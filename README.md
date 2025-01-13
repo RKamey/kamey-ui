@@ -5,13 +5,13 @@ KameyUI es una librería de componentes para la creación de interfaces de usuar
 ## Instalación
 
 ```bash
-bun i kamey-ui
+bun i kamey-components
 ```
 
 ## Uso
 
 ```tsx
-import { DynamicTable } from 'kamey-ui'
+import { DynamicTable } from 'kamey-components'
 
 <DynamicTable />
 ```

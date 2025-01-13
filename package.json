@@ -1,5 +1,5 @@
 {
-  "name": "kamey-ui",
+  "name": "kamey-components",
   "version": "0.0.1",
   "type": "module",
   "scripts": {
@@ -9,12 +9,12 @@
     "preview": "vite preview"
   },
   "files": ["dist"],
-  "main": "./dist/kamey-ui.umd.cjs",
-  "module": "./dist/kamey-ui.js",
+  "main": "./dist/kamey-components.umd.cjs",
+  "module": "./dist/kamey-components.js",
   "exports": {
     ".": {
-      "import": "./dist/kamey-ui.js",
-      "require": "./dist/kamey-ui.umd.cjs"
+      "import": "./dist/kamey-components.js",
+      "require": "./dist/kamey-components.umd.cjs"
     },
     "./dist/style.css": "./dist/style.css"
   },

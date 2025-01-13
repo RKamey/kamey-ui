@@ -16,8 +16,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
-      name: 'kamey-ui',
-      fileName: (format) => `kamey-ui.${format}.js`,
+      name: 'kamey-components',
+      fileName: (format) => `kamey-components.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
