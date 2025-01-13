@@ -10,7 +10,7 @@ export interface CustomTitleProps {
   style?: CSSProperties;
 }
 
-const Title = ({ level = 1, children, className = '', style }: CustomTitleProps) => {
+export const Title = ({ level = 1, children, className = '', style }: CustomTitleProps) => {
   const baseClasses = 'font-bold tracking-tight text-gray-900 dark:text-white';
   
   const levelClasses = {
@@ -31,5 +31,3 @@ const Title = ({ level = 1, children, className = '', style }: CustomTitleProps)
     </AntTitle>
   );
 };
-
-export default Title;
