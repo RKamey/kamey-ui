@@ -30,6 +30,14 @@ jobs:
       - name: 📦 Build
         run: npm run build
 
+      - name: Check Git status
+        run: git status
+
+      - name: Stage changes
+        run: |
+          git add .
+          git status
+
       - name: 🕵️ Detect version type
         id: version-type
         run: |
@@ -41,15 +49,13 @@ jobs:
           else
             echo "type=patch" >> $GITHUB_OUTPUT
           fi
-      
-      - name: Mostrar registro de npm
-        if: failure()
-        run: cat /home/runner/.npm/_logs/2025-01-14T19_09_17_783Z-debug-0.log
-        
+
       - name: 🏷️ Version and tag
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Build artifacts" || echo "No changes to commit"
           npm version ${{ steps.version-type.outputs.type }} -m "Release %s"
           git push
           git push --tags
