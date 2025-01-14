@@ -1,6 +1,6 @@
 {
   "name": "kamey-components",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,7 +16,8 @@
   "exports": {
     ".": {
       "import": "./dist/kamey-components.js",
-      "require": "./dist/kamey-components.umd.cjs"
+      "require": "./dist/kamey-components.umd.cjs",
+      "types": "./dist/kamey-components.d.ts"
     },
     "./dist/style.css": "./dist/style.css"
   },
