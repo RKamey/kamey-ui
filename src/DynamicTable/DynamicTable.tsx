@@ -1,4 +1,4 @@
-import { Typography, Button, Input, Table } from 'antd';
+import { Typography, Button, Input, Table, Popconfirm } from 'antd';
 import { ColumnsProps, DynamicTableProps } from './types';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import { useMemo, useState } from 'react';
@@ -6,12 +6,35 @@ import { useMemo, useState } from 'react';
 const { Title, Text } = Typography;
 const { Search } = Input;
 
+/**
+ * @description 
+ * The DynamicTable component is a table that allows you to display and manage data.  
+ * It includes a search bar, a create button, and action buttons for each row.
+ * @param {DynamicTableProps} props
+ * @param {string} props.title - The title of the table
+ * @param {React.ElementType} props.icon - The icon of the table
+ * @param {string} props.description - The description of the table
+ * @param {boolean} props.showCreateButton - Whether to show the create button
+ * @param {() => void} props.onCreate - The function to be called when the create button is clicked
+ * @param {() => void} props.onEdit - The function to be called when the edit button is clicked
+ * @param {() => void} props.onDelete - The function to be called when the delete button is clicked
+ * @param {string} props.createButtonText - The text of the create button
+ * @param {React.ReactElement} props.createButtonIcon - The icon of the create button
+ * @param {ColumnsProps[]} props.columns - The columns of the table
+ * @param {unknown[]} props.data - The data of the table
+ * @param {boolean} props.loading - Whether the table is loading
+ * @param {ActionConfig} props.actionConfig - The action configuration of the table
+ * @param {SearchConfig} props.searchConfig - The search configuration of the table
+ * @returns {React.ReactNode}
+ */
 export const DynamicTable = ({
   title,
   icon: Icon,
   description,
   showCreateButton,
   onCreate,
+  onEdit,
+  onDelete,
   createButtonText = 'Create',
   createButtonIcon = <FaPlus />,
   columns,
@@ -31,7 +54,7 @@ export const DynamicTable = ({
     searchableFields: [],
     customSearch: undefined,
   },
-}: DynamicTableProps) => {
+}: DynamicTableProps): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // ==== [ Handlers ] ====
@@ -86,12 +109,14 @@ export const DynamicTable = ({
     className: 'custom-pagination',
   };
 
-  const handleEdit = (record: unknown) => {
+  const handleEdit = (record: Record<string, unknown>) => {
     console.log('Editando registro:', record);
+    onEdit?.(record);
   };
 
-  const handleDelete = (record: unknown) => {
+  const handleDelete = (record: Record<string, unknown>) => {
     console.log('Eliminando registro:', record);
+    onDelete?.(record);
   };
 
   const processColumns = (columns: ColumnsProps[]) => {
@@ -121,16 +146,22 @@ export const DynamicTable = ({
                 type="text"
                 className="action-button hover:bg-gray-50 transition-colors"
                 icon={actionConfig.customIcons?.edit || <FaEdit className="text-primary-600 text-lg" />}
-                onClick={() => handleEdit(record)}
+                onClick={() => handleEdit(record as Record<string, unknown>)}
               />
             )}
             {actionConfig.showDelete && (
-              <Button
-                type="text"
-                className="action-button hover:bg-red-50 transition-colors"
-                icon={actionConfig.customIcons?.delete || <FaTrash className="text-red-600 text-lg" />}
-                onClick={() => handleDelete(record)}
-              />
+              <Popconfirm
+                title="¿Estás seguro de que deseas eliminar este registro?"
+                onConfirm={() => handleDelete(record as Record<string, unknown>)}
+                okText="Eliminar"
+                cancelText="Cancelar"
+              >
+                <Button
+                  type="text"
+                  className="action-button hover:bg-red-50 transition-colors"
+                  icon={actionConfig.customIcons?.delete || <FaTrash className="text-red-600 text-lg" />}
+                />
+              </Popconfirm>
             )}
           </div>
         ),

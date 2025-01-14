@@ -12,14 +12,14 @@ interface ActionIcons {
   delete?: React.ReactElement;
 }
 
-interface ActionConfig {
+export interface ActionConfig {
   showDefaultActions?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;
   customIcons?: ActionIcons;
 }
 
-interface SearchConfig {
+export interface SearchConfig {
   searchableFields?: string[];
   customSearch?: (item: unknown, term: string) => boolean;
 }
@@ -37,6 +37,8 @@ export interface DynamicTableProps {
   createButtonText?: string;
   createButtonIcon?: React.ReactElement;
   onCreate?: () => void;
+  onEdit?: (record: unknown) => void;
+  onDelete?: (record: unknown) => void;
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
 }
