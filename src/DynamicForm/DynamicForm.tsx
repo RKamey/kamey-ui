@@ -57,7 +57,7 @@ export interface DynamicFormProps {
  * @param {ApiConfig} props.apiConfig - The API configuration of the form
  * @returns {React.ReactNode}
  */
-const DynamicForm = ({
+export const DynamicForm = ({
   mode,
   title,
   description,
@@ -296,5 +296,3 @@ const DynamicForm = ({
     </div>
   );
 };
-
-export default DynamicForm;
