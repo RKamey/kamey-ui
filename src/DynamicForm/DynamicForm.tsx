@@ -32,7 +32,7 @@ export interface DynamicFormProps {
   mode?: 'create' | 'update';
   title?: string;
   description?: string;
-  icon?: React.ReactNode;
+  icon?: React.ElementType;
   layout?: "vertical" | "horizontal";
   fields: FormField[];
   submitButtonText?: string;
@@ -41,6 +41,22 @@ export interface DynamicFormProps {
   initialData?: Record<string, unknown>;
 }
 
+/**
+ * @alias DynamicForm
+ * @description The DynamicForm component is a form that allows you to create and update records.
+ * @param {DynamicFormProps} props
+ * @param {'create' | 'update'} props.mode - The mode of the form
+ * @param {string} props.title - The title of the form
+ * @param {string} props.description - The description of the form
+ * @param {React.ElementType} props.icon - The icon of the form
+ * @param {'vertical' | 'horizontal'} props.layout - The layout of the form
+ * @param {FormField[]} props.fields - The fields of the form
+ * @param {string} props.submitButtonText - The text of the submit button
+ * @param {() => void} props.onSubmit - The function to be called when the submit button is clicked
+ * @param {Record<string, unknown>} props.initialData - The initial data of the form
+ * @param {ApiConfig} props.apiConfig - The API configuration of the form
+ * @returns {React.ReactNode}
+ */
 const DynamicForm = ({
   mode,
   title,
@@ -51,7 +67,7 @@ const DynamicForm = ({
   submitButtonText = "Enviar",
   onSubmit,
   initialData = {},
-}: DynamicFormProps) => {
+}: DynamicFormProps): React.ReactNode => {
   const [form] = Form.useForm();
   const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>({});
 
@@ -88,6 +104,11 @@ const DynamicForm = ({
   }, []);
 
   // ==== [ Functions ] ====
+  const handleSubmit = (values: Record<string, unknown>) => {
+    console.log(values);
+    onSubmit?.(values);
+  }
+
   const fetchSelectOptions = async (field: FormField) => {
     if (!field.selectConfig?.apiConfig) return;
     
@@ -230,7 +251,7 @@ const DynamicForm = ({
       {/* Header */}
       <div className="flex flex-col gap-2">
         <Title level={3} className="flex items-center gap-4">
-          {icon}
+          {icon && React.createElement(icon)}
           {title}
         </Title>
         <Text className="text-sm text-gray-500">{description}</Text>
@@ -241,7 +262,7 @@ const DynamicForm = ({
         form={form}
         layout={layout}
         initialValues={initialData}
-        onFinish={onSubmit}
+        onFinish={handleSubmit}
       >
         {/* Render the formItems from json */}
         {fields.map((field, index) => (
