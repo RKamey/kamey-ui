@@ -6,6 +6,24 @@ export interface ColumnsProps {
   render?: (value: unknown, record: unknown) => React.ReactNode;
 }
 
+interface ActionIcons {
+  create?: React.ReactElement;
+  edit?: React.ReactElement;
+  delete?: React.ReactElement;
+}
+
+interface ActionConfig {
+  showDefaultActions?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
+  customIcons?: ActionIcons;
+}
+
+interface SearchConfig {
+  searchableFields?: string[];
+  customSearch?: (item: unknown, term: string) => boolean;
+}
+
 export interface DynamicTableProps {
   title?: string;
   description?: string;
@@ -19,4 +37,6 @@ export interface DynamicTableProps {
   createButtonText?: string;
   createButtonIcon?: React.ReactElement;
   onCreate?: () => void;
+  actionConfig?: ActionConfig;
+  searchConfig?: SearchConfig;
 }
