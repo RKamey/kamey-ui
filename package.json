@@ -2,18 +2,19 @@
   "name": "kamey-components",
   "version": "0.0.36",
   "type": "module",
-  "main": "./dist/kamey-components.umd.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/kamey-components.umd.cjs",
   "module": "./dist/kamey-components.es.js",
   "types": "./dist/kamey-components.d.ts",
   "exports": {
     ".": {
       "import": "./dist/kamey-components.es.js",
-      "require": "./dist/kamey-components.umd.js"
-    }
+      "require": "./dist/kamey-components.umd.cjs"
+    },
+    "./dist/style.css": "./dist/style.css"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
