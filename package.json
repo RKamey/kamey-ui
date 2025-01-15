@@ -1,25 +1,28 @@
 {
   "name": "kamey-components",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "type": "module",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "files": [
+    "/dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "prepare": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
-  },
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/kamey-components.umd.cjs",
-  "module": "./dist/kamey-components.js",
-  "exports": {
-    ".": {
-      "import": "./dist/kamey-components.js",
-      "require": "./dist/kamey-components.umd.cjs",
-      "types": "./dist/kamey-components.d.ts"
-    },
-    "./dist/style.css": "./dist/style.css"
   },
   "dependencies": {
     "antd": "^5.23.0",
