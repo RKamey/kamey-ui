@@ -4,10 +4,6 @@
   "type": "module",
   "main": "./dist/kamey-components.umd.js",
   "module": "./dist/kamey-components.es.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RKamey/kamey-ui"
-  },
   "types": "./dist/kamey-components.d.ts",
   "exports": {
     ".": {
@@ -16,9 +12,6 @@
     }
   },
   "files": ["dist"],
-  "publishConfig": {
-    "registry": "https://www.npmjs.com/package/kamey-components"
-  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
