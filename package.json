@@ -1,22 +1,23 @@
 {
   "name": "kamey-components",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "type": "module",
-  "main": "dist/index.umd.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/kamey-components.umd.js",
+  "module": "./dist/kamey-components.es.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RKamey/kamey-ui"
+  },
+  "types": "./dist/kamey-components.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/kamey-components.es.js",
+      "require": "./dist/kamey-components.umd.js"
     }
   },
-  "files": [
-    "/dist"
-  ],
+  "files": ["dist"],
   "publishConfig": {
-    "access": "public"
+    "registry": "https://www.npmjs.com/package/kamey-components"
   },
   "scripts": {
     "dev": "vite",

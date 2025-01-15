@@ -1,22 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
 import dts from 'vite-plugin-dts';
+import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react(), dts()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'index.ts'),
+      entry: resolve(__dirname, 'src/main.ts'),
       name: 'kamey-components',
-      fileName: (format) => `index.${format}.js`,
+      fileName: 'kamey-components',
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'react/jsx-runtime',
         },
       },
     },

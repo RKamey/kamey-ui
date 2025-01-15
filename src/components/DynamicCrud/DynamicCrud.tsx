@@ -1,4 +1,4 @@
-import { DynamicTable } from "../main";
+import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
 import { ActionConfig, ColumnsProps, SearchConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
