@@ -4,24 +4,36 @@ import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [react(), dts({ rollupTypes: true })],
+  plugins: [
+    react(),
+    dts({ include: ['src'] })
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
-      name: 'kamey-components',
-      fileName: 'kamey-components',
+      name: 'KameyComponents',
+      formats: ['es', 'umd'],
+      fileName: (format) => `kamey-components.${format === 'es' ? 'js' : 'umd.cjs'}`
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+        'react',
+        'react-dom',
+        'antd',
+        'axios',
+        'dayjs'
+      ],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'react/jsx-runtime',
-        },
-      },
+          antd: 'antd',
+          axios: 'axios',
+          dayjs: 'dayjs'
+        }
+      }
     },
     sourcemap: true,
-    emptyOutDir: true,
-  },
-})
+    minify: 'terser'
+  }
+});

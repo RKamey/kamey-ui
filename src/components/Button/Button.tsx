@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 
-interface BtnProps {
+export interface BtnProps {
   children: React.ReactNode;
   type?: 'primary' | 'link' | 'text' | 'default' | 'dashed';
   size?: 'small' | 'middle' | 'large';

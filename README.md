@@ -8,6 +8,13 @@ KameyUI es una librería de componentes para la creación de interfaces de usuar
 bun i kamey-components
 ```
 
+## Peer Dependencies
+Esta librería requiere que se instalen los siguientes paquetes:
+
+```bash
+npm install react react-dom antd axios dayjs
+```
+
 ## Uso
 
 ```tsx
