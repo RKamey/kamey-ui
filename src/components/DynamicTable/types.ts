@@ -24,6 +24,26 @@ export interface SearchConfig {
   customSearch?: (item: unknown, term: string) => boolean;
 }
 
+export interface StyleConfig {
+  wrapper?: string;
+  header?: {
+    container?: string;
+    iconContainer?: string;
+    icon?: string;
+    title?: string;
+    description?: string;
+  };
+  table?: {
+    container?: string;
+    row?: string;
+    cell?: string;
+    actionButtons?: {
+      edit?: string;
+      delete?: string;
+    };
+  };
+}
+
 export interface DynamicTableProps {
   title?: string;
   description?: string;
@@ -41,4 +61,5 @@ export interface DynamicTableProps {
   onDelete?: (record: unknown) => void;
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
+  styleConfig?: StyleConfig;
 }

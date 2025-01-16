@@ -54,6 +54,24 @@ export const DynamicTable = ({
     searchableFields: [],
     customSearch: undefined,
   },
+  styleConfig = {
+    wrapper: 'bg-white rounded-xl shadow-sm border border-gray-100',
+    header: {
+      container: 'p-6 border-b border-gray-100',
+      iconContainer: 'w-10 h-10 rounded-lg bg-primary hover:bg-primary/90',
+      icon: 'text-primary-foreground text-xl',
+      title: '!m-0 !text-gray-900',
+      description: 'text-gray-500'
+    },
+    table: {
+      container: 'dynamic-table',
+      row: 'py-4 px-6 bg-white',
+      actionButtons: {
+        edit: 'hover:bg-gray-50',
+        delete: 'hover:bg-red-50'
+      }
+    }
+  },
 }: DynamicTableProps): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -173,16 +191,16 @@ export const DynamicTable = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-gray-100">
+    <div className={styleConfig.wrapper}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center gap-3 mb-4">
+      <div className={styleConfig.header?.container}>
+        <div className={styleConfig.header?.iconContainer}>
           {Icon && (
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-50 hover:bg-primary-100 transition-colors">
               <Icon className="text-primary-600 text-xl" />
             </div>
           )}
-          <Title level={4} className="!m-0 !text-gray-900">
+          <Title level={4} className={styleConfig.header?.title}>
             {title}
           </Title>
         </div>
@@ -190,7 +208,7 @@ export const DynamicTable = ({
         <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
           {/* Description */}
           {description && (
-            <Text className="text-gray-500 flex-grow">{description}</Text>
+            <Text className={styleConfig.header?.description}>{description}</Text>
           )}
           
           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -228,7 +246,7 @@ export const DynamicTable = ({
           total: filteredData.length,
           showTotal: (total) => `Total ${total} registros${searchTerm ? ' filtrados' : ''}`,
         }}
-        className="dynamic-table"
+        className={styleConfig.table?.container}
       />
     </div>
   );
