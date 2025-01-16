@@ -20,7 +20,7 @@ interface DynamicCrudProps {
   searchConfig?: SearchConfig;
   headerDirection?: "horizontal" | "vertical";
   loading?: boolean;
-  onCreate?: () => void;
+  onCreate?: (values: Record<string, unknown>) => void;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
   onSubmit?: () => void;
@@ -83,9 +83,9 @@ export const DynamicCrud = ({
   const [mode, setMode] = useState(initialData ? "update" : "create");
   
   // ==== [ Handlers ] ====
-  const handleCreate = () => {
+  const handleCreate = (values: Record<string, unknown>) => {
     if (onCreate) {
-      onCreate();
+      onCreate(values);
     } else {
       setIsModalVisible(true);
       setMode("create");
@@ -125,7 +125,7 @@ export const DynamicCrud = ({
         actionConfig={actionConfig}
         headerDirection={headerDirection}
         loading={loading}
-        onCreate={handleCreate}
+        onCreate={() => handleCreate({})}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
@@ -143,7 +143,14 @@ export const DynamicCrud = ({
             icon={icon}
             layout={layout}
             initialData={currentRecord || undefined}
-            onSubmit={onSubmit}
+            onSubmit={(values) => {
+              if (mode === "create") {
+                onCreate?.(values as Record<string, unknown>);
+              } else {
+                onSubmit?.();
+              }
+              handleCancel();
+            }}
             mode={mode as "create" | "update"}
             submitButtonText={submitButtonText}
             apiConfig={apiConfig}

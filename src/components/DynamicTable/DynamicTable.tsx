@@ -48,6 +48,10 @@ export const DynamicTable = ({
       create: <FaPlus />,
       edit: <FaEdit />,
       delete: <FaTrash />,
+    },
+    customActionsColor: {
+      edit: 'bg-gray-50',
+      delete: 'bg-red-50',
     }
   },
   searchConfig = {
@@ -162,7 +166,7 @@ export const DynamicTable = ({
             {actionConfig.showEdit && (
               <Button
                 type="text"
-                className="action-button hover:bg-gray-50 transition-colors"
+                className={`action-button hover:bg-gray-50 transition-colors ${actionConfig.customActionsColor?.edit || ''}`}
                 icon={actionConfig.customIcons?.edit || <FaEdit className="text-primary-600 text-lg" />}
                 onClick={() => handleEdit(record as Record<string, unknown>)}
               />
@@ -176,7 +180,7 @@ export const DynamicTable = ({
               >
                 <Button
                   type="text"
-                  className="action-button hover:bg-red-50 transition-colors"
+                  className={`action-button hover:bg-red-50 transition-colors ${actionConfig.customActionsColor?.delete || ''}`}
                   icon={actionConfig.customIcons?.delete || <FaTrash className="text-red-600 text-lg" />}
                 />
               </Popconfirm>

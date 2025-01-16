@@ -6,7 +6,7 @@ export interface ColumnsProps {
   render?: (value: unknown, record: unknown) => React.ReactNode;
 }
 
-interface ActionIcons {
+export interface ActionIcons {
   create?: React.ReactElement;
   edit?: React.ReactElement;
   delete?: React.ReactElement;
@@ -17,6 +17,10 @@ export interface ActionConfig {
   showEdit?: boolean;
   showDelete?: boolean;
   customIcons?: ActionIcons;
+  customActionsColor?: {
+    edit?: string;
+    delete?: string;
+  };
 }
 
 export interface SearchConfig {
