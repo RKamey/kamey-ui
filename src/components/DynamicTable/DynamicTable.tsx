@@ -1,14 +1,21 @@
-import { Typography, Button, Input, Table, Popconfirm } from 'antd';
-import { ColumnsProps, DynamicTableProps } from './types';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { useMemo, useState } from 'react';
+import {
+  Typography,
+  Button,
+  Input,
+  Table,
+  Popconfirm,
+  ConfigProvider,
+} from "antd";
+import { ColumnsProps, DynamicTableProps } from "./types";
+import { FaPlus, FaEdit, FaTrash, FaSync } from "react-icons/fa";
+import { useMemo, useState } from "react";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
 
 /**
- * @description 
- * The DynamicTable component is a table that allows you to display and manage data.  
+ * @description
+ * The DynamicTable component is a table that allows you to display and manage data.
  * It includes a search bar, a create button, and action buttons for each row.
  * @param {DynamicTableProps} props
  * @param {string} props.title - The title of the table
@@ -32,14 +39,17 @@ export const DynamicTable = ({
   icon: Icon,
   description,
   showCreateButton,
+  showRefreshButton,
   onCreate,
   onEdit,
   onDelete,
-  createButtonText = 'Create',
+  onRefresh,
+  createButtonText = "Create",
   createButtonIcon = <FaPlus />,
   columns,
   data,
   loading,
+  moreActions,
   actionConfig = {
     showDefaultActions: true,
     showEdit: true,
@@ -50,34 +60,17 @@ export const DynamicTable = ({
       delete: <FaTrash />,
     },
     customActionsColor: {
-      edit: 'bg-gray-50',
-      delete: 'bg-red-50',
-    }
+      edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+      delete: "!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+    },
   },
   searchConfig = {
     searchableFields: [],
     customSearch: undefined,
   },
-  styleConfig = {
-    wrapper: 'bg-white rounded-xl shadow-sm border border-gray-100',
-    header: {
-      container: 'p-6 border-b border-gray-100',
-      iconContainer: 'w-10 h-10 rounded-lg bg-primary hover:bg-primary/90',
-      icon: 'text-primary-foreground text-xl',
-      title: '!m-0 !text-gray-900',
-      description: 'text-gray-500'
-    },
-    table: {
-      container: 'dynamic-table',
-      row: 'py-4 px-6 bg-white',
-      actionButtons: {
-        edit: 'hover:bg-gray-50',
-        delete: 'hover:bg-red-50'
-      }
-    }
-  },
+  themeConfig,
 }: DynamicTableProps): React.ReactNode => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // ==== [ Handlers ] ====
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,18 +78,18 @@ export const DynamicTable = ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return Object.values(obj).some((value: any) => {
       if (value === null || value === undefined) return false;
-      
-      if (typeof value === 'object') {
+
+      if (typeof value === "object") {
         return searchInObject(value, term);
       }
-      
+
       return value.toString().toLowerCase().includes(term.toLowerCase());
     });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const searchByFields = (item: any, term: string, fields: string[]) => {
-    return fields.some(field => {
+    return fields.some((field) => {
       const value = item[field];
       if (value === null || value === undefined) return false;
       return value.toString().toLowerCase().includes(term.toLowerCase());
@@ -106,12 +99,15 @@ export const DynamicTable = ({
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
 
-    return data.filter(item => {
+    return data.filter((item) => {
       if (searchConfig.customSearch) {
         return searchConfig.customSearch(item, searchTerm);
       }
 
-      if (searchConfig.searchableFields && searchConfig.searchableFields.length > 0) {
+      if (
+        searchConfig.searchableFields &&
+        searchConfig.searchableFields.length > 0
+      ) {
         return searchByFields(item, searchTerm, searchConfig.searchableFields);
       }
 
@@ -123,22 +119,28 @@ export const DynamicTable = ({
   const handleSearch = (value: string) => {
     setSearchTerm(value);
   };
-  
+
   const paginationConfig = {
     pageSize: 10,
     showSizeChanger: true,
     showTotal: (total: number) => `Total ${total} registros`,
-    className: 'custom-pagination',
+    className: "custom-pagination",
   };
 
   const handleEdit = (record: Record<string, unknown>) => {
-    console.log('Editando registro:', record);
+    console.log("Editando registro:", record);
     onEdit?.(record);
   };
 
   const handleDelete = (record: Record<string, unknown>) => {
-    console.log('Eliminando registro:', record);
+    console.log("Eliminando registro:", record);
     onDelete?.(record);
+  };
+
+  const handleRefresh = async () => {
+    if (onRefresh) {
+      await onRefresh();
+    }
   };
 
   const processColumns = (columns: ColumnsProps[]) => {
@@ -158,7 +160,7 @@ export const DynamicTable = ({
     if (actionConfig.showDefaultActions) {
       const actionsColumn = {
         title: <span className="font-medium">Acciones</span>,
-        key: 'actions',
+        key: "actions",
         width: 120,
         className: "py-4 px-6 bg-white",
         render: (_: unknown, record: unknown) => (
@@ -166,25 +168,58 @@ export const DynamicTable = ({
             {actionConfig.showEdit && (
               <Button
                 type="text"
-                className={`action-button hover:bg-gray-50 transition-colors ${actionConfig.customActionsColor?.edit || ''}`}
-                icon={actionConfig.customIcons?.edit || <FaEdit className="text-primary-600 text-lg" />}
+                className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                  actionConfig.customActionsColor?.edit ||
+                  "bg-blue-600 hover:bg-blue-500 text-white"
+                }`}
+                icon={
+                  actionConfig.customIcons?.edit || (
+                    <FaEdit className="text-white text-sm" />
+                  )
+                }
                 onClick={() => handleEdit(record as Record<string, unknown>)}
               />
             )}
             {actionConfig.showDelete && (
               <Popconfirm
                 title="¿Estás seguro de que deseas eliminar este registro?"
-                onConfirm={() => handleDelete(record as Record<string, unknown>)}
+                onConfirm={() =>
+                  handleDelete(record as Record<string, unknown>)
+                }
                 okText="Eliminar"
                 cancelText="Cancelar"
               >
                 <Button
                   type="text"
-                  className={`action-button hover:bg-red-50 transition-colors ${actionConfig.customActionsColor?.delete || ''}`}
-                  icon={actionConfig.customIcons?.delete || <FaTrash className="text-red-600 text-lg" />}
+                  className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                    actionConfig.customActionsColor?.delete ||
+                    "bg-red-600 hover:bg-red-500 text-white"
+                  }`}
+                  icon={
+                    actionConfig.customIcons?.delete || (
+                      <FaTrash className="text-white text-sm" />
+                    )
+                  }
                 />
               </Popconfirm>
             )}
+            {moreActions &&
+              moreActions.length > 0 &&
+              moreActions.map((action) => {
+                return (
+                  <Button
+                    key={action.key}
+                    type="text"
+                    className={`action-button transition-colors ${
+                      actionConfig.customActionsColor?.edit || ""
+                    }`}
+                    icon={action.icon}
+                    onClick={action.onClick}
+                  >
+                    {action.label}
+                  </Button>
+                );
+              })}
           </div>
         ),
       };
@@ -195,64 +230,92 @@ export const DynamicTable = ({
   };
 
   return (
-    <div className={styleConfig.wrapper}>
-      {/* Header */}
-      <div className={styleConfig.header?.container}>
-        <div className={styleConfig.header?.iconContainer}>
-          {Icon && (
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-50 hover:bg-primary-100 transition-colors">
-              <Icon className="text-primary-600 text-xl" />
-            </div>
-          )}
-          <Title level={4} className={styleConfig.header?.title}>
-            {title}
-          </Title>
-        </div>
-
-        <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-          {/* Description */}
-          {description && (
-            <Text className={styleConfig.header?.description}>{description}</Text>
-          )}
-          
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            {/* Search */}
-            <Search
-              allowClear
-              className="min-w-[240px]"
-              placeholder="Buscar"
-              onChange={(e) => handleSearch(e.target.value)}
-              onSearch={handleSearch}
-            />
-
-            {/* Create Button */}
-            {showCreateButton && (
-              <Button 
-                type="primary"
-                className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-                icon={actionConfig.customIcons?.create || createButtonIcon}
-                onClick={onCreate}
-              >
-                {createButtonText}
-              </Button>
+    <ConfigProvider theme={themeConfig}>
+      <div className="p-4 bg-white rounded-xl shadow-lg">
+        {/* Header */}
+        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+          {/* Title and Icon Section */}
+          <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
+            {Icon && (
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                <Icon className="text-primary-dark text-lg sm:text-xl" />
+              </div>
             )}
+            <Title
+              level={4}
+              className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl"
+            >
+              {title}
+            </Title>
+          </div>
+
+          {/* Content Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {/* Description - Lado izquierdo */}
+            {description && (
+              <div className="w-full sm:flex-1">
+                <Text className="text-gray-600 text-sm leading-relaxed">
+                  {description}
+                </Text>
+              </div>
+            )}
+
+            {/* Search y Create Button - Lado derecho */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              <Search
+                allowClear
+                className="w-full sm:min-w-[240px]"
+                placeholder="Buscar"
+                onChange={(e) => handleSearch(e.target.value)}
+                onSearch={handleSearch}
+              />
+
+              {showRefreshButton && (
+                <Button
+                  type="default"
+                  className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
+                  icon={
+                    <FaSync className="text-gray-600 hover:rotate-180 transition-transform duration-500" />
+                  }
+                  onClick={handleRefresh}
+                >
+                  <span className="text-gray-700 font-medium">Refrescar</span>
+                </Button>
+              )}
+
+              {showCreateButton && (
+                <Button
+                  type="primary"
+                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md"
+                  icon={actionConfig.customIcons?.create || createButtonIcon}
+                  onClick={onCreate}
+                >
+                  {createButtonText}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Table */}
-      <Table
-        columns={processColumns(columns)}
-        dataSource={filteredData}
-        loading={loading}
-        pagination={{
-          ...paginationConfig,
-          total: filteredData.length,
-          showTotal: (total) => `Total ${total} registros${searchTerm ? ' filtrados' : ''}`,
-        }}
-        className={styleConfig.table?.container}
-      />
-    </div>
+        {/* Table Section */}
+        <div className="overflow-x-auto">
+          <Table
+            columns={processColumns(columns)}
+            dataSource={filteredData}
+            loading={loading}
+            pagination={{
+              ...paginationConfig,
+              total: filteredData.length,
+              showTotal: (total) =>
+                `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
+              responsive: true,
+              className: "px-4 sm:px-6 py-3 sm:py-4",
+            }}
+            className="dynamic-table"
+            scroll={{ x: "max-content" }}
+          />
+        </div>
+      </div>
+    </ConfigProvider>
   );
 };
-

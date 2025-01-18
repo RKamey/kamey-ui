@@ -6,6 +6,21 @@ export interface ColumnsProps {
   render?: (value: unknown, record: unknown) => React.ReactNode;
 }
 
+export interface ThemeConfig {
+  token?: {
+    colorPrimary?: string;
+    colorPrimaryHover?: string;
+  };
+  components?: {
+    Table?: {
+      headerBg?: string;
+      colorTextHeading?: string;
+      stickyScrollBar?: string;
+      rowHoverBg?: string;
+    };
+  };
+}
+
 export interface ActionIcons {
   create?: React.ReactElement;
   edit?: React.ReactElement;
@@ -27,25 +42,11 @@ export interface SearchConfig {
   searchableFields?: string[];
   customSearch?: (item: unknown, term: string) => boolean;
 }
-
-export interface StyleConfig {
-  wrapper?: string;
-  header?: {
-    container?: string;
-    iconContainer?: string;
-    icon?: string;
-    title?: string;
-    description?: string;
-  };
-  table?: {
-    container?: string;
-    row?: string;
-    cell?: string;
-    actionButtons?: {
-      edit?: string;
-      delete?: string;
-    };
-  };
+export interface MoreActions {
+  key: string;
+  label: string;
+  icon: React.ReactElement;
+  onClick: () => void;
 }
 
 export interface DynamicTableProps {
@@ -58,12 +59,15 @@ export interface DynamicTableProps {
   className?: string;
   loading?: boolean;
   showCreateButton?: boolean;
+  showRefreshButton?: boolean;
   createButtonText?: string;
   createButtonIcon?: React.ReactElement;
+  moreActions?: MoreActions[];
   onCreate?: () => void;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
+  onRefresh?: () => void;
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
-  styleConfig?: StyleConfig;
+  themeConfig?: ThemeConfig;
 }
