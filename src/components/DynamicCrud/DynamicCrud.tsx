@@ -1,6 +1,6 @@
 import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
-import { ActionConfig, ColumnsProps, SearchConfig } from "../DynamicTable/types";
+import { ActionConfig, ColumnsProps, SearchConfig, ThemeConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
 import { useState } from "react";
 import { Modal } from "antd";
@@ -27,6 +27,7 @@ interface DynamicCrudProps {
   submitButtonText?: string;
   apiConfig?: ApiConfig;
   initialData?: Record<string, unknown>;
+  themeConfig?: ThemeConfig 
 }
 
 /**
@@ -76,7 +77,8 @@ export const DynamicCrud = ({
   onSubmit,
   submitButtonText,
   apiConfig,
-  initialData
+  initialData,
+  themeConfig
 }: DynamicCrudProps): React.ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
@@ -128,6 +130,7 @@ export const DynamicCrud = ({
         onCreate={() => handleCreate({})}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        themeConfig={themeConfig}
       />
 
       {isModalVisible && (
