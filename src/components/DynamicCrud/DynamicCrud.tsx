@@ -6,7 +6,8 @@ import { useState } from "react";
 import { Modal } from "antd";
 
 interface DynamicCrudProps {
-  title: string;
+  title?: string;
+  formTitle?: string;
   description?: string;
   columns: ColumnsProps[];
   data: unknown[];
@@ -60,6 +61,7 @@ export const DynamicCrud = ({
   columns,
   data,
   title,
+  formTitle,
   description,
   fields,
   showCreateButton,
@@ -140,7 +142,7 @@ export const DynamicCrud = ({
           footer={null}
         >
           <DynamicForm 
-            title={title}
+            title={formTitle || title}
             description={description}
             fields={fields}
             icon={icon}
