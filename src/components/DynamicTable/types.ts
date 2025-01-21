@@ -44,8 +44,8 @@ export interface SearchConfig {
 }
 export interface MoreActions {
   key: string;
-  label: string;
-  icon: React.ReactElement;
+  label?: string;
+  icon?: React.ReactElement;
   onClick: () => void;
 }
 
