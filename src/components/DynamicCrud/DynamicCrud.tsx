@@ -139,10 +139,15 @@ export const DynamicCrud = ({
             layout={layout}
             initialData={currentRecord || undefined}
             onSubmit={(values) => {
-              if (mode === 'update') {
-                onEdit?.(values as Record<string, unknown>);
-              } else {
-                onCreate?.(values as Record<string, unknown>);
+              try {
+                if (mode === 'update') {
+                  onEdit?.(values as Record<string, unknown>);
+                } else {
+                  onCreate?.(values as Record<string, unknown>);
+                }
+                setIsModalVisible(false);
+                } catch (error) {
+                console.error(`Error al ${mode === 'update' ? 'editar' : 'crear'} registro:`, error);
               }
             }}
             mode={mode as "create" | "update"}
