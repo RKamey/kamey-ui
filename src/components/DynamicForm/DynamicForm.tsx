@@ -249,9 +249,11 @@ export const DynamicForm = ({
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col mb-4">
         <Title level={3} className="flex items-center gap-4">
-          {icon && React.createElement(icon)}
+          <Text>
+            {icon && React.createElement(icon)}
+          </Text>
           {title}
         </Title>
         <Text className="text-sm text-gray-500">{description}</Text>

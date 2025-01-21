@@ -10,7 +10,7 @@ interface DynamicCrudProps {
   formTitle?: string;
   description?: string;
   columns: ColumnsProps[];
-  data: unknown[];
+  data?: unknown[];
   fields: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;
@@ -19,12 +19,12 @@ interface DynamicCrudProps {
   layout?: "horizontal" | "vertical";
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
+  showRefreshButton?: boolean;
   headerDirection?: "horizontal" | "vertical";
   loading?: boolean;
   onCreate?: (values: Record<string, unknown>) => void;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
-  onSubmit?: () => void;
   submitButtonText?: string;
   apiConfig?: ApiConfig;
   initialData?: Record<string, unknown>;
@@ -51,7 +51,6 @@ interface DynamicCrudProps {
  * @param {() => void} props.onCreate - The function to be called when the create button is clicked
  * @param {() => void} props.onEdit - The function to be called when the edit button is clicked
  * @param {() => void} props.onDelete - The function to be called when the delete button is clicked
- * @param {() => void} props.onSubmit - The function to be called when the submit button is clicked
  * @param {string} props.submitButtonText - The text of the submit button
  * @param {ApiConfig} props.apiConfig - The API configuration of the form
  * @param {Record<string, unknown>} props.initialData - The initial data of the form
@@ -72,11 +71,11 @@ export const DynamicCrud = ({
   actionConfig,
   searchConfig,
   headerDirection,
+  showRefreshButton,
   loading,
   onCreate,
   onEdit,
   onDelete,
-  onSubmit,
   submitButtonText,
   apiConfig,
   initialData,
@@ -85,17 +84,8 @@ export const DynamicCrud = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
   const [mode, setMode] = useState(initialData ? "update" : "create");
-  
-  // ==== [ Handlers ] ====
-  const handleCreate = (values: Record<string, unknown>) => {
-    if (onCreate) {
-      onCreate(values);
-    } else {
-      setIsModalVisible(true);
-      setMode("create");
-    }
-  }
 
+  // ==== [ Handlers ] ====
   const handleCancel = () => {
     setIsModalVisible(false);
     setCurrentRecord(null);
@@ -106,7 +96,6 @@ export const DynamicCrud = ({
     setCurrentRecord(record as Record<string, unknown>);
     setIsModalVisible(true);
     setMode("update");
-    onEdit?.(record);
   }
 
   const handleDelete = (record: unknown) => {
@@ -121,15 +110,16 @@ export const DynamicCrud = ({
         description={description}
         icon={icon}
         columns={columns}
-        data={data}
+        data={data || []}
         showCreateButton={showCreateButton}
         createButtonText={createButtonText}
         createButtonIcon={createButtonIcon}
         searchConfig={searchConfig}
         actionConfig={actionConfig}
         headerDirection={headerDirection}
+        showRefreshButton={showRefreshButton}
         loading={loading}
-        onCreate={() => handleCreate({})}
+        onCreate={() => setIsModalVisible(true)}
         onEdit={handleEdit}
         onDelete={handleDelete}
         themeConfig={themeConfig}
@@ -149,12 +139,11 @@ export const DynamicCrud = ({
             layout={layout}
             initialData={currentRecord || undefined}
             onSubmit={(values) => {
-              if (mode === "create") {
-                onCreate?.(values as Record<string, unknown>);
+              if (mode === 'update') {
+                onEdit?.(values as Record<string, unknown>);
               } else {
-                onSubmit?.();
+                onCreate?.(values as Record<string, unknown>);
               }
-              handleCancel();
             }}
             mode={mode as "create" | "update"}
             submitButtonText={submitButtonText}
