@@ -137,7 +137,7 @@ export const DynamicForm = ({
       return null;
     }
 
-    const { format, showTime } = datepickerConfig || {};
+    const { format, showTime, picker, size } = datepickerConfig || {};
     
     let formItem;
 
@@ -173,7 +173,18 @@ export const DynamicForm = ({
         );
         break;
       case 'datepicker':
-        formItem = <DatePicker className="w-full" placeholder={placeholder} format={format} showTime={showTime} />;
+        formItem = <DatePicker className="w-full" placeholder={placeholder} size={size} format={format} showTime={showTime} />;
+        break;
+      case 'rangepicker':
+        formItem = (
+          <DatePicker.RangePicker 
+            className="w-full"
+            picker={picker}
+            format={format} 
+            showTime={showTime}
+            size={size}
+          />
+        )
         break;
       case 'email':
         formItem = <Input type="email" placeholder={placeholder} readOnly={readonly} />;

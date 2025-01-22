@@ -1,8 +1,10 @@
-export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload';
-
+export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'rangepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload';
+export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
 export interface DatepickerConfig {
   format?: string;
   showTime?: boolean;
+  picker?: PickerType;
+  size?: 'large' | 'middle' | 'small';
 }
 
 export interface SelectConfig {

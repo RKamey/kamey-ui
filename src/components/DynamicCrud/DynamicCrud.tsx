@@ -88,6 +88,10 @@ export const DynamicCrud = ({
   const [mode, setMode] = useState(initialData ? "update" : "create");
 
   // ==== [ Handlers ] ====
+  const generateDataWithKey = (data: unknown[]) => {
+    return data.map((item, index) => (typeof item === 'object' && item !== null ? { ...item, key: index } : { key: index }));
+  }
+
   const handleCancel = () => {
     setIsModalVisible(false);
     setCurrentRecord(null);
@@ -112,7 +116,7 @@ export const DynamicCrud = ({
         description={description}
         icon={icon}
         columns={columns}
-        data={data || []}
+        data={generateDataWithKey(data || [])}
         showCreateButton={showCreateButton}
         createButtonText={createButtonText}
         createButtonIcon={createButtonIcon}
