@@ -46,7 +46,7 @@ export interface MoreActions {
   key: string;
   label?: string;
   icon?: React.ReactElement;
-  onClick: () => void;
+  onClick: (record: unknown) => void;
 }
 
 export interface DynamicTableProps {
