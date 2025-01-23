@@ -34,6 +34,7 @@ export interface DynamicFormProps {
   description?: string;
   icon?: React.ElementType;
   layout?: "vertical" | "horizontal";
+  cols?: 1 | 2 | 3 | 4;
   fields: FormField[];
   submitButtonText?: string;
   onSubmit?: (data: unknown) => void;
@@ -50,6 +51,7 @@ export interface DynamicFormProps {
  * @param {string} props.description - The description of the form
  * @param {React.ElementType} props.icon - The icon of the form
  * @param {'vertical' | 'horizontal'} props.layout - The layout of the form
+ * @param {number} props.cols - The number of columns of the form
  * @param {FormField[]} props.fields - The fields of the form
  * @param {string} props.submitButtonText - The text of the submit button
  * @param {() => void} props.onSubmit - The function to be called when the submit button is clicked
@@ -63,6 +65,7 @@ export const DynamicForm = ({
   description,
   icon,
   layout = "vertical",
+  cols = 1,
   fields,
   submitButtonText = "Enviar",
   onSubmit,
@@ -129,6 +132,43 @@ export const DynamicForm = ({
 
     setSelectOptions(prev => ({ ...prev, [field.name]: options }));
   }
+
+  const getCols = (cols: number) => {
+    switch (cols) {
+      case 1:
+        return 24;
+      case 2:
+        return 12;
+      case 3:
+        return 8;
+      case 4:
+        return 6;
+      default:
+        return 24;
+    }
+  }
+
+  const groupFieldsInRows = (fields: FormField[]) => {
+    const rows: FormField[][] = [];
+    let currentRow: FormField[] = [];
+
+    fields.forEach((field) => {
+      if (currentRow.length < cols) {
+        currentRow.push(field);
+      }
+      
+      if (currentRow.length === cols) {
+        rows.push(currentRow);
+        currentRow = [];
+      }
+    });
+
+    if (currentRow.length > 0) {
+      rows.push(currentRow);
+    }
+
+    return rows;
+  };
 
   const renderFormField = (field: FormField) => {
     const { type, name, label, placeholder, readonly, validations, options, min, max, step, datepickerConfig } = field;
@@ -278,19 +318,13 @@ export const DynamicForm = ({
         onFinish={handleSubmit}
       >
         {/* Render the formItems from json */}
-        {fields.map((field, index) => (
-          <Row key={index} gutter={16}>
-            {Array.isArray(field) ? (
-              field.map((item, innerIndex) => (
-                <Col key={innerIndex} span={24 / field.length}>
-                  {renderFormField(item)}
-                </Col>
-              ))
-            ) : (
-              <Col span={24}>
+        {groupFieldsInRows(fields).map((row, rowIndex) => (
+          <Row key={rowIndex} gutter={16}>
+            {row.map((field, colIndex) => (
+              <Col key={`${rowIndex}-${colIndex}`} span={getCols(cols)}>
                 {renderFormField(field)}
               </Col>
-            )}
+            ))}
           </Row>
         ))}
 
