@@ -159,7 +159,7 @@ export const DynamicTable = ({
       ...column,
       title: column.icon ? (
         <div className="flex items-center gap-2">
-          {column.icon && React.cloneElement(column.icon)}
+          {React.isValidElement(column.icon) ? React.cloneElement(column.icon) : column.icon}
           <span className="font-medium">{column.title}</span>
         </div>
       ) : (
@@ -202,7 +202,7 @@ export const DynamicTable = ({
                     actionConfig.customActionsColor?.delete ||
                     "bg-red-600 hover:bg-red-500 text-white"
                   }`}
-                  icon={actionConfig.customIcons?.delete ? React.createElement(actionConfig.customIcons.delete.type) : <FaTrash />}
+                  icon={actionConfig.customIcons?.delete?.type ? React.createElement(actionConfig.customIcons.delete.type) : <FaTrash />}
                 />
               </Popconfirm>
             )}
@@ -216,7 +216,7 @@ export const DynamicTable = ({
                     className={`action-button transition-colors ${
                       actionConfig.customActionsColor?.edit || ""
                     }`}
-                    icon={action.icon}
+                    icon={React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
                     onClick={() => action.onClick(record as Record<string, unknown>)}
                   >
                     {action.label}
@@ -241,7 +241,7 @@ export const DynamicTable = ({
           <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
             {Icon && (
               <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                {React.isValidElement(Icon) && React.cloneElement(Icon)}
+                {React.isValidElement(Icon) ? React.cloneElement(Icon): Icon}
               </div>
             )}
             <Title
