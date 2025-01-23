@@ -359,7 +359,7 @@ export const DynamicForm = ({
       <div className="flex flex-col mb-4">
         <Title level={3} className="flex items-center gap-4">
           <Text>
-            {icon && React.createElement(icon.type, icon.props)}
+            {icon && React.cloneElement(icon)}
           </Text>
           {title}
         </Title>

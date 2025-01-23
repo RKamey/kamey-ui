@@ -288,7 +288,7 @@ export const DynamicTable = ({
                 <Button
                   type="primary"
                   className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md"
-                  icon={React.createElement(createButtonIcon.type, createButtonIcon.props)}
+                  icon={React.cloneElement(createButtonIcon) || <FaPlus />}
                   onClick={onCreate}
                 >
                   {createButtonText}
