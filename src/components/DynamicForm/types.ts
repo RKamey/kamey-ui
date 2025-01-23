@@ -66,6 +66,24 @@ export interface Options {
 }
 
 export interface Validations {
-  required?: boolean;
-  regex?: string;
+  required?: boolean | { 
+    value: boolean; 
+    message?: string; 
+  };
+  regex?: {
+    pattern: string;
+    message?: string;
+  };
+  min?: {
+    value: number;
+    message?: string;
+  };
+  max?: {
+    value: number;
+    message?: string;
+  };
+  email?: {
+    value: boolean;
+    message?: string;
+  };
 }

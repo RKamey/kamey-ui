@@ -15,9 +15,9 @@ interface DynamicCrudProps {
   fields: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;
-  createButtonIcon?: React.ElementType;
+  createButtonIcon?: React.ReactElement;
   submitButtonText?: string;
-  icon?: React.ElementType;
+  icon?: React.ReactElement;
   layout?: "horizontal" | "vertical";
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;

@@ -46,7 +46,7 @@ export const DynamicTable = ({
   onDelete,
   onRefresh,
   createButtonText = "Crear",
-  createButtonIcon = FaPlus,
+  createButtonIcon = <FaPlus />,
   columns,
   data,
   loading,
@@ -57,10 +57,10 @@ export const DynamicTable = ({
     showDelete: true,
     refreshButtonText: "Refrescar",
     customIcons: {
-      create: FaPlus,
-      edit: FaEdit,
-      delete: FaTrash,
-      refresh: FaSync,
+      create: <FaPlus />,
+      edit: <FaEdit />,
+      delete: <FaTrash />,
+      refresh: <FaSync />,
     },
     customActionsColor: {
       edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
@@ -159,7 +159,7 @@ export const DynamicTable = ({
       ...column,
       title: column.icon ? (
         <div className="flex items-center gap-2">
-          {column.icon && <column.icon className="text-primary-600" />}
+          {column.icon && React.cloneElement(column.icon)}
           <span className="font-medium">{column.title}</span>
         </div>
       ) : (
@@ -183,7 +183,7 @@ export const DynamicTable = ({
                   actionConfig.customActionsColor?.edit ||
                   "bg-blue-600 hover:bg-blue-500 text-white"
                 }`}
-                icon={React.createElement(actionConfig.customIcons?.edit || FaEdit)}
+                icon={actionConfig.customIcons?.edit || <FaEdit />}
                 onClick={() => handleEdit(record as Record<string, unknown>)}
               />
             )}
@@ -202,7 +202,7 @@ export const DynamicTable = ({
                     actionConfig.customActionsColor?.delete ||
                     "bg-red-600 hover:bg-red-500 text-white"
                   }`}
-                  icon={actionConfig.customIcons?.delete ? React.createElement(actionConfig.customIcons.delete) : null}
+                  icon={actionConfig.customIcons?.delete ? React.createElement(actionConfig.customIcons.delete.type) : <FaTrash />}
                 />
               </Popconfirm>
             )}
@@ -217,7 +217,7 @@ export const DynamicTable = ({
                       actionConfig.customActionsColor?.edit || ""
                     }`}
                     icon={action.icon}
-                    onClick={action.onClick}
+                    onClick={() => action.onClick(record as Record<string, unknown>)}
                   >
                     {action.label}
                   </Button>
@@ -241,7 +241,7 @@ export const DynamicTable = ({
           <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
             {Icon && (
               <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                <Icon className="text-primary-dark text-lg sm:text-xl" />
+                {React.isValidElement(Icon) && React.cloneElement(Icon)}
               </div>
             )}
             <Title
@@ -277,7 +277,7 @@ export const DynamicTable = ({
                 <Button
                   type="default"
                   className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
-                  icon={React.createElement(actionConfig.customIcons?.refresh || FaSync)}
+                  icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
                   <span className="text-gray-700 font-medium">{actionConfig.refreshButtonText}</span>
@@ -288,7 +288,7 @@ export const DynamicTable = ({
                 <Button
                   type="primary"
                   className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md"
-                  icon={React.createElement(createButtonIcon)}
+                  icon={React.createElement(createButtonIcon.type, createButtonIcon.props)}
                   onClick={onCreate}
                 >
                   {createButtonText}

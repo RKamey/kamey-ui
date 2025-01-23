@@ -2,7 +2,7 @@ export interface ColumnsProps {
   title?: string;
   dataIndex: string;
   key: string | number;
-  icon?: React.ElementType;
+  icon?: React.ReactElement;
   render?: (value: unknown, record: unknown) => React.ReactNode;
 }
 
@@ -22,10 +22,10 @@ export interface ThemeConfig {
 }
 
 export interface ActionIcons {
-  create?: React.ElementType;
-  edit?: React.ElementType;
-  delete?: React.ElementType;
-  refresh?: React.ElementType;
+  create?: React.ReactElement;
+  edit?: React.ReactElement;
+  delete?: React.ReactElement;
+  refresh?: React.ReactElement;
 }
 
 export interface ActionConfig {
@@ -48,13 +48,13 @@ export interface MoreActions {
   key: string;
   label?: string;
   icon?: React.ReactElement;
-  onClick: (record: unknown) => void;
+  onClick: (record: Record<string, unknown>) => void;
 }
 
 export interface DynamicTableProps {
   title?: string;
   description?: string;
-  icon?: React.ElementType;
+  icon?: React.ReactElement;
   headerDirection?: "horizontal" | "vertical";
   columns: ColumnsProps[];
   data: unknown[];
@@ -63,7 +63,7 @@ export interface DynamicTableProps {
   showCreateButton?: boolean;
   showRefreshButton?: boolean;
   createButtonText?: string;
-  createButtonIcon?: React.ElementType;
+  createButtonIcon?: React.ReactElement;
   moreActions?: MoreActions[];
   onCreate?: () => void;
   onEdit?: (record: unknown) => void;

@@ -14,7 +14,7 @@ import {
   Row,
   Col,
 } from "antd";
-import { FormField, Options } from "./types";
+import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
 import axios from "axios";
 
@@ -32,7 +32,7 @@ export interface DynamicFormProps {
   mode?: 'create' | 'update';
   title?: string;
   description?: string;
-  icon?: React.ElementType;
+  icon?: React.ReactElement;
   layout?: "vertical" | "horizontal";
   cols?: 1 | 2 | 3 | 4;
   fields: FormField[];
@@ -147,6 +147,62 @@ export const DynamicForm = ({
         return 24;
     }
   }
+
+  const getRules = (validations?: Validations[]) => {
+    if (!validations) return [];
+  
+    return validations.map(validation => {
+      const rules: Record<string, unknown> = {};
+  
+      if (validation.required) {
+        const requiredConfig = typeof validation.required === 'object' 
+          ? validation.required 
+          : { value: validation.required };
+        
+        rules.required = requiredConfig.value;
+        if (requiredConfig.message) {
+          rules.message = requiredConfig.message;
+        }
+      }
+  
+      if (validation.regex) {
+        const regexConfig = typeof validation.regex === 'object' 
+          ? validation.regex 
+          : { pattern: validation.regex };
+        
+        rules.pattern = new RegExp(regexConfig.pattern);
+        if (regexConfig.message) {
+          rules.message = regexConfig.message;
+        }
+      }
+  
+      if (validation.min) {
+        const minConfig = validation.min;
+        rules.min = minConfig.value;
+        if (minConfig.message) {
+          rules.message = minConfig.message;
+        }
+      }
+  
+      if (validation.max) {
+        const maxConfig = validation.max;
+        rules.max = maxConfig.value;
+        if (maxConfig.message) {
+          rules.message = maxConfig.message;
+        }
+      }
+  
+      if (validation.email) {
+        const emailConfig = validation.email;
+        rules.type = 'email';
+        if (emailConfig.message) {
+          rules.message = emailConfig.message;
+        }
+      }
+  
+      return rules;
+    });
+  };
 
   const groupFieldsInRows = (fields: FormField[]) => {
     const rows: FormField[][] = [];
@@ -290,7 +346,7 @@ export const DynamicForm = ({
       <Form.Item 
         label={label} 
         name={name} 
-        rules={validations}
+        rules={getRules(validations)}
       >
         {React.cloneElement(formItem)}
       </Form.Item>
@@ -303,7 +359,7 @@ export const DynamicForm = ({
       <div className="flex flex-col mb-4">
         <Title level={3} className="flex items-center gap-4">
           <Text>
-            {icon && React.createElement(icon)}
+            {icon && React.createElement(icon.type, icon.props)}
           </Text>
           {title}
         </Title>
