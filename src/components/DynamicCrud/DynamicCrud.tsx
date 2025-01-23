@@ -4,6 +4,7 @@ import { ActionConfig, ColumnsProps, MoreActions, SearchConfig, ThemeConfig } fr
 import { FormField } from "../DynamicForm/types";
 import { useState } from "react";
 import { Modal } from "antd";
+import dayjs from "dayjs";
 
 interface DynamicCrudProps {
   title?: string;
@@ -14,7 +15,8 @@ interface DynamicCrudProps {
   fields: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;
-  createButtonIcon?: React.ReactElement;
+  createButtonIcon?: React.ElementType;
+  submitButtonText?: string;
   icon?: React.ElementType;
   layout?: "horizontal" | "vertical";
   actionConfig?: ActionConfig;
@@ -25,7 +27,6 @@ interface DynamicCrudProps {
   onCreate?: (values: Record<string, unknown>) => void;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
-  submitButtonText?: string;
   apiConfig?: ApiConfig;
   initialData?: Record<string, unknown>;
   themeConfig?: ThemeConfig;
@@ -65,7 +66,7 @@ export const DynamicCrud = ({
   description,
   fields,
   showCreateButton,
-  createButtonText,
+  createButtonText = 'Crear',
   createButtonIcon,
   icon,
   layout,
@@ -77,19 +78,28 @@ export const DynamicCrud = ({
   onCreate,
   onEdit,
   onDelete,
-  submitButtonText,
+  submitButtonText = 'Guardar',
   apiConfig,
   initialData,
   themeConfig,
-  moreActions
+  moreActions,
+
 }: DynamicCrudProps): React.ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
   const [mode, setMode] = useState(initialData ? "update" : "create");
 
   // ==== [ Handlers ] ====
-  const generateDataWithKey = (data: unknown[]) => {
-    return data.map((item, index) => (typeof item === 'object' && item !== null ? { ...item, key: index } : { key: index }));
+  const formatRecordDates = (record: Record<string, unknown>): Record<string, unknown> => {
+    const formattedRecord = {...record};
+    
+    fields.forEach((field) => {
+      if (field.type === 'datepicker' && formattedRecord[field.name as string]) {
+        formattedRecord[field.name as string] = dayjs(formattedRecord[field.name] as string | number | Date | null | undefined);
+      }
+    });
+
+    return formattedRecord;
   }
 
   const handleCancel = () => {
@@ -99,7 +109,8 @@ export const DynamicCrud = ({
   }
 
   const handleEdit = (record: unknown) => {
-    setCurrentRecord(record as Record<string, unknown>);
+    const formattedRecord = formatRecordDates(record as Record<string, unknown>);
+    setCurrentRecord(formattedRecord);
     setIsModalVisible(true);
     setMode("update");
   }
@@ -116,7 +127,7 @@ export const DynamicCrud = ({
         description={description}
         icon={icon}
         columns={columns}
-        data={generateDataWithKey(data || [])}
+        data={data || []}
         showCreateButton={showCreateButton}
         createButtonText={createButtonText}
         createButtonIcon={createButtonIcon}

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Typography,
   Button,
@@ -44,8 +45,8 @@ export const DynamicTable = ({
   onEdit,
   onDelete,
   onRefresh,
-  createButtonText = "Create",
-  createButtonIcon = <FaPlus />,
+  createButtonText = "Crear",
+  createButtonIcon = FaPlus,
   columns,
   data,
   loading,
@@ -54,10 +55,12 @@ export const DynamicTable = ({
     showDefaultActions: true,
     showEdit: true,
     showDelete: true,
+    refreshButtonText: "Refrescar",
     customIcons: {
-      create: <FaPlus />,
-      edit: <FaEdit />,
-      delete: <FaTrash />,
+      create: FaPlus,
+      edit: FaEdit,
+      delete: FaTrash,
+      refresh: FaSync,
     },
     customActionsColor: {
       edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
@@ -73,6 +76,14 @@ export const DynamicTable = ({
   const [searchTerm, setSearchTerm] = useState("");
 
   // ==== [ Handlers ] ====
+  // generate key for data if not present
+  const dataWithKey = data.map((item, index) => {
+    if (typeof item === "object" && item !== null) {
+      return { ...item, key: index };
+    }
+    return { key: index };
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const searchInObject = (obj: any, term: string): boolean => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -172,11 +183,7 @@ export const DynamicTable = ({
                   actionConfig.customActionsColor?.edit ||
                   "bg-blue-600 hover:bg-blue-500 text-white"
                 }`}
-                icon={
-                  actionConfig.customIcons?.edit || (
-                    <FaEdit className="text-white text-sm" />
-                  )
-                }
+                icon={React.createElement(actionConfig.customIcons?.edit || FaEdit)}
                 onClick={() => handleEdit(record as Record<string, unknown>)}
               />
             )}
@@ -195,11 +202,7 @@ export const DynamicTable = ({
                     actionConfig.customActionsColor?.delete ||
                     "bg-red-600 hover:bg-red-500 text-white"
                   }`}
-                  icon={
-                    actionConfig.customIcons?.delete || (
-                      <FaTrash className="text-white text-sm" />
-                    )
-                  }
+                  icon={actionConfig.customIcons?.delete ? React.createElement(actionConfig.customIcons.delete) : null}
                 />
               </Popconfirm>
             )}
@@ -274,12 +277,10 @@ export const DynamicTable = ({
                 <Button
                   type="default"
                   className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
-                  icon={
-                    <FaSync className="text-gray-600 hover:rotate-180 transition-transform duration-500" />
-                  }
+                  icon={React.createElement(actionConfig.customIcons?.refresh || FaSync)}
                   onClick={handleRefresh}
                 >
-                  <span className="text-gray-700 font-medium">Refrescar</span>
+                  <span className="text-gray-700 font-medium">{actionConfig.refreshButtonText}</span>
                 </Button>
               )}
 
@@ -287,7 +288,7 @@ export const DynamicTable = ({
                 <Button
                   type="primary"
                   className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md"
-                  icon={actionConfig.customIcons?.create || createButtonIcon}
+                  icon={React.createElement(createButtonIcon)}
                   onClick={onCreate}
                 >
                   {createButtonText}
@@ -301,7 +302,7 @@ export const DynamicTable = ({
         <div className="overflow-x-auto">
           <Table
             columns={processColumns(columns)}
-            dataSource={filteredData}
+            dataSource={dataWithKey}
             loading={loading}
             pagination={{
               ...paginationConfig,

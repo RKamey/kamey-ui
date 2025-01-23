@@ -22,9 +22,10 @@ export interface ThemeConfig {
 }
 
 export interface ActionIcons {
-  create?: React.ReactElement;
-  edit?: React.ReactElement;
-  delete?: React.ReactElement;
+  create?: React.ElementType;
+  edit?: React.ElementType;
+  delete?: React.ElementType;
+  refresh?: React.ElementType;
 }
 
 export interface ActionConfig {
@@ -32,6 +33,7 @@ export interface ActionConfig {
   showEdit?: boolean;
   showDelete?: boolean;
   customIcons?: ActionIcons;
+  refreshButtonText?: string;
   customActionsColor?: {
     edit?: string;
     delete?: string;
@@ -61,7 +63,7 @@ export interface DynamicTableProps {
   showCreateButton?: boolean;
   showRefreshButton?: boolean;
   createButtonText?: string;
-  createButtonIcon?: React.ReactElement;
+  createButtonIcon?: React.ElementType;
   moreActions?: MoreActions[];
   onCreate?: () => void;
   onEdit?: (record: unknown) => void;
