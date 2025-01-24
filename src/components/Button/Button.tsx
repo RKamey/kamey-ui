@@ -21,7 +21,7 @@ export interface BtnProps {
 export const Btn = ({ children, type = 'primary', size = 'middle', onClick }: BtnProps): React.ReactNode => {
   return (
     <Button
-      className="rounded-md"
+      className="rounded-md shadow-md"
       type={type} 
       size={size} 
       onClick={onClick}
