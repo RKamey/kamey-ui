@@ -26,8 +26,8 @@
     "antd": "^5.23.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "dependencies": {
     "jspdf": "^2.5.2",
@@ -41,7 +41,7 @@
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
     "antd": "^5.23.0",
-    "autoprefixer": "^1 0.4.20",
+    "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "eslint": "^9.17.0",
