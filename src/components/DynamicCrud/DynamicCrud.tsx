@@ -6,10 +6,15 @@ import { useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
 
+type OnCreateHandler = 
+  | ((values: Record<string, unknown>) => void)
+  | (() => void);
+
 interface DynamicCrudProps {
   title?: string;
   formTitle?: string;
   description?: string;
+  formDescription?: string;
   columns: ColumnsProps[];
   data?: unknown[];
   fields: FormField[];
@@ -24,7 +29,8 @@ interface DynamicCrudProps {
   showRefreshButton?: boolean;
   headerDirection?: "horizontal" | "vertical";
   loading?: boolean;
-  onCreate?: (values: Record<string, unknown>) => void;
+  onCreate?: OnCreateHandler;
+  createRedirect?: boolean;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
   apiConfig?: ApiConfig;
@@ -42,7 +48,9 @@ interface DynamicCrudProps {
  * @param {ColumnsProps[]} props.columns - The columns of the table
  * @param {unknown[]} props.data - The data of the table
  * @param {string} props.title - The title of the table
+ * @param {string} props.formTitle - The title of the form
  * @param {string} props.description - The description of the table
+ * @param {string} props.formDescription - The description of the form
  * @param {FormField[]} props.fields - The fields of the form
  * @param {boolean} props.showCreateButton - Whether to show the create button
  * @param {string} props.createButtonText - The text of the create button
@@ -53,6 +61,7 @@ interface DynamicCrudProps {
  * @param {SearchConfig} props.searchConfig - The search configuration of the table
  * @param {boolean} props.loading - Whether the table is loading
  * @param {() => void} props.onCreate - The function to be called when the create button is clicked
+ * @param {boolean} props.createRedirect - Whether to redirect to the create form
  * @param {() => void} props.onEdit - The function to be called when the edit button is clicked
  * @param {() => void} props.onDelete - The function to be called when the delete button is clicked
  * @param {string} props.submitButtonText - The text of the submit button
@@ -66,6 +75,7 @@ export const DynamicCrud = ({
   title,
   formTitle,
   description,
+  formDescription,
   fields,
   showCreateButton,
   createButtonText = 'Crear',
@@ -78,6 +88,7 @@ export const DynamicCrud = ({
   showRefreshButton,
   loading,
   onCreate,
+  createRedirect = false,
   onEdit,
   onDelete,
   submitButtonText = 'Guardar',
@@ -103,6 +114,17 @@ export const DynamicCrud = ({
     });
 
     return formattedRecord;
+  }
+  
+  const handleCreate = () => {
+    if (createRedirect) {
+      if (typeof onCreate === 'function') {
+        onCreate({});
+      }
+    } else {
+      setIsModalVisible(true);
+      setMode("create");
+    }
   }
 
   const handleCancel = () => {
@@ -139,7 +161,7 @@ export const DynamicCrud = ({
         headerDirection={headerDirection}
         showRefreshButton={showRefreshButton}
         loading={loading}
-        onCreate={() => setIsModalVisible(true)}
+        onCreate={handleCreate}
         onEdit={handleEdit}
         onDelete={handleDelete}
         themeConfig={themeConfig}
@@ -154,7 +176,7 @@ export const DynamicCrud = ({
         >
           <DynamicForm 
             title={formTitle || title}
-            description={description}
+            description={formDescription || description}
             fields={fields}
             icon={icon}
             layout={layout}
