@@ -72,4 +72,5 @@ export interface DynamicTableProps {
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
   themeConfig?: ThemeConfig;
+  customCols?: boolean;
 }

@@ -32,6 +32,7 @@ interface DynamicCrudProps {
   themeConfig?: ThemeConfig;
   moreActions?: MoreActions[];
   formCols?: 1 | 2 | 3 | 4;
+  formCustomCols?: boolean;
 }
 
 /**
@@ -84,7 +85,8 @@ export const DynamicCrud = ({
   initialData,
   themeConfig,
   moreActions,
-  formCols = 1
+  formCols = 1,
+  formCustomCols = false
 }: DynamicCrudProps): React.ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
@@ -173,6 +175,7 @@ export const DynamicCrud = ({
             submitButtonText={submitButtonText}
             apiConfig={apiConfig}
             cols={formCols}
+            customCols={formCustomCols}
           />
         </Modal>
       )}

@@ -35,11 +35,12 @@ export interface DynamicFormProps {
   icon?: React.ReactElement;
   layout?: "vertical" | "horizontal";
   cols?: 1 | 2 | 3 | 4;
-  fields: FormField[];
+  fields: FormField[] | FormField[][];
   submitButtonText?: string;
   onSubmit?: (data: unknown) => void;
   apiConfig?: ApiConfig;
   initialData?: Record<string, unknown>;
+  customCols?: boolean;
 }
 
 /**
@@ -70,6 +71,7 @@ export const DynamicForm = ({
   submitButtonText = "Enviar",
   onSubmit,
   initialData = {},
+  customCols = false,
 }: DynamicFormProps): React.ReactNode => {
   const [form] = Form.useForm();
   const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>({});
@@ -79,34 +81,45 @@ export const DynamicForm = ({
     if ((mode === 'update' && initialData) || initialData) {
       const newInitialData = { ...initialData };
       
-      // Iteramos sobre cada campo
-      fields.forEach(field => {
-        const value = newInitialData[field.name];
-        
-        if (field.type === 'datepicker' && value) {
-          const converted = dayjs(value as string);
-          if (converted.isValid()) {
-            newInitialData[field.name] = converted;
+      fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field))
+        .forEach(field => {
+          const value = newInitialData[field.name];
+          
+          if (field.type === 'datepicker' && value) {
+            const converted = dayjs(value as string);
+            if (converted.isValid()) {
+              newInitialData[field.name] = converted;
+            }
           }
-        }
-      });
+        });
       
       form.setFieldsValue(newInitialData);
     }
   }, [form, mode, initialData, fields]);
-
+  
   useEffect(() => {
-    fields.forEach(field => {
-      if (field.type === 'select' && 
-          field.selectConfig?.apiConfig && 
-          !field.selectConfig.dependsOn) {
-        fetchSelectOptions(field);
-      }
-    });
+    fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field))
+      .forEach(field => {
+        if (field.type === 'select' && 
+            field.selectConfig?.apiConfig && 
+            !field.selectConfig.dependsOn) {
+          fetchSelectOptions(field);
+        }
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ==== [ Functions ] ====
+  const processFields = (fields: FormField[] | FormField[][]) => {
+    if (customCols) {
+      return fields.map(row => 
+        Array.isArray(row) ? row : [row]
+      );
+    }
+  
+    return groupFieldsInRows(fields as FormField[]);
+  }
+
   const handleSubmit = (values: Record<string, unknown>) => {
     console.log(values);
     onSubmit?.(values);
@@ -132,22 +145,7 @@ export const DynamicForm = ({
 
     setSelectOptions(prev => ({ ...prev, [field.name]: options }));
   }
-
-  const getCols = (cols: number) => {
-    switch (cols) {
-      case 1:
-        return 24;
-      case 2:
-        return 12;
-      case 3:
-        return 8;
-      case 4:
-        return 6;
-      default:
-        return 24;
-    }
-  }
-
+  
   const getRules = (validations?: Validations[]) => {
     if (!validations) return [];
   
@@ -374,16 +372,15 @@ export const DynamicForm = ({
         onFinish={handleSubmit}
       >
         {/* Render the formItems from json */}
-        {groupFieldsInRows(fields).map((row, rowIndex) => (
-          <Row key={rowIndex} gutter={16}>
-            {row.map((field, colIndex) => (
-              <Col key={`${rowIndex}-${colIndex}`} span={getCols(cols)}>
-                {renderFormField(field)}
-              </Col>
-            ))}
-          </Row>
-        ))}
-
+        {processFields(fields).map((row, rowIndex) => (
+  <Row key={rowIndex} gutter={16}>
+    {row.map((field: FormField, colIndex: number) => (
+      <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
+        {renderFormField(field)}
+      </Col>
+    ))}
+  </Row>
+))}
         <Row justify="end">
           <Form.Item>
             <Button 
