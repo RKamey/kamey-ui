@@ -188,7 +188,10 @@ export const DynamicForm = ({
     const rows: FormField[][] = [];
     let currentRow: FormField[] = [];
 
-    fields.forEach((field) => {
+    // Filtrar campos ocultos antes de agruparlos
+    const visibleFields = fields.filter(field => !field.hidden);
+
+    visibleFields.forEach((field) => {
       if (currentRow.length < cols) {
         currentRow.push(field);
       }
@@ -342,7 +345,6 @@ export const DynamicForm = ({
           <h1 className="text-lg font-semibold">{title}</h1>
         </div>
         <p className="text-sm text-gray-500">{description}</p>
-        <hr className="my-4" />
       </div>
 
       {/* Form */}
