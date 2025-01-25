@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'rangepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload';
+export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'rangepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload' | 'custom' | 'hidden';
 export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
 export interface DatepickerConfig {
   format?: string;
@@ -52,6 +52,7 @@ export interface FormField {
     transform?: (value: string | number) => Record<string, string>;
   }
   checkboxConfig?: CheckboxConfig;
+  hidden?: boolean;
 }
 
 export interface CheckboxConfig {
@@ -66,9 +67,9 @@ export interface Options {
 }
 
 export interface Validations {
-  required?: boolean | { 
-    value: boolean; 
-    message?: string; 
+  required?: boolean | {
+    value: boolean;
+    message?: string;
   };
   regex?: {
     pattern: string;

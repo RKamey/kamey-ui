@@ -17,24 +17,10 @@
  */
 
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Button,
-  Input,
-  InputNumber,
-  Select,
-  DatePicker,
-  Checkbox,
-  Radio,
-  Switch,
-  Slider,
-  Row,
-  Col,
-} from "antd";
+import { Form, Button, Input, InputNumber, Select, DatePicker, Checkbox, Radio, Switch, Slider, Row, Col } from "antd";
 import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
 import axios from "axios";
-
 
 export interface ApiConfig {
   url: string;
@@ -221,9 +207,9 @@ export const DynamicForm = ({
   };
 
   const renderFormField = (field: FormField) => {
-    const { type, name, label, placeholder, readonly, validations, options, min, max, step, datepickerConfig } = field;
+    const { type, name, label, placeholder, readonly, validations, options, min, max, step, datepickerConfig, hidden } = field;
 
-    if (readonly) {
+    if (readonly || hidden) {
       return null;
     }
 
@@ -375,6 +361,12 @@ export const DynamicForm = ({
               </Col>
             ))}
           </Row>
+        ))}
+        {/* Add hidden fields */}
+        {fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field) && field.hidden === true).map((field) => (
+          <Form.Item key={field.name} name={field.name} hidden>
+            <Input type="hidden" />
+          </Form.Item>
         ))}
         <Row justify="end">
           <Form.Item>
