@@ -14,6 +14,7 @@ type OnCreateHandler =
 interface DynamicCrudProps {
   title?: string;
   formTitle?: string;
+  formTitles?: string[];
   description?: string;
   formDescription?: string;
   columns: ColumnsProps[];
@@ -47,6 +48,7 @@ export const DynamicCrud = ({
   data,
   title,
   formTitle,
+  formTitles,
   description,
   formDescription,
   fields,
@@ -119,9 +121,10 @@ export const DynamicCrud = ({
   }
 
   // ==== [ Títulos e íconos ] ====
-  const defaultCreateTitle = "Crear nuevo registro";
-  const defaultEditTitle = "Editar registro";
-  const defaultCreateIcon = <PlusOutlined />;
+
+  const defaultCreateTitle = formTitles?.[0] || "Crear nuevo registro";
+  const defaultEditTitle = formTitles?.[1] || "Editar registro";
+  const defaultCreateIcon = createButtonIcon || <PlusOutlined />;
   const defaultEditIcon = <EditOutlined />;
 
   const formTitleToShow = formTitle || (mode === "create" ? defaultCreateTitle : defaultEditTitle);

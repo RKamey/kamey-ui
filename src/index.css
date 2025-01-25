@@ -27,3 +27,22 @@
   padding: 4px 8px;
   border-radius: 6px;
 }
+
+button.ant-btn-warning,
+button.ant-btn-info,
+button.ant-btn-danger,
+button.ant-btn-dangerous,
+button.ant-btn-primary,
+button.ant-btn-success,
+button.ant-btn-reload,
+button.ant-btn-download {
+  border: 2px solid;
+  box-shadow: 0 0 0 0;
+  background-color: #fff;
+  font-weight: bolder;
+}
+
+button.ant-btn-warning { border-color: #ffca2c; color: #ffca2c; }
+button.ant-btn-danger, button.ant-btn-dangerous { border-color: #dc3545; color: #dc3545; }
+button.ant-btn-warning:hover { border-color: #ffca2c; color: #ffca2c; }
+button.ant-btn-danger:hover, button.ant-btn-dangerous:hover { border-color: #dc3545; color: #dc3545; }

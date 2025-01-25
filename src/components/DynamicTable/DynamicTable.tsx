@@ -202,7 +202,7 @@ export const DynamicTable = ({
           <div className="flex items-center gap-3">
             {actionConfig.showEdit && (
               <Button
-                type="text"
+                type="warning"
                 className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
                   actionConfig.customActionsColor?.edit ||
                   "bg-blue-600 hover:bg-blue-500 text-white"
@@ -219,7 +219,7 @@ export const DynamicTable = ({
                 cancelText="Cancelar"
               >
                 <Button
-                  type="text"
+                  type="danger"
                   className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
                     actionConfig.customActionsColor?.delete ||
                     "bg-red-600 hover:bg-red-500 text-white"
