@@ -1,19 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useMemo, useState } from "react";
-import {
-  Typography,
-  Button,
-  Input,
-  Table,
-  Popconfirm,
-  ConfigProvider,
-} from "antd";
-import { FaPlus, FaEdit, FaTrash, FaSync } from "react-icons/fa";
-import { ColumnsProps, DynamicTableProps } from "./types";
-
-const { Title, Text } = Typography;
-const { Search } = Input;
-
 /**
  * @alias DynamicTableProps
  * @description The properties object for the DynamicTable component.
@@ -75,7 +59,29 @@ const { Search } = Input;
  *   loading={false}
  * />
  */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useMemo, useState } from "react";
+import {
+  Typography,
+  Input,
+  Table,
+  Popconfirm,
+  ConfigProvider,
+  Button,
+  Space,
+  TableProps,
+} from "antd";
+import { FaPlus, FaEdit, FaTrash, FaSync } from "react-icons/fa";
+import { ColumnsProps, DynamicTableProps } from "./types";
+import { SorterResult } from "antd/es/table/interface";
 
+const { Title, Text } = Typography;
+const { Search } = Input;
+
+type OnChange = NonNullable<TableProps<Record<string, unknown>>['onChange']>;
+type Filters = Parameters<OnChange>[1];
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
 export const DynamicTable = ({
   title,
@@ -105,8 +111,8 @@ export const DynamicTable = ({
       refresh: <FaSync />,
     },
     customActionsColor: {
-      edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
-      delete: "!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+      edit: "!bg-yellow-50 hover:!bg-yellow-100 !text-yellow-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+      delete: "!bg-red-50 hover:!bg-red-100 !text-red-600 !border-none shadow-sm hover:shadow transition-all duration-300",
     },
   },
   searchConfig = {
@@ -116,8 +122,25 @@ export const DynamicTable = ({
   themeConfig,
 }: DynamicTableProps): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({});
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const dataWithKey = useMemo(() => data.map((item, index) => (typeof item === 'object' && item !== null ? { ...item, key: index } : { key: index })), [data]);
+
+  const handleChange: OnChange = (pagination, filters, sorter) => {
+    console.log('Various parameters', pagination, filters, sorter);
+    setFilteredInfo(filters);
+    setSortedInfo(sorter as Sorts);
+  };
+
+  const clearFilters = () => {
+    setFilteredInfo({});
+  };
+
+  const clearAll = () => {
+    setFilteredInfo({});
+    setSortedInfo({});
+  };
 
   const searchInObject = (obj: Record<string, unknown>, term: string): boolean => {
     return Object.values(obj).some((value: unknown) => {
@@ -190,6 +213,9 @@ export const DynamicTable = ({
         <span className="font-medium">{column.title}</span>
       ),
       className: "py-4 px-6 bg-white",
+      sorter: column.sorter || false, // Agregar sorter si está definido
+      sortOrder: sortedInfo.columnKey === column.dataIndex ? sortedInfo.order : null,
+      filteredValue: filteredInfo[column.dataIndex] || null,
     }));
 
     if (actionConfig.showDefaultActions) {
@@ -201,15 +227,13 @@ export const DynamicTable = ({
         render: (_: unknown, record: unknown) => (
           <div className="flex items-center gap-3">
             {actionConfig.showEdit && (
-              <Button
-                type="warning"
-                className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                  actionConfig.customActionsColor?.edit ||
-                  "bg-blue-600 hover:bg-blue-500 text-white"
-                }`}
-                icon={actionConfig.customIcons?.edit || <FaEdit />}
+              <button
+                title="Editar"
+                className={`p-2 rounded-lg hover:bg-yellow-100 text-yellow-600 transition-all duration-300 ${actionConfig.customActionsColor?.edit}`}
                 onClick={() => handleEdit(record as Record<string, unknown>)}
-              />
+              >
+                <FaEdit />
+              </button>
             )}
             {actionConfig.showDelete && (
               <Popconfirm
@@ -218,28 +242,22 @@ export const DynamicTable = ({
                 okText="Eliminar"
                 cancelText="Cancelar"
               >
-                <Button
-                  type="danger"
-                  className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                    actionConfig.customActionsColor?.delete ||
-                    "bg-red-600 hover:bg-red-500 text-white"
-                  }`}
-                  icon={actionConfig.customIcons?.delete?.type ? React.createElement(actionConfig.customIcons.delete.type) : <FaTrash />}
-                />
+                <button
+                  title="Eliminar"
+                  className={`p-2 rounded-lg hover:bg-red-100 text-red-600 transition-all duration-300 ${actionConfig.customActionsColor?.delete}`}
+                >
+                  <FaTrash />
+                </button>
               </Popconfirm>
             )}
             {moreActions?.map((action) => (
-              <Button
+              <button
                 key={action.key}
-                type="text"
-                className={`action-button transition-colors ${
-                  actionConfig.customActionsColor?.edit || ""
-                }`}
-                icon={React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
+                className={`p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-all duration-300`}
                 onClick={() => action.onClick(record as Record<string, unknown>)}
               >
-                {action.label}
-              </Button>
+                {React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
+              </button>
             ))}
           </div>
         ),
@@ -282,29 +300,32 @@ export const DynamicTable = ({
               />
 
               {showRefreshButton && (
-                <Button
-                  type="default"
+                <button
                   className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
-                  icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
+                  <FaSync className="text-gray-700" />
                   <span className="text-gray-700 font-medium">{actionConfig.refreshButtonText}</span>
-                </Button>
+                </button>
               )}
 
               {showCreateButton && (
-                <Button
-                  type="primary"
-                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md"
-                  icon={React.cloneElement(createButtonIcon) || <FaPlus />}
+                <button
+                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white transition-all duration-200 shadow-sm hover:shadow-md rounded-lg px-4 h-8"
                   onClick={onCreate}
                 >
+                  {React.cloneElement(createButtonIcon) || <FaPlus />}
                   {createButtonText}
-                </Button>
+                </button>
               )}
             </div>
           </div>
         </div>
+
+        <Space style={{ marginBottom: 16 }}>
+          <Button onClick={clearFilters}>Limpiar filtros</Button>
+          <Button onClick={clearAll}>Limpiar filtros y ordenamiento</Button>
+        </Space>
 
         <div className="overflow-x-auto">
           <Table
@@ -319,6 +340,7 @@ export const DynamicTable = ({
             }}
             className="dynamic-table"
             scroll={{ x: "max-content" }}
+            onChange={(pagination, filters, sorter, extra) => handleChange(pagination, filters, sorter as SorterResult<Record<string, unknown>> | SorterResult<Record<string, unknown>>[], extra)}
           />
         </div>
       </div>

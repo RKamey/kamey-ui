@@ -4,6 +4,7 @@ export interface ColumnsProps {
   key: string | number;
   icon?: React.ReactElement;
   render?: (value: unknown, record: unknown) => React.ReactNode;
+  sorter?: boolean | ((a: unknown, b: unknown) => number);
 }
 
 export interface ThemeConfig {
