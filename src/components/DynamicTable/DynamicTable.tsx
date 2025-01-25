@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useMemo, useState } from "react";
 import {
   Typography,
   Button,
@@ -7,34 +8,75 @@ import {
   Popconfirm,
   ConfigProvider,
 } from "antd";
-import { ColumnsProps, DynamicTableProps } from "./types";
 import { FaPlus, FaEdit, FaTrash, FaSync } from "react-icons/fa";
-import { useMemo, useState } from "react";
+import { ColumnsProps, DynamicTableProps } from "./types";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
 
 /**
- * @description
- * The DynamicTable component is a table that allows you to display and manage data.
- * It includes a search bar, a create button, and action buttons for each row.
- * @param {DynamicTableProps} props
- * @param {string} props.title - The title of the table
- * @param {React.ElementType} props.icon - The icon of the table
- * @param {string} props.description - The description of the table
- * @param {boolean} props.showCreateButton - Whether to show the create button
- * @param {() => void} props.onCreate - The function to be called when the create button is clicked
- * @param {() => void} props.onEdit - The function to be called when the edit button is clicked
- * @param {() => void} props.onDelete - The function to be called when the delete button is clicked
- * @param {string} props.createButtonText - The text of the create button
- * @param {React.ReactElement} props.createButtonIcon - The icon of the create button
- * @param {ColumnsProps[]} props.columns - The columns of the table
- * @param {unknown[]} props.data - The data of the table
- * @param {boolean} props.loading - Whether the table is loading
- * @param {ActionConfig} props.actionConfig - The action configuration of the table
- * @param {SearchConfig} props.searchConfig - The search configuration of the table
- * @returns {React.ReactNode}
+ * @alias DynamicTableProps
+ * @description The properties object for the DynamicTable component.
+ * @author @RKamey @Guada8a
+ * @param {Object} props - The properties object.
+ * @param {string} props.title - The title of the table.
+ * @param {React.ReactNode} [props.icon] - The icon to display next to the title.
+ * @param {string} [props.description] - The description of the table.
+ * @param {boolean} [props.showCreateButton] - Whether to show the create button.
+ * @param {boolean} [props.showRefreshButton] - Whether to show the refresh button.
+ * @param {() => void} [props.onCreate] - Callback function when the create button is clicked.
+ * @param {(record: Record<string, unknown>) => void} [props.onEdit] - Callback function when the edit button is clicked.
+ * @param {(record: Record<string, unknown>) => void} [props.onDelete] - Callback function when the delete button is clicked.
+ * @param {() => void} [props.onRefresh] - Callback function when the refresh button is clicked.
+ * @param {string} [props.createButtonText="Crear"] - The text for the create button.
+ * @param {React.ReactNode} [props.createButtonIcon=<FaPlus />] - The icon for the create button.
+ * @param {ColumnsProps[]} props.columns - The columns configuration for the table.
+ * @param {Record<string, unknown>[]} props.data - The data to display in the table.
+ * @param {boolean} [props.loading] - Whether the table is in a loading state.
+ * @param {Array<{ key: string, label: string, icon: React.ReactNode, onClick: (record: Record<string, unknown>) => void }>} [props.moreActions] - Additional actions to display in the actions column.
+ * @param {Object} [props.actionConfig] - Configuration for the actions column.
+ * @param {boolean} [props.actionConfig.showDefaultActions=true] - Whether to show the default actions (edit, delete).
+ * @param {boolean} [props.actionConfig.showEdit=true] - Whether to show the edit button.
+ * @param {boolean} [props.actionConfig.showDelete=true] - Whether to show the delete button.
+ * @param {string} [props.actionConfig.refreshButtonText="Refrescar"] - The text for the refresh button.
+ * @param {Object} [props.actionConfig.customIcons] - Custom icons for the actions.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.create=<FaPlus />] - Custom icon for the create button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.edit=<FaEdit />] - Custom icon for the edit button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.delete=<FaTrash />] - Custom icon for the delete button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.refresh=<FaSync />] - Custom icon for the refresh button.
+ * @param {Object} [props.actionConfig.customActionsColor] - Custom colors for the actions.
+ * @param {string} [props.actionConfig.customActionsColor.edit] - Custom color for the edit button.
+ * @param {string} [props.actionConfig.customActionsColor.delete] - Custom color for the delete button.
+ * @param {Object} [props.searchConfig] - Configuration for the search functionality.
+ * @param {string[]} [props.searchConfig.searchableFields=[]] - Fields to search within.
+ * @param {(item: Record<string, unknown>, term: string) => boolean} [props.searchConfig.customSearch] - Custom search function.
+ * @param {Object} [props.themeConfig] - Theme configuration for the table.
+ * 
+ * @example
+ * <DynamicTable
+ *   title="User List"
+ *   icon={<FaUsers />}
+ *   description="List of all users"
+ *   showCreateButton={true}
+ *   showRefreshButton={true}
+ *   onCreate={() => console.log('Create button clicked')}
+ *   onEdit={(record) => console.log('Edit button clicked', record)}
+ *   onDelete={(record) => console.log('Delete button clicked', record)}
+ *   onRefresh={() => console.log('Refresh button clicked')}
+ *   createButtonText="Add User"
+ *   columns={[
+ *     { title: 'Name', dataIndex: 'name', key: 'name' },
+ *     { title: 'Email', dataIndex: 'email', key: 'email' },
+ *   ]}
+ *   data={[
+ *     { name: 'John Doe', email: 'john@example.com' },
+ *     { name: 'Jane Doe', email: 'jane@example.com' },
+ *   ]}
+ *   loading={false}
+ * />
  */
+
+
 export const DynamicTable = ({
   title,
   icon: Icon,
@@ -75,31 +117,21 @@ export const DynamicTable = ({
 }: DynamicTableProps): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ==== [ Handlers ] ====
-  // generate key for data if not present
-  const dataWithKey = data.map((item, index) => {
-    if (typeof item === "object" && item !== null) {
-      return { ...item, key: index };
-    }
-    return { key: index };
-  });
+  const dataWithKey = useMemo(() => data.map((item, index) => (typeof item === 'object' && item !== null ? { ...item, key: index } : { key: index })), [data]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const searchInObject = (obj: any, term: string): boolean => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return Object.values(obj).some((value: any) => {
+  const searchInObject = (obj: Record<string, unknown>, term: string): boolean => {
+    return Object.values(obj).some((value: unknown) => {
       if (value === null || value === undefined) return false;
 
       if (typeof value === "object") {
-        return searchInObject(value, term);
+        return typeof value === 'object' && value !== null && !Array.isArray(value) ? searchInObject(value as Record<string, unknown>, term) : false;
       }
 
       return value.toString().toLowerCase().includes(term.toLowerCase());
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const searchByFields = (item: any, term: string, fields: string[]) => {
+  const searchByFields = (item: Record<string, unknown>, term: string, fields: string[]) => {
     return fields.some((field) => {
       const value = item[field];
       if (value === null || value === undefined) return false;
@@ -108,24 +140,20 @@ export const DynamicTable = ({
   };
 
   const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
+    if (!searchTerm) return dataWithKey;
 
-    return data.filter((item) => {
+    return dataWithKey.filter((item) => {
       if (searchConfig.customSearch) {
         return searchConfig.customSearch(item, searchTerm);
       }
 
-      if (
-        searchConfig.searchableFields &&
-        searchConfig.searchableFields.length > 0
-      ) {
+      if (searchConfig.searchableFields && searchConfig.searchableFields.length > 0) {
         return searchByFields(item, searchTerm, searchConfig.searchableFields);
       }
 
       return searchInObject(item, searchTerm);
     });
-    // eslint-disable-next-line
-  }, [data, searchTerm, searchConfig]);
+  }, [dataWithKey, searchTerm, searchConfig]);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -134,24 +162,20 @@ export const DynamicTable = ({
   const paginationConfig = {
     pageSize: 10,
     showSizeChanger: true,
-    showTotal: (total: number) => `Total ${total} registros`,
+    showTotal: (total: number) => `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
     className: "custom-pagination",
   };
 
   const handleEdit = (record: Record<string, unknown>) => {
-    console.log("Editando registro:", record);
     onEdit?.(record);
   };
 
   const handleDelete = (record: Record<string, unknown>) => {
-    console.log("Eliminando registro:", record);
     onDelete?.(record);
   };
 
   const handleRefresh = async () => {
-    if (onRefresh) {
-      await onRefresh();
-    }
+    onRefresh?.();
   };
 
   const processColumns = (columns: ColumnsProps[]) => {
@@ -190,9 +214,7 @@ export const DynamicTable = ({
             {actionConfig.showDelete && (
               <Popconfirm
                 title="¿Estás seguro de que deseas eliminar este registro?"
-                onConfirm={() =>
-                  handleDelete(record as Record<string, unknown>)
-                }
+                onConfirm={() => handleDelete(record as Record<string, unknown>)}
                 okText="Eliminar"
                 cancelText="Cancelar"
               >
@@ -206,23 +228,19 @@ export const DynamicTable = ({
                 />
               </Popconfirm>
             )}
-            {moreActions &&
-              moreActions.length > 0 &&
-              moreActions.map((action) => {
-                return (
-                  <Button
-                    key={action.key}
-                    type="text"
-                    className={`action-button transition-colors ${
-                      actionConfig.customActionsColor?.edit || ""
-                    }`}
-                    icon={React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
-                    onClick={() => action.onClick(record as Record<string, unknown>)}
-                  >
-                    {action.label}
-                  </Button>
-                );
-              })}
+            {moreActions?.map((action) => (
+              <Button
+                key={action.key}
+                type="text"
+                className={`action-button transition-colors ${
+                  actionConfig.customActionsColor?.edit || ""
+                }`}
+                icon={React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
+                onClick={() => action.onClick(record as Record<string, unknown>)}
+              >
+                {action.label}
+              </Button>
+            ))}
           </div>
         ),
       };
@@ -235,35 +253,25 @@ export const DynamicTable = ({
   return (
     <ConfigProvider theme={themeConfig}>
       <div className="p-4 bg-white rounded-xl shadow-lg">
-        {/* Header */}
         <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-          {/* Title and Icon Section */}
           <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
             {Icon && (
               <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                {React.isValidElement(Icon) ? React.cloneElement(Icon): Icon}
+                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
               </div>
             )}
-            <Title
-              level={4}
-              className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl"
-            >
+            <Title level={4} className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
               {title}
             </Title>
           </div>
 
-          {/* Content Section */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            {/* Description - Lado izquierdo */}
             {description && (
               <div className="w-full sm:flex-1">
-                <Text className="text-gray-600 text-sm leading-relaxed">
-                  {description}
-                </Text>
+                <Text className="text-gray-600 text-sm leading-relaxed">{description}</Text>
               </div>
             )}
 
-            {/* Search y Create Button - Lado derecho */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
               <Search
                 allowClear
@@ -298,17 +306,14 @@ export const DynamicTable = ({
           </div>
         </div>
 
-        {/* Table Section */}
         <div className="overflow-x-auto">
           <Table
             columns={processColumns(columns)}
-            dataSource={dataWithKey}
+            dataSource={filteredData}
             loading={loading}
             pagination={{
               ...paginationConfig,
               total: filteredData.length,
-              showTotal: (total) =>
-                `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
               responsive: true,
               className: "px-4 sm:px-6 py-3 sm:py-4",
             }}

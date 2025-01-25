@@ -1,3 +1,22 @@
+/**
+ * @alias DynamicForm
+ * @description The DynamicForm component is a form that allows you to create and update records.
+ * @param {DynamicFormProps} props
+ * @param {'create' | 'update'} props.mode - The mode of the form
+ * @param {string} props.title - The title of the form
+ * @param {string} props.description - The description of the form
+ * @param {React.ElementType} props.icon - The icon of the form
+ * @param {'vertical' | 'horizontal'} props.layout - The layout of the form
+ * @param {number} props.cols - The number of columns of the form
+ * @param {FormField[]} props.fields - The fields of the form
+ * @param {string} props.submitButtonText - The text of the submit button
+ * @param {() => void} props.onSubmit - The function to be called when the submit button is clicked
+ * @param {Record<string, unknown>} props.initialData - The initial data of the form
+ * @param {ApiConfig} props.apiConfig - The API configuration of the form
+ * @returns {React.ReactNode}
+ */
+
+
 import React, { useEffect, useState } from "react";
 import {
   Typography,
@@ -43,23 +62,6 @@ export interface DynamicFormProps {
   customCols?: boolean;
 }
 
-/**
- * @alias DynamicForm
- * @description The DynamicForm component is a form that allows you to create and update records.
- * @param {DynamicFormProps} props
- * @param {'create' | 'update'} props.mode - The mode of the form
- * @param {string} props.title - The title of the form
- * @param {string} props.description - The description of the form
- * @param {React.ElementType} props.icon - The icon of the form
- * @param {'vertical' | 'horizontal'} props.layout - The layout of the form
- * @param {number} props.cols - The number of columns of the form
- * @param {FormField[]} props.fields - The fields of the form
- * @param {string} props.submitButtonText - The text of the submit button
- * @param {() => void} props.onSubmit - The function to be called when the submit button is clicked
- * @param {Record<string, unknown>} props.initialData - The initial data of the form
- * @param {ApiConfig} props.apiConfig - The API configuration of the form
- * @returns {React.ReactNode}
- */
 export const DynamicForm = ({
   mode,
   title,
@@ -76,7 +78,6 @@ export const DynamicForm = ({
   const [form] = Form.useForm();
   const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>({});
 
-  // ==== [ Effects ] ====
   useEffect(() => {
     if ((mode === 'update' && initialData) || initialData) {
       const newInitialData = { ...initialData };
@@ -106,10 +107,8 @@ export const DynamicForm = ({
           fetchSelectOptions(field);
         }
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ==== [ Functions ] ====
   const processFields = (fields: FormField[] | FormField[][]) => {
     if (customCols) {
       return fields.map(row => 
@@ -373,14 +372,14 @@ export const DynamicForm = ({
       >
         {/* Render the formItems from json */}
         {processFields(fields).map((row, rowIndex) => (
-  <Row key={rowIndex} gutter={16}>
-    {row.map((field: FormField, colIndex: number) => (
-      <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
-        {renderFormField(field)}
-      </Col>
-    ))}
-  </Row>
-))}
+          <Row key={rowIndex} gutter={16}>
+            {row.map((field: FormField, colIndex: number) => (
+              <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
+                {renderFormField(field)}
+              </Col>
+            ))}
+          </Row>
+        ))}
         <Row justify="end">
           <Form.Item>
             <Button 

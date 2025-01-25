@@ -5,6 +5,7 @@ import { FormField } from "../DynamicForm/types";
 import { useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
+import { PlusOutlined, EditOutlined } from '@ant-design/icons'; // Importar íconos por defecto
 
 type OnCreateHandler = 
   | ((values: Record<string, unknown>) => void)
@@ -41,34 +42,6 @@ interface DynamicCrudProps {
   formCustomCols?: boolean;
 }
 
-/**
- * @alias DynamicCrud
- * @description The DynamicCrud component is a wrapper that combines the DynamicTable and DynamicForm components to create a full-featured CRUD interface.
- * @param {DynamicCrudProps} props
- * @param {ColumnsProps[]} props.columns - The columns of the table
- * @param {unknown[]} props.data - The data of the table
- * @param {string} props.title - The title of the table
- * @param {string} props.formTitle - The title of the form
- * @param {string} props.description - The description of the table
- * @param {string} props.formDescription - The description of the form
- * @param {FormField[]} props.fields - The fields of the form
- * @param {boolean} props.showCreateButton - Whether to show the create button
- * @param {string} props.createButtonText - The text of the create button
- * @param {React.ReactElement} props.createButtonIcon - The icon of the create button
- * @param {React.ElementType} props.icon - The icon of the table
- * @param {string} props.layout - The layout of the form
- * @param {ActionConfig} props.actionConfig - The action configuration of the table
- * @param {SearchConfig} props.searchConfig - The search configuration of the table
- * @param {boolean} props.loading - Whether the table is loading
- * @param {() => void} props.onCreate - The function to be called when the create button is clicked
- * @param {boolean} props.createRedirect - Whether to redirect to the create form
- * @param {() => void} props.onEdit - The function to be called when the edit button is clicked
- * @param {() => void} props.onDelete - The function to be called when the delete button is clicked
- * @param {string} props.submitButtonText - The text of the submit button
- * @param {ApiConfig} props.apiConfig - The API configuration of the form
- * @param {Record<string, unknown>} props.initialData - The initial data of the form
- * @returns {React.ReactNode}
- */
 export const DynamicCrud = ({
   columns,
   data,
@@ -145,6 +118,15 @@ export const DynamicCrud = ({
     onDelete?.(record as Record<string, unknown>);
   }
 
+  // ==== [ Títulos e íconos ] ====
+  const defaultCreateTitle = "Crear nuevo registro";
+  const defaultEditTitle = "Editar registro";
+  const defaultCreateIcon = <PlusOutlined />;
+  const defaultEditIcon = <EditOutlined />;
+
+  const formTitleToShow = formTitle || (mode === "create" ? defaultCreateTitle : defaultEditTitle);
+  const formIconToShow = icon || (mode === "create" ? defaultCreateIcon : defaultEditIcon);
+
   return (
     <div>
       <DynamicTable
@@ -175,10 +157,10 @@ export const DynamicCrud = ({
           footer={null}
         >
           <DynamicForm 
-            title={formTitle || title}
+            title={formTitleToShow}
             description={formDescription || description}
             fields={fields}
-            icon={icon}
+            icon={formIconToShow}
             layout={layout}
             initialData={currentRecord || undefined}
             onSubmit={(values) => {
