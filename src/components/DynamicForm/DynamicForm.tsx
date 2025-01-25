@@ -93,9 +93,19 @@ export const DynamicForm = ({
   }, []);
 
   const handleSubmit = (values: Record<string, unknown>) => {
-    console.log(values);
-    onSubmit?.(values);
-  }
+    const formattedValues = { ...values };
+  
+    // Formatea los valores de los campos datepicker
+    fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field))
+      .forEach(field => {
+        if (field.type === 'datepicker' && formattedValues[field.name]) {
+          formattedValues[field.name] = dayjs(formattedValues[field.name] as string).format(field.datepickerConfig?.format || 'YYYY-MM-DD');
+        }
+      });
+  
+    console.log(formattedValues); // Verifica el formato
+    onSubmit?.(formattedValues); // Envía los datos formateados
+  };
 
   const fetchSelectOptions = async (field: FormField) => {
     if (!field.selectConfig?.apiConfig) return;
