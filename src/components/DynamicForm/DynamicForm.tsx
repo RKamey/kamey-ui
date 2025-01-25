@@ -18,7 +18,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Typography,
   Form,
   Button,
   Input,
@@ -36,7 +35,6 @@ import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
 import axios from "axios";
 
-const { Title, Text } = Typography;
 
 export interface ApiConfig {
   url: string;
@@ -107,16 +105,6 @@ export const DynamicForm = ({
         }
       });
   }, []);
-
-  const processFields = (fields: FormField[] | FormField[][]) => {
-    if (customCols) {
-      return fields.map(row => 
-        Array.isArray(row) ? row : [row]
-      );
-    }
-  
-    return groupFieldsInRows(fields as FormField[]);
-  }
 
   const handleSubmit = (values: Record<string, unknown>) => {
     console.log(values);
@@ -199,6 +187,16 @@ export const DynamicForm = ({
       return rules;
     });
   };
+
+  const processFields = (fields: FormField[] | FormField[][]) => {
+    if (customCols) {
+      return fields.map(row => 
+        Array.isArray(row) ? row : [row]
+      );
+    }
+  
+    return groupFieldsInRows(fields as FormField[]);
+  }
 
   const groupFieldsInRows = (fields: FormField[]) => {
     const rows: FormField[][] = [];
@@ -353,13 +351,12 @@ export const DynamicForm = ({
     <div>
       {/* Header */}
       <div className="flex flex-col mb-4">
-        <Title level={3} className="flex items-center gap-4">
-          <Text>
-            {icon && React.cloneElement(icon)}
-          </Text>
-          {title}
-        </Title>
-        <Text className="text-sm text-gray-500">{description}</Text>
+        <div className="flex items-center gap-4">
+          {icon && React.cloneElement(icon)}
+          <h1 className="text-lg font-semibold">{title}</h1>
+        </div>
+        <p className="text-sm text-gray-500">{description}</p>
+        <hr className="my-4" />
       </div>
 
       {/* Form */}
@@ -385,6 +382,7 @@ export const DynamicForm = ({
               type="primary" 
               htmlType="submit"
               className="bg-primary"
+              style={{ color: 'white' }}
               >
               {submitButtonText || (mode ? { create: 'Crear', update: 'Actualizar' }[mode] : 'Crear')}
             </Button>
