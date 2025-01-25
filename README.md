@@ -23,6 +23,168 @@ import { DynamicTable } from 'kamey-components'
 <DynamicTable />
 ```
 
+## Componentes
+
+DynamicCrud
+El componente DynamicCrud es un wrapper que combina los componentes DynamicTable y DynamicForm para crear una interfaz CRUD completa.
+
+## Props
+
+| Propiedad           | Tipo                           | Descripción                                             |
+|---------------------|--------------------------------|---------------------------------------------------------|
+| columns             | ColumnsProps[]                 | Las columnas de la tabla.                               |
+| data                | unknown[]                      | Los datos de la tabla.                                  |
+| title               | string                         | El título de la tabla.                                  |
+| formTitle           | string                         | El título del formulario.                               |
+| description         | string                         | La descripción de la tabla.                             |
+| formDescription     | string                         | La descripción del formulario.                          |
+| fields              | FormField[]                    | Los campos del formulario.                              |
+| showCreateButton    | boolean                        | Indica si se debe mostrar el botón de crear.            |
+| createButtonText    | string                         | El texto del botón de crear.                            |
+| createButtonIcon    | React.ReactElement             | El icono del botón de crear.                            |
+| icon                | React.ElementType              | El icono de la tabla.                                   |
+| layout              | `"horizontal" \| "vertical"`   | El diseño del formulario.                               |
+| actionConfig        | ActionConfig                   | La configuración de acciones de la tabla.               |
+| searchConfig        | SearchConfig                   | La configuración de búsqueda de la tabla.               |
+| loading             | boolean                        | Indica si la tabla está cargando.                       |
+| onCreate            | OnCreateHandler                | Función que se ejecuta al hacer clic en el botón de crear. |
+| createRedirect      | boolean                        | Indica si se debe redirigir al formulario de creación.  |
+| onEdit              | (record: unknown) => void      | Función que se ejecuta al hacer clic en el botón de editar. |
+| onDelete            | (record: unknown) => void      | Función que se ejecuta al hacer clic en el botón de eliminar. |
+| submitButtonText    | string                         | El texto del botón de enviar en el formulario.          |
+| apiConfig           | ApiConfig                      | La configuración de la API para el formulario.          |
+| initialData         | Record<string, unknown>        | Los datos iniciales del formulario.                     |
+| themeConfig         | ThemeConfig                    | La configuración del tema.                              |
+| moreActions         | MoreActions[]                  | Acciones adicionales para la tabla.                     |
+| formCols            | `1 \| 2 \| 3 \| 4`             | Número de columnas del formulario.                      |
+| formCustomCols      | boolean                        | Indica si se usan columnas personalizadas en el formulario. |
+
+## Ejemplo de uso
+
+```tsx	
+import { DynamicCrud } from 'kamey-components';
+
+const columns = [
+  { title: 'Nombre', dataIndex: 'name', key: 'name' },
+  { title: 'Edad', dataIndex: 'age', key: 'age' },
+];
+
+const fields = [
+  { name: 'name', label: 'Nombre', type: 'text' },
+  { name: 'age', label: 'Edad', type: 'number' },
+];
+
+const data = [
+  { name: 'Juan', age: 25 },
+  { name: 'Ana', age: 30 },
+];
+
+const App = () => (
+  <DynamicCrud
+    title="Usuarios"
+    columns={columns}
+    data={data}
+    fields={fields}
+    showCreateButton
+    onCreate={(values) => console.log('Crear:', values)}
+    onEdit={(record) => console.log('Editar:', record)}
+    onDelete={(record) => console.log('Eliminar:', record)}
+  />
+);
+```
+
+## DynamicForm
+
+El componente DynamicForm es un formulario dinámico que permite crear y actualizar registros.
+
+### Props
+
+| Propiedad         | Tipo                           | Descripción                                      |
+|-------------------|--------------------------------|--------------------------------------------------|
+| mode              | `"create" \| "update"`         | El modo del formulario (crear o actualizar).     |
+| title             | string                         | El título del formulario.                        |
+| description       | string                         | La descripción del formulario.                   |
+| icon              | React.ElementType              | El icono del formulario.                         |
+| layout            | `"vertical" \| "horizontal"`   | El diseño del formulario.                        |
+| cols              | `1 \| 2 \| 3 \| 4`             | Número de columnas del formulario.               |
+| fields            | `FormField[] \| FormField[][]` | Los campos del formulario.                       |
+| submitButtonText  | string                         | El texto del botón de enviar.                    |
+| onSubmit          | (data: unknown) => void        | Función que se ejecuta al enviar el formulario.  |
+| apiConfig         | ApiConfig                      | La configuración de la API para el formulario.   |
+| initialData       | Record<string, unknown>        | Los datos iniciales del formulario.              |
+| customCols        | boolean                        | Indica si se usan columnas personalizadas en el formulario. |
+
+### Ejemplo de uso
+
+```tsx
+import { DynamicForm } from 'kamey-components';
+
+const fields = [
+  { name: 'name', label: 'Nombre', type: 'text' },
+  { name: 'age', label: 'Edad', type: 'number' },
+];
+
+const App = () => (
+  <DynamicForm
+    title="Crear usuario"
+    fields={fields}
+    onSubmit={(values) => console.log('Enviar:', values)}
+  />
+);
+```
+
+## DynamicTable
+
+El componente DynamicTable es una tabla dinámica que permite mostrar y gestionar datos.
+
+### Props
+
+| Propiedad           | Tipo                           | Descripción                                             |
+|---------------------|--------------------------------|---------------------------------------------------------|
+| title               | string                         | El título de la tabla.                                  |
+| icon                | React.ElementType              | El icono de la tabla.                                   |
+| description         | string                         | La descripción de la tabla.                             |
+| showCreateButton    | boolean                        | Indica si se debe mostrar el botón de crear.            |
+| onCreate            | () => void                     | Función que se ejecuta al hacer clic en el botón de crear. |
+| onEdit              | (record: unknown) => void      | Función que se ejecuta al hacer clic en el botón de editar. |
+| onDelete            | (record: unknown) => void      | Función que se ejecuta al hacer clic en el botón de eliminar. |
+| createButtonText    | string                         | El texto del botón de crear.                            |
+| createButtonIcon    | React.ReactElement             | El icono del botón de crear.                            |
+| columns             | ColumnsProps[]                 | Las columnas de la tabla.                               |
+| data                | unknown[]                      | Los datos de la tabla.                                  |
+| loading             | boolean                        | Indica si la tabla está cargando.                       |
+| actionConfig        | ActionConfig                   | La configuración de acciones de la tabla.               |
+| searchConfig        | SearchConfig                   | La configuración de búsqueda de la tabla.               |
+| themeConfig         | ThemeConfig                    | La configuración del tema.                              |
+
+### Ejemplo de uso
+
+```tsx
+import { DynamicTable } from 'kamey-components';
+
+const columns = [
+  { title: 'Nombre', dataIndex: 'name', key: 'name' },
+  { title: 'Edad', dataIndex: 'age', key: 'age' },
+];
+
+const data = [
+  { name: 'Juan', age: 25 },
+  { name: 'Ana', age: 30 },
+];
+
+const App = () => (
+  <DynamicTable
+    title="Usuarios"
+    columns={columns}
+    data={data}
+    showCreateButton
+    onCreate={() => console.log('Crear nuevo usuario')}
+    onEdit={(record) => console.log('Editar:', record)}
+    onDelete={(record) => console.log('Eliminar:', record)}
+  />
+);
+```
+
 ## Guía de desarrollo
 
 ### Estructura de ramas
