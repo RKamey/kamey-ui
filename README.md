@@ -62,14 +62,14 @@ El componente DynamicCrud es un wrapper que combina los componentes DynamicTable
 ## Ejemplo de uso
 
 ```tsx	
-import { DynamicCrud } from 'kamey-components';
+import { DynamicCrud, ColumnsProps, FormField } from 'kamey-components';
 
-const columns = [
+const columns: ColumnsProps[] = [
   { title: 'Nombre', dataIndex: 'name', key: 'name' },
   { title: 'Edad', dataIndex: 'age', key: 'age' },
 ];
 
-const fields = [
+const fields: FormField[] = [
   { name: 'name', label: 'Nombre', type: 'text' },
   { name: 'age', label: 'Edad', type: 'number' },
 ];
@@ -117,9 +117,9 @@ El componente DynamicForm es un formulario dinámico que permite crear y actuali
 ### Ejemplo de uso
 
 ```tsx
-import { DynamicForm } from 'kamey-components';
+import { DynamicForm, FormField } from 'kamey-components';
 
-const fields = [
+const fields: FormField[] = [
   { name: 'name', label: 'Nombre', type: 'text' },
   { name: 'age', label: 'Edad', type: 'number' },
 ];
@@ -160,9 +160,9 @@ El componente DynamicTable es una tabla dinámica que permite mostrar y gestiona
 ### Ejemplo de uso
 
 ```tsx
-import { DynamicTable } from 'kamey-components';
+import { DynamicTable, ColumnsProps } from 'kamey-components';
 
-const columns = [
+const columns: ColumnsProps[] = [
   { title: 'Nombre', dataIndex: 'name', key: 'name' },
   { title: 'Edad', dataIndex: 'age', key: 'age' },
 ];
