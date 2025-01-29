@@ -29,6 +29,7 @@ interface DynamicCrudProps {
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
   showRefreshButton?: boolean;
+  onRefresh?: () => void;
   headerDirection?: "horizontal" | "vertical";
   loading?: boolean;
   onCreate?: OnCreateHandler;
@@ -61,6 +62,7 @@ export const DynamicCrud = ({
   searchConfig,
   headerDirection,
   showRefreshButton,
+  onRefresh,
   loading,
   onCreate,
   createRedirect = false,
@@ -157,6 +159,7 @@ export const DynamicCrud = ({
           console.log('editando', record);
           handleEdit(record);
         }}
+        onRefresh={onRefresh}
         onDelete={handleDelete}
         themeConfig={themeConfig}
         moreActions={moreActions}
