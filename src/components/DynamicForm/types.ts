@@ -30,6 +30,8 @@ export interface SelectDependencyConfig {
   valueKey: string;
   labelKey: string;
   paramKey: string;
+  idPlaceholder?: string;
+  placeholderTemplate?: string;
   transformRequest?: (value: string | number) => Record<string, string>;
 }
 
@@ -46,11 +48,7 @@ export interface FormField {
   datepickerConfig?: DatepickerConfig;
   selectConfig?: SelectConfig;
   readonly?: boolean;
-  dependsOn?: {
-    field: string;
-    valueMapping?: boolean;
-    transform?: (value: string | number) => Record<string, string>;
-  }
+  dependsOn?: SelectDependencyConfig;
   checkboxConfig?: CheckboxConfig;
   hidden?: boolean;
 }

@@ -79,6 +79,8 @@ export const DynamicCrud = ({
   const [mode, setMode] = useState(initialData ? "update" : "create");
 
   // ==== [ Handlers ] ====
+  const primaryKeyField = columns.find((col => col.isPrimaryKey))?.dataIndex || 'id';
+
   const formatRecordDates = (record: Record<string, unknown>): Record<string, unknown> => {
     const formattedRecord = {...record};
     
@@ -110,10 +112,14 @@ export const DynamicCrud = ({
 
   const handleEdit = (record: unknown) => {
     const formattedRecord = formatRecordDates(record as Record<string, unknown>);
+    
+    console.log('ID del registro:', formattedRecord[primaryKeyField]);
+    
     setCurrentRecord(formattedRecord);
     setIsModalVisible(true);
     setMode("update");
-  }
+  };
+  
 
   const handleDelete = (record: unknown) => {
     console.log('Eliminando registro:', record);
@@ -147,7 +153,10 @@ export const DynamicCrud = ({
         showRefreshButton={showRefreshButton}
         loading={loading}
         onCreate={handleCreate}
-        onEdit={handleEdit}
+        onEdit={(record) => {
+          console.log('editando', record);
+          handleEdit(record);
+        }}
         onDelete={handleDelete}
         themeConfig={themeConfig}
         moreActions={moreActions}
@@ -169,7 +178,12 @@ export const DynamicCrud = ({
             onSubmit={(values) => {
               try {
                 if (mode === 'update') {
-                  onEdit?.(values as Record<string, unknown>);
+                  const dataToSend = {
+                    ...(typeof values === 'object' && values !== null ? values : {}),
+                    [primaryKeyField]: currentRecord?.[primaryKeyField]
+                  };
+                  
+                  onEdit?.(dataToSend as Record<string, unknown>);
                 } else {
                   onCreate?.(values as Record<string, unknown>);
                 }

@@ -17,7 +17,20 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { Form, Button, Input, InputNumber, Select, DatePicker, Checkbox, Radio, Switch, Slider, Row, Col } from "antd";
+import {
+  Form,
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  DatePicker,
+  Checkbox,
+  Radio,
+  Switch,
+  Slider,
+  Row,
+  Col,
+} from "antd";
 import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
 import axios from "axios";
@@ -31,7 +44,7 @@ export interface ApiConfig {
 }
 
 export interface DynamicFormProps {
-  mode?: 'create' | 'update';
+  mode?: "create" | "update";
   title?: string;
   description?: string;
   icon?: React.ReactElement;
@@ -59,103 +72,207 @@ export const DynamicForm = ({
   customCols = false,
 }: DynamicFormProps): React.ReactNode => {
   const [form] = Form.useForm();
-  const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>({});
+  const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>(
+    {}
+  );
 
   useEffect(() => {
-    if ((mode === 'update' && initialData) || initialData) {
+    if ((mode === "update" && initialData) || initialData) {
       const newInitialData = { ...initialData };
-      
-      fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field))
-        .forEach(field => {
+
+      fields
+        .filter(
+          (field): field is FormField =>
+            typeof field === "object" && !Array.isArray(field)
+        )
+        .forEach((field) => {
           const value = newInitialData[field.name];
-          
-          if (field.type === 'datepicker' && value) {
+
+          if (field.type === "datepicker" && value) {
             const converted = dayjs(value as string);
             if (converted.isValid()) {
               newInitialData[field.name] = converted;
             }
           }
         });
-      
+
       form.setFieldsValue(newInitialData);
     }
   }, [form, mode, initialData, fields]);
-  
+
   useEffect(() => {
-    fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field))
-      .forEach(field => {
-        if (field.type === 'select' && 
-            field.selectConfig?.apiConfig && 
-            !field.selectConfig.dependsOn) {
+    fields
+      .filter(
+        (field): field is FormField =>
+          typeof field === "object" && !Array.isArray(field)
+      )
+      .forEach((field) => {
+        if (
+          field.type === "select" &&
+          field.selectConfig?.apiConfig &&
+          !field.selectConfig.dependsOn
+        ) {
           fetchSelectOptions(field);
+        } else if (field.type === "select" && field.dependsOn) {
+          fetchDependentOptions(
+            field,
+            initialData[field.dependsOn.field] as string
+          );
         }
       });
   }, []);
 
   const handleSubmit = (values: Record<string, unknown>) => {
     const formattedValues = { ...values };
-  
+
     // Formatea los valores de los campos datepicker
-    fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field))
-      .forEach(field => {
-        if (field.type === 'datepicker' && formattedValues[field.name]) {
-          formattedValues[field.name] = dayjs(formattedValues[field.name] as string).format(field.datepickerConfig?.format || 'YYYY-MM-DD');
+    fields
+      .filter(
+        (field): field is FormField =>
+          typeof field === "object" && !Array.isArray(field)
+      )
+      .forEach((field) => {
+        if (field.type === "datepicker" && formattedValues[field.name]) {
+          formattedValues[field.name] = dayjs(
+            formattedValues[field.name] as string
+          ).format(field.datepickerConfig?.format || "YYYY-MM-DD");
         }
       });
-  
+
     console.log(formattedValues); // Verifica el formato
     onSubmit?.(formattedValues); // Envía los datos formateados
   };
 
   const fetchSelectOptions = async (field: FormField) => {
     if (!field.selectConfig?.apiConfig) return;
-    
-    const { url, method, headers, valueKey, labelKey, responseDataPath } = field.selectConfig.apiConfig;
 
-    const response = await axios.get(url, { method: method || 'GET', headers });
-    
-    const responseData = responseDataPath ? response.data[responseDataPath] : response.data.data;
+    const { url, method, headers, valueKey, labelKey, responseDataPath } =
+      field.selectConfig.apiConfig;
 
-    const data = Array.isArray(responseData) && Array.isArray(responseData[0]) 
-      ? responseData[0] 
-      : responseData;
+    const response = await axios.get(url, { method: method || "GET", headers });
+
+    const responseData = responseDataPath
+      ? response.data[responseDataPath]
+      : response.data.data;
+
+    const data =
+      Array.isArray(responseData) && Array.isArray(responseData[0])
+        ? responseData[0]
+        : responseData;
 
     const options = data.map((item: Record<string, unknown>) => ({
       value: item[valueKey],
-      label: item[labelKey]
+      label: item[labelKey],
     }));
 
-    setSelectOptions(prev => ({ ...prev, [field.name]: options }));
-  }
-  
+    setSelectOptions((prev) => ({ ...prev, [field.name]: options }));
+  };
+
+  const fetchDependentOptions = async (
+    field: FormField,
+    parentValue: string | number
+  ) => {
+    if (!field.dependsOn) return;
+
+    const {
+      apiUrl,
+      method = "GET",
+      labelKey,
+      valueKey,
+      idPlaceholder = ":id",
+    } = field.dependsOn;
+
+    try {
+      // Reemplazar el placeholder con el valor real
+      const processedUrl = apiUrl.replace(
+        idPlaceholder,
+        parentValue.toString()
+      );
+
+      const response = await axios({
+        url: processedUrl,
+        method,
+      });
+
+      const responseData = response.data.data || response.data;
+
+      const options = responseData.map((item: Record<string, unknown>) => ({
+        value: item[valueKey],
+        label: item[labelKey],
+      }));
+
+      setSelectOptions((prev) => ({ ...prev, [field.name]: options }));
+      form.setFieldValue(field.name, undefined);
+    } catch (error) {
+      console.error(`Error fetching options for ${field.name}:`, error);
+      setSelectOptions((prev) => ({ ...prev, [field.name]: [] }));
+    }
+  };
+
+  const getFormattedPlaceholder = (
+    field: FormField,
+    parentFieldName?: string
+  ) => {
+    if (!field.dependsOn?.placeholderTemplate || !parentFieldName) {
+      return field.placeholder;
+    }
+
+    // Obtener el valor del campo padre
+    const parentField = fields.find(
+      (f) =>
+        typeof f === "object" && !Array.isArray(f) && f.name === parentFieldName
+    ) as FormField;
+
+    const parentValue = form.getFieldValue(parentFieldName);
+
+    // Si no hay valor seleccionado en el padre, usar placeholder default
+    if (!parentValue) {
+      return `Seleccione primero un ${parentField?.label?.toLowerCase()}`;
+    }
+
+    // Obtener el label del valor seleccionado del padre
+    const parentOptions = selectOptions[parentFieldName] || [];
+    const selectedOption = parentOptions.find(
+      (opt) => opt.value === parentValue
+    );
+
+    // Reemplazar el placeholder con el valor real
+    return field.dependsOn.placeholderTemplate.replace(
+      "${" + parentFieldName + "}",
+      selectedOption?.label || parentValue
+    );
+  };
+
   const getRules = (validations?: Validations[]) => {
     if (!validations) return [];
-  
-    return validations.map(validation => {
+
+    return validations.map((validation) => {
       const rules: Record<string, unknown> = {};
-  
+
       if (validation.required) {
-        const requiredConfig = typeof validation.required === 'object' 
-          ? validation.required 
-          : { value: validation.required };
-        
+        const requiredConfig =
+          typeof validation.required === "object"
+            ? validation.required
+            : { value: validation.required };
+
         rules.required = requiredConfig.value;
         if (requiredConfig.message) {
           rules.message = requiredConfig.message;
         }
       }
-  
+
       if (validation.regex) {
-        const regexConfig = typeof validation.regex === 'object' 
-          ? validation.regex 
-          : { pattern: validation.regex };
-        
+        const regexConfig =
+          typeof validation.regex === "object"
+            ? validation.regex
+            : { pattern: validation.regex };
+
         rules.pattern = new RegExp(regexConfig.pattern);
         if (regexConfig.message) {
           rules.message = regexConfig.message;
         }
       }
-  
+
       if (validation.min) {
         const minConfig = validation.min;
         rules.min = minConfig.value;
@@ -163,7 +280,7 @@ export const DynamicForm = ({
           rules.message = minConfig.message;
         }
       }
-  
+
       if (validation.max) {
         const maxConfig = validation.max;
         rules.max = maxConfig.value;
@@ -171,41 +288,39 @@ export const DynamicForm = ({
           rules.message = maxConfig.message;
         }
       }
-  
+
       if (validation.email) {
         const emailConfig = validation.email;
-        rules.type = 'email';
+        rules.type = "email";
         if (emailConfig.message) {
           rules.message = emailConfig.message;
         }
       }
-  
+
       return rules;
     });
   };
 
   const processFields = (fields: FormField[] | FormField[][]) => {
     if (customCols) {
-      return fields.map(row => 
-        Array.isArray(row) ? row : [row]
-      );
+      return fields.map((row) => (Array.isArray(row) ? row : [row]));
     }
-  
+
     return groupFieldsInRows(fields as FormField[]);
-  }
+  };
 
   const groupFieldsInRows = (fields: FormField[]) => {
     const rows: FormField[][] = [];
     let currentRow: FormField[] = [];
 
     // Filtrar campos ocultos antes de agruparlos
-    const visibleFields = fields.filter(field => !field.hidden);
+    const visibleFields = fields.filter((field) => !field.hidden);
 
     visibleFields.forEach((field) => {
       if (currentRow.length < cols) {
         currentRow.push(field);
       }
-      
+
       if (currentRow.length === cols) {
         rows.push(currentRow);
         currentRow = [];
@@ -220,71 +335,119 @@ export const DynamicForm = ({
   };
 
   const renderFormField = (field: FormField) => {
-    const { type, name, label, placeholder, readonly, validations, options, min, max, step, datepickerConfig, hidden } = field;
+    const {
+      type,
+      name,
+      label,
+      placeholder,
+      readonly,
+      validations,
+      options,
+      min,
+      max,
+      step,
+      datepickerConfig,
+      hidden,
+    } = field;
 
     if (readonly || hidden) {
       return null;
     }
 
     const { format, showTime, picker, size } = datepickerConfig || {};
-    
+
     let formItem;
 
     switch (type) {
-      case 'text':
+      case "text":
         formItem = <Input placeholder={placeholder} readOnly={readonly} />;
         break;
-      case 'number':
+      case "number":
         formItem = (
           <InputNumber
             className="w-full"
-            placeholder={placeholder} 
-            readOnly={readonly} 
-            min={min} 
-            max={max} 
-            step={step} 
+            placeholder={placeholder}
+            readOnly={readonly}
+            min={min}
+            max={max}
+            step={step}
           />
         );
         break;
-      case 'select':
+      case "select":
         formItem = (
-          <Select 
+          <Select
             showSearch
-            placeholder={placeholder}
-            options={field.selectConfig ? selectOptions[name] : options}
+            placeholder={placeholder ? placeholder : getFormattedPlaceholder(field, field.dependsOn?.field)}
+            options={
+              field.dependsOn
+                ? selectOptions[name]
+                : field.selectConfig?.apiConfig
+                ? selectOptions[name]
+                : options
+            }
             optionFilterProp="label"
             onChange={(value) => {
-              form.setFieldsValue({
-                [name]: value
-              });
+              form.setFieldsValue({ [name]: value });
+
+              if (value) {
+                fields
+                  .filter(
+                    (f): f is FormField =>
+                      typeof f === "object" &&
+                      !Array.isArray(f) &&
+                      f.dependsOn?.field === name
+                  )
+                  .forEach((dependentField) => {
+                    fetchDependentOptions(dependentField, value);
+                  });
+              }
             }}
           />
         );
         break;
-      case 'datepicker':
-        formItem = <DatePicker className="w-full" placeholder={placeholder} size={size} format={format} showTime={showTime} />;
-        break;
-      case 'rangepicker':
+      case "datepicker":
         formItem = (
-          <DatePicker.RangePicker 
+          <DatePicker
+            className="w-full"
+            placeholder={placeholder}
+            size={size}
+            format={format}
+            showTime={showTime}
+          />
+        );
+        break;
+      case "rangepicker":
+        formItem = (
+          <DatePicker.RangePicker
             className="w-full"
             picker={picker}
-            format={format} 
+            format={format}
             showTime={showTime}
             size={size}
           />
-        )
+        );
         break;
-      case 'email':
-        formItem = <Input type="email" placeholder={placeholder} readOnly={readonly} />;
+      case "email":
+        formItem = (
+          <Input type="email" placeholder={placeholder} readOnly={readonly} />
+        );
         break;
-      case 'password':
-        formItem = <Input type="password" placeholder={placeholder} readOnly={readonly} />;
+      case "password":
+        formItem = (
+          <Input
+            type="password"
+            placeholder={placeholder}
+            readOnly={readonly}
+          />
+        );
         break;
-      case 'textarea':
-        formItem = <Input.TextArea placeholder={placeholder} readOnly={readonly} />;
+      case "textarea":
+        formItem = (
+          <Input.TextArea placeholder={placeholder} readOnly={readonly} />
+        );
         break;
-      case 'checkbox':
+      case "checkbox":
         if (options) {
           formItem = (
             <Checkbox.Group
@@ -292,7 +455,7 @@ export const DynamicForm = ({
               disabled={readonly}
               onChange={(checkedValues) => {
                 form.setFieldsValue({
-                  [name]: checkedValues
+                  [name]: checkedValues,
                 });
               }}
             />
@@ -303,7 +466,7 @@ export const DynamicForm = ({
               disabled={readonly}
               onChange={(e) => {
                 form.setFieldsValue({
-                  [name]: e.target.checked
+                  [name]: e.target.checked,
                 });
               }}
             >
@@ -312,7 +475,7 @@ export const DynamicForm = ({
           );
         }
         break;
-      case 'radio':
+      case "radio":
         formItem = (
           <Radio.Group
             options={options}
@@ -323,10 +486,10 @@ export const DynamicForm = ({
           />
         );
         break;
-      case 'switch':
+      case "switch":
         formItem = <Switch />;
         break;
-      case 'slider':
+      case "slider":
         formItem = <Slider />;
         break;
       default:
@@ -336,14 +499,10 @@ export const DynamicForm = ({
     if (!formItem) return null;
 
     return (
-      <Form.Item 
-        label={label} 
-        name={name} 
-        rules={getRules(validations)}
-      >
+      <Form.Item label={label} name={name} rules={getRules(validations)}>
         {React.cloneElement(formItem)}
       </Form.Item>
-    )
+    );
   };
 
   return (
@@ -375,20 +534,30 @@ export const DynamicForm = ({
           </Row>
         ))}
         {/* Add hidden fields */}
-        {fields.filter((field): field is FormField => typeof field === 'object' && !Array.isArray(field) && field.hidden === true).map((field) => (
-          <Form.Item key={field.name} name={field.name} hidden>
-            <Input type="hidden" />
-          </Form.Item>
-        ))}
+        {fields
+          .filter(
+            (field): field is FormField =>
+              typeof field === "object" &&
+              !Array.isArray(field) &&
+              field.hidden === true
+          )
+          .map((field) => (
+            <Form.Item key={field.name} name={field.name} hidden>
+              <Input type="hidden" />
+            </Form.Item>
+          ))}
         <Row justify="end">
           <Form.Item>
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               htmlType="submit"
               className="bg-primary"
-              style={{ color: 'white' }}
-              >
-              {submitButtonText || (mode ? { create: 'Crear', update: 'Actualizar' }[mode] : 'Crear')}
+              style={{ color: "white" }}
+            >
+              {submitButtonText ||
+                (mode
+                  ? { create: "Crear", update: "Actualizar" }[mode]
+                  : "Crear")}
             </Button>
           </Form.Item>
         </Row>

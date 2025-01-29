@@ -1,6 +1,7 @@
 export interface ColumnsProps {
   title?: string;
   dataIndex: string;
+  isPrimaryKey?: boolean;
   key: string | number;
   icon?: React.ReactElement;
   render?: (value: unknown, record: unknown) => React.ReactNode;
