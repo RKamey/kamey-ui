@@ -14,3 +14,5 @@ export { DynamicTable } from './components/DynamicTable/DynamicTable';
 export type { DynamicTableProps, ActionIcons, ActionConfig, SearchConfig, ColumnsProps, MoreActions, ThemeConfig } from './components/DynamicTable/types';
 
 export { ApiVersioning } from './components/ApiVersioning/ApiVersioning';
+
+export { useAsync } from './components/UseAsync/UseAsync';
