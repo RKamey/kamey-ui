@@ -240,8 +240,9 @@ export const DynamicTable = ({
                 key={action.key}
                 type="button"
                 className={`action-button transition-colors ${
-                  actionConfig.customActionsColor?.edit || ""
+                  actionConfig.customActionsColor?.edit || action.className || ''
                 }`}
+                style={action.style}
                 icon={React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
                 onClick={() => action.onClick(record as Record<string, unknown>)}
               >

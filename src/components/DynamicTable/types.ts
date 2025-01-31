@@ -49,6 +49,8 @@ export interface SearchConfig {
 export interface MoreActions {
   key: string;
   label?: string;
+  className?: string;
+  style?: React.CSSProperties;
   icon?: React.ReactElement;
   onClick: (record: Record<string, unknown>) => void;
 }
