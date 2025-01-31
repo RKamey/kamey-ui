@@ -1,4 +1,3 @@
-
 /**
  * @alias DynamicTableProps
  * @description The properties object for the DynamicTable component.
@@ -12,6 +11,7 @@
  * @param {() => void} [props.onCreate] - Callback function when the create button is clicked.
  * @param {(record: Record<string, unknown>) => void} [props.onEdit] - Callback function when the edit button is clicked.
  * @param {(record: Record<string, unknown>) => void} [props.onDelete] - Callback function when the delete button is clicked.
+ * @param {(record: Record<string, unknown>) => void} [props.onView] - Callback function when the view button is clicked. This is optional and will only show the view button if provided.
  * @param {() => void} [props.onRefresh] - Callback function when the refresh button is clicked.
  * @param {string} [props.createButtonText="Crear"] - The text for the create button.
  * @param {React.ReactNode} [props.createButtonIcon=<FaPlus />] - The icon for the create button.
@@ -20,10 +20,10 @@
  * @param {boolean} [props.loading] - Whether the table is in a loading state.
  * @param {Array<{ key: string, label: string, icon: React.ReactNode, onClick: (record: Record<string, unknown>) => void }>} [props.moreActions] - Additional actions to display in the actions column.
  * @param {Object} [props.actionConfig] - Configuration for the actions column.
- * @param {boolean} [props.actionConfig.showDefaultActions=true] - Whether to show the default actions (edit, delete).
+ * @param {boolean} [props.actionConfig.showDefaultActions=true] - Whether to show the default actions (edit, delete, view).
  * @param {boolean} [props.actionConfig.showEdit=true] - Whether to show the edit button.
  * @param {boolean} [props.actionConfig.showDelete=true] - Whether to show the delete button.
- * @param {boolean} [props.actionConfig.showView=true] - Whether to show the view button.
+ * @param {boolean} [props.actionConfig.showView=true] - Whether to show the view button. This is optional and will only show the view button if `onView` is provided.
  * @param {string} [props.actionConfig.refreshButtonText="Refrescar"] - The text for the refresh button.
  * @param {Object} [props.actionConfig.customIcons] - Custom icons for the actions.
  * @param {React.ReactNode} [props.actionConfig.customIcons.create=<FaPlus />] - Custom icon for the create button.
@@ -34,6 +34,7 @@
  * @param {Object} [props.actionConfig.customActionsColor] - Custom colors for the actions.
  * @param {string} [props.actionConfig.customActionsColor.edit] - Custom color for the edit button.
  * @param {string} [props.actionConfig.customActionsColor.delete] - Custom color for the delete button.
+ * @param {string} [props.actionConfig.customActionsColor.view] - Custom color for the view button.
  * @param {Object} [props.searchConfig] - Configuration for the search functionality.
  * @param {string[]} [props.searchConfig.searchableFields=[]] - Fields to search within.
  * @param {(item: Record<string, unknown>, term: string) => boolean} [props.searchConfig.customSearch] - Custom search function.
@@ -49,14 +50,16 @@
  *   onCreate={() => console.log('Create button clicked')}
  *   onEdit={(record) => console.log('Edit button clicked', record)}
  *   onDelete={(record) => console.log('Delete button clicked', record)}
+ *   onView={(record) => console.log('View button clicked', record)} // Optional
  *   onRefresh={() => console.log('Refresh button clicked')}
- *    moreActions={[
- *    {
- *     key: 'view',
- *    label: 'View',  
- *   icon: <FaEye />,
- *  onClick: (record) => console.log('View button clicked', record),
- * },
+ *   moreActions={[
+ *     {
+ *       key: 'view',
+ *       label: 'View',
+ *       icon: <FaEye />,
+ *       onClick: (record) => console.log('View button clicked', record),
+ *     },
+ *   ]}
  *   createButtonText="Add User"
  *   columns={[
  *     { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -107,16 +110,19 @@ export const DynamicTable = ({
     showDefaultActions: true,
     showEdit: true,
     showDelete: true,
+    showView: true,
     refreshButtonText: "Refrescar",
     customIcons: {
       create: <FaPlus />,
       edit: <FaEdit />,
       delete: <FaTrash />,
       refresh: <FaSync />,
+      view: <FaEye />,
     },
     customActionsColor: {
       edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
       delete: "!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+      view: "!bg-gray-50 hover:!bg-gray-100 !text-gray-600 !border-none shadow-sm hover:shadow transition-all duration-300",
     },
   },
   searchConfig = {
@@ -242,7 +248,7 @@ export const DynamicTable = ({
                 />
               </Popconfirm>
             )}
-            {actionConfig.showView && (
+            {actionConfig.showView && onView && ( // Solo mostrar el botón de "Ver" si onView está definido
               <Button
                 type="view"
                 className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${

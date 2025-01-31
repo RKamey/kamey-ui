@@ -1,3 +1,69 @@
+/**
+ * @alias DynamicCrudProps
+ * @description The properties object for the DynamicCrud component.
+ * @author @RKamey @Guada8a
+ * @param {Object} props - The properties object.
+ * @param {string} [props.title] - The title of the table.
+ * @param {string} [props.formTitle] - The title of the form (used in the modal).
+ * @param {string[]} [props.formTitles] - An array of titles for the form, where the first element is used for the "create" mode and the second for the "update" mode.
+ * @param {string} [props.description] - The description of the table.
+ * @param {string} [props.formDescription] - The description of the form (used in the modal).
+ * @param {ColumnsProps[]} props.columns - The columns configuration for the table.
+ * @param {unknown[]} [props.data] - The data to display in the table.
+ * @param {FormField[]} props.fields - The fields configuration for the form.
+ * @param {boolean} [props.showCreateButton] - Whether to show the create button.
+ * @param {string} [props.createButtonText="Crear"] - The text for the create button.
+ * @param {React.ReactElement} [props.createButtonIcon] - The icon for the create button.
+ * @param {string} [props.submitButtonText="Guardar"] - The text for the submit button in the form.
+ * @param {React.ReactElement} [props.icon] - The icon to display next to the title.
+ * @param {"horizontal" | "vertical"} [props.layout] - The layout of the form (horizontal or vertical).
+ * @param {ActionConfig} [props.actionConfig] - Configuration for the actions column in the table.
+ * @param {SearchConfig} [props.searchConfig] - Configuration for the search functionality in the table.
+ * @param {boolean} [props.showRefreshButton] - Whether to show the refresh button.
+ * @param {() => void} [props.onRefresh] - Callback function when the refresh button is clicked.
+ * @param {"horizontal" | "vertical"} [props.headerDirection] - The direction of the header (horizontal or vertical).
+ * @param {boolean} [props.loading] - Whether the table is in a loading state.
+ * @param {OnCreateHandler} [props.onCreate] - Callback function when the create button is clicked or when a new record is submitted.
+ * @param {boolean} [props.createRedirect=false] - Whether to redirect to a different page when the create button is clicked.
+ * @param {(record: unknown) => void} [props.onEdit] - Callback function when the edit button is clicked or when an existing record is updated.
+ * @param {(record: unknown) => void} [props.onDelete] - Callback function when the delete button is clicked.
+ * @param {(record: unknown) => void} [props.onView] - Callback function when the view button is clicked. This is optional and will only show the view button if provided.
+ * @param {ApiConfig} [props.apiConfig] - Configuration for API interactions in the form.
+ * @param {Record<string, unknown>} [props.initialData] - Initial data for the form when in "update" mode.
+ * @param {ThemeConfig} [props.themeConfig] - Theme configuration for the table and form.
+ * @param {MoreActions[]} [props.moreActions] - Additional actions to display in the actions column of the table.
+ * @param {1 | 2 | 3 | 4} [props.formCols=1] - The number of columns to use in the form layout.
+ * @param {boolean} [props.formCustomCols=false] - Whether to use a custom column layout in the form.
+ * @param {boolean} [props.showView] - Whether to show the view button in the table. This is optional and will only show the view button if `onView` is provided.
+ * 
+ * @example
+ * <DynamicCrud
+ *   title="User Management"
+ *   description="Manage users in the system"
+ *   columns={[
+ *     { title: 'Name', dataIndex: 'name', key: 'name' },
+ *     { title: 'Email', dataIndex: 'email', key: 'email' },
+ *   ]}
+ *   data={[
+ *     { name: 'John Doe', email: 'john@example.com' },
+ *     { name: 'Jane Doe', email: 'jane@example.com' },
+ *   ]}
+ *   fields={[
+ *     { name: 'name', label: 'Name', type: 'text', required: true },
+ *     { name: 'email', label: 'Email', type: 'email', required: true },
+ *   ]}
+ *   showCreateButton={true}
+ *   createButtonText="Add User"
+ *   onCreate={(values) => console.log('Creating user:', values)}
+ *   onEdit={(record) => console.log('Editing user:', record)}
+ *   onDelete={(record) => console.log('Deleting user:', record)}
+ *   onView={(record) => console.log('Viewing user:', record)} // Optional
+ *   showRefreshButton={true}
+ *   onRefresh={() => console.log('Refreshing data')}
+ *   formCols={2}
+ * />
+ */
+
 import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
 import { ActionConfig, ColumnsProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
@@ -43,6 +109,7 @@ interface DynamicCrudProps {
   moreActions?: MoreActions[];
   formCols?: 1 | 2 | 3 | 4;
   formCustomCols?: boolean;
+  showView?: boolean;
 }
 
 export const DynamicCrud = ({
