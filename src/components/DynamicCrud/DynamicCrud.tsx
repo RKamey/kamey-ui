@@ -36,6 +36,7 @@ interface DynamicCrudProps {
   createRedirect?: boolean;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
+  onView?: (record: unknown) => void;
   apiConfig?: ApiConfig;
   initialData?: Record<string, unknown>;
   themeConfig?: ThemeConfig;
@@ -68,6 +69,7 @@ export const DynamicCrud = ({
   createRedirect = false,
   onEdit,
   onDelete,
+  onView,
   submitButtonText = 'Guardar',
   apiConfig,
   initialData,
@@ -128,6 +130,10 @@ export const DynamicCrud = ({
     onDelete?.(record as Record<string, unknown>);
   }
 
+  const handleView = (record: unknown) => {
+    onView?.(record as Record<string, unknown>);
+  }
+
   // ==== [ Títulos e íconos ] ====
 
   const defaultCreateTitle = formTitles?.[0] || "Crear nuevo registro";
@@ -161,6 +167,7 @@ export const DynamicCrud = ({
         }}
         onRefresh={onRefresh}
         onDelete={handleDelete}
+        onView={handleView}
         themeConfig={themeConfig}
         moreActions={moreActions}
       />
