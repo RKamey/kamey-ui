@@ -110,7 +110,7 @@ export const DynamicTable = ({
     showDefaultActions: true,
     showEdit: true,
     showDelete: true,
-    showView: true,
+    showView: false,
     refreshButtonText: "Refrescar",
     customIcons: {
       create: <FaPlus />,
