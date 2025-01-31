@@ -28,17 +28,20 @@ export interface ActionIcons {
   edit?: React.ReactElement;
   delete?: React.ReactElement;
   refresh?: React.ReactElement;
+  view?: React.ReactElement;
 }
 
 export interface ActionConfig {
   showDefaultActions?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;
+  showView?: boolean;
   customIcons?: ActionIcons;
   refreshButtonText?: string;
   customActionsColor?: {
     edit?: string;
     delete?: string;
+    view?: string;
   };
 }
 
@@ -70,6 +73,7 @@ export interface DynamicTableProps {
   createButtonIcon?: React.ReactElement;
   moreActions?: MoreActions[];
   onCreate?: () => void;
+  onView?: (record: unknown) => void;
   onEdit?: (record: unknown) => void;
   onDelete?: (record: unknown) => void;
   onRefresh?: () => void;

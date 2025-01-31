@@ -23,12 +23,14 @@
  * @param {boolean} [props.actionConfig.showDefaultActions=true] - Whether to show the default actions (edit, delete).
  * @param {boolean} [props.actionConfig.showEdit=true] - Whether to show the edit button.
  * @param {boolean} [props.actionConfig.showDelete=true] - Whether to show the delete button.
+ * @param {boolean} [props.actionConfig.showView=true] - Whether to show the view button.
  * @param {string} [props.actionConfig.refreshButtonText="Refrescar"] - The text for the refresh button.
  * @param {Object} [props.actionConfig.customIcons] - Custom icons for the actions.
  * @param {React.ReactNode} [props.actionConfig.customIcons.create=<FaPlus />] - Custom icon for the create button.
  * @param {React.ReactNode} [props.actionConfig.customIcons.edit=<FaEdit />] - Custom icon for the edit button.
  * @param {React.ReactNode} [props.actionConfig.customIcons.delete=<FaTrash />] - Custom icon for the delete button.
  * @param {React.ReactNode} [props.actionConfig.customIcons.refresh=<FaSync />] - Custom icon for the refresh button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.view=<FaEye />] - Custom icon for the view button.
  * @param {Object} [props.actionConfig.customActionsColor] - Custom colors for the actions.
  * @param {string} [props.actionConfig.customActionsColor.edit] - Custom color for the edit button.
  * @param {string} [props.actionConfig.customActionsColor.delete] - Custom color for the delete button.
@@ -78,7 +80,7 @@ import {
   Popconfirm,
   ConfigProvider,
 } from "antd";
-import { FaPlus, FaEdit, FaTrash, FaSync } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash, FaSync, FaEye } from "react-icons/fa";
 import { ColumnsProps, DynamicTableProps } from "./types";
 
 const { Title, Text } = Typography;
@@ -93,6 +95,7 @@ export const DynamicTable = ({
   onCreate,
   onEdit,
   onDelete,
+  onView,
   onRefresh,
   createButtonText = "Crear",
   createButtonIcon = <FaPlus />,
@@ -181,6 +184,10 @@ export const DynamicTable = ({
     onDelete?.(record);
   };
 
+  const handleView = (record: Record<string, unknown>) => {
+    onView?.(record);
+  }
+
   const handleRefresh = async () => {
     onRefresh?.();
   };
@@ -234,6 +241,17 @@ export const DynamicTable = ({
                   icon={actionConfig.customIcons?.delete?.type ? React.createElement(actionConfig.customIcons.delete.type) : <FaTrash />}
                 />
               </Popconfirm>
+            )}
+            {actionConfig.showView && (
+              <Button
+                type="view"
+                className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                  actionConfig.customActionsColor?.view ||
+                  "bg-gray-600 hover:bg-gray-500 text-white"
+                }`}
+                icon={actionConfig.customIcons?.view || <FaEye />}
+                onClick={() => handleView(record as Record<string, unknown>)}
+              />
             )}
             {moreActions?.map((action) => (
               <Button
