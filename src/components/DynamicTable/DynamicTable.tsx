@@ -48,6 +48,13 @@
  *   onEdit={(record) => console.log('Edit button clicked', record)}
  *   onDelete={(record) => console.log('Delete button clicked', record)}
  *   onRefresh={() => console.log('Refresh button clicked')}
+ *    moreActions={[
+ *    {
+ *     key: 'view',
+ *    label: 'View',  
+ *   icon: <FaEye />,
+ *  onClick: (record) => console.log('View button clicked', record),
+ * },
  *   createButtonText="Add User"
  *   columns={[
  *     { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -231,7 +238,7 @@ export const DynamicTable = ({
             {moreActions?.map((action) => (
               <Button
                 key={action.key}
-                type="text"
+                type="button"
                 className={`action-button transition-colors ${
                   actionConfig.customActionsColor?.edit || ""
                 }`}
