@@ -39,7 +39,7 @@
  * @param {string[]} [props.searchConfig.searchableFields=[]] - Fields to search within.
  * @param {(item: Record<string, unknown>, term: string) => boolean} [props.searchConfig.customSearch] - Custom search function.
  * @param {Object} [props.themeConfig] - Theme configuration for the table.
- * 
+ *
  * @example
  * <DynamicTable
  *   title="User List"
@@ -83,11 +83,25 @@ import {
   Popconfirm,
   ConfigProvider,
 } from "antd";
-import { FaPlus, FaEdit, FaTrash, FaSync, FaEye } from "react-icons/fa";
+import {
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaSync,
+  FaEye,
+  FaFileExcel,
+} from "react-icons/fa";
 import { ColumnsProps, DynamicTableProps } from "./types";
+import * as XLSX from "xlsx";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
+
+interface ExportData {
+  key: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
 
 export const DynamicTable = ({
   title,
@@ -100,6 +114,18 @@ export const DynamicTable = ({
   onDelete,
   onView,
   onRefresh,
+  exportToExcel = {
+    data: [],
+    fileName: "reporte",
+    columns: [],
+    sheetName: "Reporte",
+    buttonProps: {
+      text: "Exportar a Excel",
+      className:
+        "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8",
+      style: {},
+    },
+  },
   createButtonText = "Crear",
   createButtonIcon = <FaPlus />,
   columns,
@@ -121,7 +147,8 @@ export const DynamicTable = ({
     },
     customActionsColor: {
       edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
-      delete: "!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+      delete:
+        "!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300",
       view: "!bg-gray-50 hover:!bg-gray-100 !text-gray-600 !border-none shadow-sm hover:shadow transition-all duration-300",
     },
   },
@@ -133,21 +160,40 @@ export const DynamicTable = ({
 }: DynamicTableProps): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const dataWithKey = useMemo(() => data.map((item, index) => (typeof item === 'object' && item !== null ? { ...item, key: index } : { key: index })), [data]);
+  const dataWithKey = useMemo(
+    () =>
+      data.map((item, index) =>
+        typeof item === "object" && item !== null
+          ? { ...item, key: index }
+          : { key: index }
+      ),
+    [data]
+  );
 
-  const searchInObject = (obj: Record<string, unknown>, term: string): boolean => {
+  const searchInObject = (
+    obj: Record<string, unknown>,
+    term: string
+  ): boolean => {
     return Object.values(obj).some((value: unknown) => {
       if (value === null || value === undefined) return false;
 
       if (typeof value === "object") {
-        return typeof value === 'object' && value !== null && !Array.isArray(value) ? searchInObject(value as Record<string, unknown>, term) : false;
+        return typeof value === "object" &&
+          value !== null &&
+          !Array.isArray(value)
+          ? searchInObject(value as Record<string, unknown>, term)
+          : false;
       }
 
       return value.toString().toLowerCase().includes(term.toLowerCase());
     });
   };
 
-  const searchByFields = (item: Record<string, unknown>, term: string, fields: string[]) => {
+  const searchByFields = (
+    item: Record<string, unknown>,
+    term: string,
+    fields: string[]
+  ) => {
     return fields.some((field) => {
       const value = item[field];
       if (value === null || value === undefined) return false;
@@ -163,7 +209,10 @@ export const DynamicTable = ({
         return searchConfig.customSearch(item, searchTerm);
       }
 
-      if (searchConfig.searchableFields && searchConfig.searchableFields.length > 0) {
+      if (
+        searchConfig.searchableFields &&
+        searchConfig.searchableFields.length > 0
+      ) {
         return searchByFields(item, searchTerm, searchConfig.searchableFields);
       }
 
@@ -178,7 +227,8 @@ export const DynamicTable = ({
   const paginationConfig = {
     pageSize: 10,
     showSizeChanger: true,
-    showTotal: (total: number) => `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
+    showTotal: (total: number) =>
+      `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
     className: "custom-pagination",
   };
 
@@ -192,10 +242,28 @@ export const DynamicTable = ({
 
   const handleView = (record: Record<string, unknown>) => {
     onView?.(record);
-  }
+  };
 
   const handleRefresh = async () => {
     onRefresh?.();
+  };
+
+  const onExportExcel = () => {
+    const { fileName, sheetName, data, columns } = exportToExcel;
+
+    const translatedData = data.map((item) => {
+      const newItem: { [key: string]: unknown } = {};
+      columns.forEach((col) => {
+        const dataIndexKey = col.dataIndex as keyof ExportData;
+        newItem[col.title] = (item as Record<string, unknown>)[dataIndexKey];
+      });
+      return newItem;
+    });
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(translatedData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
 
   const processColumns = (columns: ColumnsProps[]) => {
@@ -203,7 +271,9 @@ export const DynamicTable = ({
       ...column,
       title: column.icon ? (
         <div className="flex items-center gap-2">
-          {React.isValidElement(column.icon) ? React.cloneElement(column.icon) : column.icon}
+          {React.isValidElement(column.icon)
+            ? React.cloneElement(column.icon)
+            : column.icon}
           <span className="font-medium">{column.title}</span>
         </div>
       ) : (
@@ -234,7 +304,9 @@ export const DynamicTable = ({
             {actionConfig.showDelete && (
               <Popconfirm
                 title="¿Estás seguro de que deseas eliminar este registro?"
-                onConfirm={() => handleDelete(record as Record<string, unknown>)}
+                onConfirm={() =>
+                  handleDelete(record as Record<string, unknown>)
+                }
                 okText="Eliminar"
                 cancelText="Cancelar"
               >
@@ -244,31 +316,46 @@ export const DynamicTable = ({
                     actionConfig.customActionsColor?.delete ||
                     "bg-red-600 hover:bg-red-500 text-white"
                   }`}
-                  icon={actionConfig.customIcons?.delete?.type ? React.createElement(actionConfig.customIcons.delete.type) : <FaTrash />}
+                  icon={
+                    actionConfig.customIcons?.delete?.type ? (
+                      React.createElement(actionConfig.customIcons.delete.type)
+                    ) : (
+                      <FaTrash />
+                    )
+                  }
                 />
               </Popconfirm>
             )}
-            {actionConfig.showView && onView && ( // Solo mostrar el botón de "Ver" si onView está definido
-              <Button
-                type="view"
-                className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                  actionConfig.customActionsColor?.view ||
-                  "bg-gray-600 hover:bg-gray-500 text-white"
-                }`}
-                icon={actionConfig.customIcons?.view || <FaEye />}
-                onClick={() => handleView(record as Record<string, unknown>)}
-              />
-            )}
+            {actionConfig.showView &&
+              onView && ( // Solo mostrar el botón de "Ver" si onView está definido
+                <Button
+                  type="view"
+                  className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                    actionConfig.customActionsColor?.view ||
+                    "bg-gray-600 hover:bg-gray-500 text-white"
+                  }`}
+                  icon={actionConfig.customIcons?.view || <FaEye />}
+                  onClick={() => handleView(record as Record<string, unknown>)}
+                />
+              )}
             {moreActions?.map((action) => (
               <Button
                 key={action.key}
                 type="button"
                 className={`action-button transition-colors ${
-                  actionConfig.customActionsColor?.edit || action.className || ''
+                  actionConfig.customActionsColor?.edit ||
+                  action.className ||
+                  ""
                 }`}
                 style={action.style}
-                icon={React.isValidElement(action.icon) ? React.cloneElement(action.icon) : action.icon}
-                onClick={() => action.onClick(record as Record<string, unknown>)}
+                icon={
+                  React.isValidElement(action.icon)
+                    ? React.cloneElement(action.icon)
+                    : action.icon
+                }
+                onClick={() =>
+                  action.onClick(record as Record<string, unknown>)
+                }
               >
                 {action.label}
               </Button>
@@ -292,7 +379,10 @@ export const DynamicTable = ({
                 {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
               </div>
             )}
-            <Title level={4} className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
+            <Title
+              level={4}
+              className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl"
+            >
               {title}
             </Title>
           </div>
@@ -300,8 +390,24 @@ export const DynamicTable = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {description && (
               <div className="w-full sm:flex-1">
-                <Text className="text-gray-600 text-sm leading-relaxed">{description}</Text>
+                <Text className="text-gray-600 text-sm leading-relaxed">
+                  {description}
+                </Text>
               </div>
+            )}
+
+            {exportToExcel && (
+              <Button
+                icon={<FaFileExcel />}
+                className={`${
+                  exportToExcel.buttonProps?.className ||
+                  "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
+                }`}
+                style={exportToExcel.buttonProps?.style || {}}
+                onClick={onExportExcel}
+              >
+                {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+              </Button>
             )}
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
@@ -320,7 +426,9 @@ export const DynamicTable = ({
                   icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
-                  <span className="text-gray-700 font-medium">{actionConfig.refreshButtonText}</span>
+                  <span className="text-gray-700 font-medium">
+                    {actionConfig.refreshButtonText}
+                  </span>
                 </Button>
               )}
 

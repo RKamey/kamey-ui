@@ -1,5 +1,5 @@
 export interface ColumnsProps {
-  title?: string;
+  title: string;
   dataIndex: string;
   isPrimaryKey?: boolean;
   key: string | number;
@@ -58,6 +58,18 @@ export interface MoreActions {
   onClick: (record: Record<string, unknown>) => void;
 }
 
+export interface ExcelConfigProps {
+  fileName: string;
+  sheetName: string;
+  data: unknown[];
+  columns: ColumnsProps[];
+  buttonProps?: {
+    className?: string;
+    style?: React.CSSProperties;
+    text?: string;
+  }
+}
+
 export interface DynamicTableProps {
   title?: string;
   description?: string;
@@ -67,6 +79,7 @@ export interface DynamicTableProps {
   data: unknown[];
   className?: string;
   loading?: boolean;
+  exportToExcel?: ExcelConfigProps;
   showCreateButton?: boolean;
   showRefreshButton?: boolean;
   createButtonText?: string;
