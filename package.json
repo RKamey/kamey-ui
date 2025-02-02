@@ -15,6 +15,18 @@
     },
     "./dist/style.css": "./dist/style.css"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RKamey/kamey-ui.git"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "antd",
+    "tailwindcss",
+    "typescript"
+  ],
+  "homepage": "https://github.com/RKamey/kamey-ui#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
