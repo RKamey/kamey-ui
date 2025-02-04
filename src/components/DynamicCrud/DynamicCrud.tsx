@@ -66,7 +66,7 @@
 
 import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
-import { ActionConfig, ColumnsProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
+import { ActionConfig, ColumnsProps, ExcelConfigProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
 import { useState } from "react";
 import { Modal } from "antd";
@@ -110,6 +110,7 @@ interface DynamicCrudProps {
   formCols?: 1 | 2 | 3 | 4;
   formCustomCols?: boolean;
   showView?: boolean;
+  exportToExcel?: ExcelConfigProps;
 }
 
 export const DynamicCrud = ({
@@ -143,7 +144,8 @@ export const DynamicCrud = ({
   themeConfig,
   moreActions,
   formCols = 1,
-  formCustomCols = false
+  formCustomCols = false,
+  exportToExcel,
 }: DynamicCrudProps): React.ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
@@ -237,6 +239,7 @@ export const DynamicCrud = ({
         onView={handleView}
         themeConfig={themeConfig}
         moreActions={moreActions}
+        exportToExcel={exportToExcel}
       />
 
       {isModalVisible && (
