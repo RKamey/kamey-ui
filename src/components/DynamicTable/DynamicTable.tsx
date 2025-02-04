@@ -267,7 +267,7 @@ export const DynamicTable = ({
   };
 
   const processColumns = (columns: ColumnsProps[]) => {
-    const processedColumns = columns.map((column) => ({
+    const processedColumns = columns.filter((column) => !column.isHidden).map((column) => ({
       ...column,
       title: column.icon ? (
         <div className="flex items-center gap-2">
