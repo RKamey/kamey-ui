@@ -33,7 +33,7 @@ import {
 } from "antd";
 import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export interface ApiConfig {
   url: string;
@@ -139,7 +139,6 @@ export const DynamicForm = ({
         }
       });
 
-    console.log(formattedValues); // Verifica el formato
     onSubmit?.(formattedValues); // Envía los datos formateados
   };
 
@@ -149,17 +148,17 @@ export const DynamicForm = ({
     const { url, getterMethod, method, headers, valueKey, labelKey, responseDataPath } =
       field.selectConfig.apiConfig;
 
-    let response;
+    let response: AxiosResponse | void;
 
     if (getterMethod) {
-      response = await getterMethod();
+      response = await getterMethod() as AxiosResponse;
     } else {
       response = await axios.get(url ? url : '', { method: method || "GET", headers });
     }
     
-    const responseData = responseDataPath
+    const responseData = response && responseDataPath
       ? response.data[responseDataPath]
-      : response.data.data;
+      : response?.data?.data;
 
     const data =
       Array.isArray(responseData) && Array.isArray(responseData[0])

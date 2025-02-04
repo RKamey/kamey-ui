@@ -186,8 +186,6 @@ export const DynamicCrud = ({
   const handleEdit = (record: unknown) => {
     const formattedRecord = formatRecordDates(record as Record<string, unknown>);
     
-    console.log('ID del registro:', formattedRecord[primaryKeyField]);
-    
     setCurrentRecord(formattedRecord);
     setIsModalVisible(true);
     setMode("update");
@@ -195,7 +193,6 @@ export const DynamicCrud = ({
   
 
   const handleDelete = (record: unknown) => {
-    console.log('Eliminando registro:', record);
     onDelete?.(record as Record<string, unknown>);
   }
 
@@ -231,7 +228,6 @@ export const DynamicCrud = ({
         loading={loading}
         onCreate={handleCreate}
         onEdit={(record) => {
-          console.log('editando', record);
           handleEdit(record);
         }}
         onRefresh={onRefresh}
