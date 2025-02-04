@@ -146,11 +146,17 @@ export const DynamicForm = ({
   const fetchSelectOptions = async (field: FormField) => {
     if (!field.selectConfig?.apiConfig) return;
 
-    const { url, method, headers, valueKey, labelKey, responseDataPath } =
+    const { url, getterMethod, method, headers, valueKey, labelKey, responseDataPath } =
       field.selectConfig.apiConfig;
 
-    const response = await axios.get(url, { method: method || "GET", headers });
+    let response;
 
+    if (getterMethod) {
+      response = await getterMethod();
+    } else {
+      response = await axios.get(url ? url : '', { method: method || "GET", headers });
+    }
+    
     const responseData = responseDataPath
       ? response.data[responseDataPath]
       : response.data.data;

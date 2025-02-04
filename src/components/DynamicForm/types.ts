@@ -7,11 +7,20 @@ export interface DatepickerConfig {
   size?: 'large' | 'middle' | 'small';
 }
 
+type AxiosResponse<T> = {
+  data: T;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  config: Record<string, string>;
+}
+
 export interface SelectConfig {
   options?: Options[];
   apiConfig?: {
-    url: string;
-    method: string;
+    url?: string;
+    getterMethod?: () => Promise<AxiosResponse<unknown>>;
+    method?: string;
     headers?: Record<string, string>;
     params?: Record<string, string>;
     valueKey: string;
