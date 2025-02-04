@@ -2,6 +2,10 @@
 
 KameyUI es una librería de componentes para la creación de interfaces de usuario. 
 
+## Documentación
+[Documentación de KameyUI](https://kameyui-web-starlight.netlify.app/)
+
+
 ## Instalación
 
 ```bash
