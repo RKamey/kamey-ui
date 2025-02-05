@@ -34,9 +34,9 @@ export interface ActionIcons {
 
 export interface ActionConfig {
   showDefaultActions?: boolean;
-  showEdit?: boolean;
-  showDelete?: boolean;
-  showView?: boolean;
+  showEdit?: boolean | ((record: Record<string, unknown>) => boolean);
+  showDelete?: boolean | ((record: Record<string, unknown>) => boolean);
+  showView?: boolean | ((record: Record<string, unknown>) => boolean);
   customIcons?: ActionIcons;
   refreshButtonText?: string;
   customActionsColor?: {
@@ -56,6 +56,7 @@ export interface MoreActions {
   className?: string;
   style?: React.CSSProperties;
   icon?: React.ReactElement;
+  hidden?: (record: Record<string, unknown>) => boolean;
   onClick: (record: Record<string, unknown>) => void;
 }
 

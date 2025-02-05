@@ -283,10 +283,9 @@ export const DynamicTable = ({
             {actionConfig.showEdit && (
               <Button
                 type="warning"
-                className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                  actionConfig.customActionsColor?.edit ||
+                className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
                   "bg-blue-600 hover:bg-blue-500 text-white"
-                }`}
+                  }`}
                 icon={actionConfig.customIcons?.edit || <FaEdit />}
                 onClick={() => handleEdit(record as Record<string, unknown>)}
               />
@@ -302,10 +301,9 @@ export const DynamicTable = ({
               >
                 <Button
                   type="danger"
-                  className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                    actionConfig.customActionsColor?.delete ||
+                  className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
                     "bg-red-600 hover:bg-red-500 text-white"
-                  }`}
+                    }`}
                   icon={
                     actionConfig.customIcons?.delete?.type ? (
                       React.createElement(actionConfig.customIcons.delete.type)
@@ -320,35 +318,35 @@ export const DynamicTable = ({
               onView && ( // Solo mostrar el botón de "Ver" si onView está definido
                 <Button
                   type="view"
-                  className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                    actionConfig.customActionsColor?.view ||
+                  className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
                     "bg-gray-600 hover:bg-gray-500 text-white"
-                  }`}
+                    }`}
                   icon={actionConfig.customIcons?.view || <FaEye />}
                   onClick={() => handleView(record as Record<string, unknown>)}
                 />
               )}
             {moreActions?.map((action) => (
-              <Button
-                key={action.key}
-                type="button"
-                className={`action-button transition-colors ${
-                  actionConfig.customActionsColor?.edit ||
-                  action.className ||
-                  ""
-                }`}
-                style={action.style}
-                icon={
-                  React.isValidElement(action.icon)
-                    ? React.cloneElement(action.icon)
-                    : action.icon
-                }
-                onClick={() =>
-                  action.onClick(record as Record<string, unknown>)
-                }
-              >
-                {action.label}
-              </Button>
+              !action.hidden && (  // Agregamos esta condición
+                <Button
+                  key={action.key}
+                  type="button"
+                  className={`action-button transition-colors ${actionConfig.customActionsColor?.edit ||
+                    action.className ||
+                    ""
+                    }`}
+                  style={action.style}
+                  icon={
+                    React.isValidElement(action.icon)
+                      ? React.cloneElement(action.icon)
+                      : action.icon
+                  }
+                  onClick={() =>
+                    action.onClick(record as Record<string, unknown>)
+                  }
+                >
+                  {action.label}
+                </Button>
+              )
             ))}
           </div>
         ),
@@ -389,10 +387,9 @@ export const DynamicTable = ({
             {exportToExcel && (
               <Button
                 icon={<FaFileExcel />}
-                className={`${
-                  exportToExcel.buttonProps?.className ||
+                className={`${exportToExcel.buttonProps?.className ||
                   "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
-                }`}
+                  }`}
                 style={exportToExcel.buttonProps?.style || {}}
                 onClick={onExportExcel}
               >
