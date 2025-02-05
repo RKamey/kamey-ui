@@ -281,52 +281,106 @@ export const DynamicTable = ({
         render: (_: unknown, record: unknown) => (
           <div className="flex items-center gap-3">
             {actionConfig.showEdit && (
-              <Button
-                type="warning"
-                className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
-                  "bg-blue-600 hover:bg-blue-500 text-white"
-                  }`}
-                icon={actionConfig.customIcons?.edit || <FaEdit />}
-                onClick={() => handleEdit(record as Record<string, unknown>)}
-              />
+              typeof actionConfig.showEdit === 'function'
+                ? actionConfig.showEdit(record as Record<string, unknown>) && (
+                  <Button
+                    type="warning"
+                    className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
+                      "bg-blue-600 hover:bg-blue-500 text-white"
+                      }`}
+                    icon={actionConfig.customIcons?.edit || <FaEdit />}
+                    onClick={() => handleEdit(record as Record<string, unknown>)}
+                  />
+                )
+                : actionConfig.showEdit && (
+                  <Button
+                    type="warning"
+                    className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
+                      "bg-blue-600 hover:bg-blue-500 text-white"
+                      }`}
+                    icon={actionConfig.customIcons?.edit || <FaEdit />}
+                    onClick={() => handleEdit(record as Record<string, unknown>)}
+                  />
+                )
             )}
             {actionConfig.showDelete && (
-              <Popconfirm
-                title="¿Estás seguro de que deseas eliminar este registro?"
-                onConfirm={() =>
-                  handleDelete(record as Record<string, unknown>)
-                }
-                okText="Eliminar"
-                cancelText="Cancelar"
-              >
-                <Button
-                  type="danger"
-                  className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
-                    "bg-red-600 hover:bg-red-500 text-white"
-                    }`}
-                  icon={
-                    actionConfig.customIcons?.delete?.type ? (
-                      React.createElement(actionConfig.customIcons.delete.type)
-                    ) : (
-                      <FaTrash />
-                    )
-                  }
-                />
-              </Popconfirm>
+              typeof actionConfig.showDelete === 'function'
+                ? actionConfig.showDelete(record as Record<string, unknown>) && (
+                  <Popconfirm
+                    title="¿Estás seguro de que deseas eliminar este registro?"
+                    onConfirm={() =>
+                      handleDelete(record as Record<string, unknown>)
+                    }
+                    okText="Eliminar"
+                    cancelText="Cancelar"
+                  >
+                    <Button
+                      type="danger"
+                      className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
+                        "bg-red-600 hover:bg-red-500 text-white"
+                        }`}
+                      icon={
+                        actionConfig.customIcons?.delete?.type ? (
+                          React.createElement(actionConfig.customIcons.delete.type)
+                        ) : (
+                          <FaTrash />
+                        )
+                      }
+                    />
+                  </Popconfirm>
+                )
+                : actionConfig.showDelete && (
+                  <Popconfirm
+                    title="¿Estás seguro de que deseas eliminar este registro?"
+                    onConfirm={() =>
+                      handleDelete(record as Record<string, unknown>)
+                    }
+                    okText="Eliminar"
+                    cancelText="Cancelar"
+                  >
+                    <Button
+                      type="danger"
+                      className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
+                        "bg-red-600 hover:bg-red-500 text-white"
+                        }`}
+                      icon={
+                        actionConfig.customIcons?.delete?.type ? (
+                          React.createElement(actionConfig.customIcons.delete.type)
+                        ) : (
+                          <FaTrash />
+                        )
+                      }
+                    />
+                  </Popconfirm>
+                )
             )}
-            {actionConfig.showView &&
-              onView && ( // Solo mostrar el botón de "Ver" si onView está definido
-                <Button
-                  type="view"
-                  className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                    "bg-gray-600 hover:bg-gray-500 text-white"
-                    }`}
-                  icon={actionConfig.customIcons?.view || <FaEye />}
-                  onClick={() => handleView(record as Record<string, unknown>)}
-                />
-              )}
-            {moreActions?.map((action) => (
-              !action.hidden && (  // Agregamos esta condición
+            {actionConfig.showView && onView && (
+              typeof actionConfig.showView === 'function'
+                ? actionConfig.showView(record as Record<string, unknown>) && (
+                  <Button
+                    type="view"
+                    className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
+                      "bg-gray-600 hover:bg-gray-500 text-white"
+                      }`}
+                    icon={actionConfig.customIcons?.view || <FaEye />}
+                    onClick={() => handleView(record as Record<string, unknown>)}
+                  />
+                )
+                : actionConfig.showView && (
+                  <Button
+                    type="view"
+                    className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
+                      "bg-gray-600 hover:bg-gray-500 text-white"
+                      }`}
+                    icon={actionConfig.customIcons?.view || <FaEye />}
+                    onClick={() => handleView(record as Record<string, unknown>)}
+                  />
+                )
+            )}
+            {moreActions?.map((action) => {
+              const isHidden = typeof action.hidden === 'function' ? action.hidden(record as Record<string, unknown>) : false;
+
+              return !isHidden && (
                 <Button
                   key={action.key}
                   type="button"
@@ -346,8 +400,8 @@ export const DynamicTable = ({
                 >
                   {action.label}
                 </Button>
-              )
-            ))}
+              );
+            })}
           </div>
         ),
       };
