@@ -114,18 +114,7 @@ export const DynamicTable = ({
   onDelete,
   onView,
   onRefresh,
-  exportToExcel = {
-    data: [],
-    fileName: "reporte",
-    columns: [],
-    sheetName: "Reporte",
-    buttonProps: {
-      text: "Exportar a Excel",
-      className:
-        "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8",
-      style: {},
-    },
-  },
+  exportToExcel,
   createButtonText = "Crear",
   createButtonIcon = <FaPlus />,
   columns,
@@ -249,6 +238,7 @@ export const DynamicTable = ({
   };
 
   const onExportExcel = () => {
+    if (!exportToExcel) return;
     const { fileName, sheetName, data, columns } = exportToExcel;
 
     const translatedData = data.map((item) => {
