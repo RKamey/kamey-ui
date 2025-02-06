@@ -4,6 +4,8 @@ export interface ColumnsProps {
   isPrimaryKey?: boolean;
   isHidden?: boolean;
   key: string | number;
+  width?: string | number;
+  align?: "left" | "right" | "center";
   icon?: React.ReactElement;
   render?: (value: unknown, record: unknown) => React.ReactNode;
   sorter?: boolean | ((a: unknown, b: unknown) => number);
