@@ -83,7 +83,7 @@ export interface DynamicTableProps {
   data: unknown[];
   className?: string;
   loading?: boolean;
-  exportToExcel?: ExcelConfigProps;
+  exportToExcel?: boolean | ExcelConfigProps;
   showCreateButton?: boolean;
   showRefreshButton?: boolean;
   createButtonText?: string;

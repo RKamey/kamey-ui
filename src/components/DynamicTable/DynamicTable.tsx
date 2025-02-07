@@ -269,7 +269,7 @@ export const DynamicTable = ({
       ) : (
         <span className="font-medium">{column.title}</span>
       ),
-      className: "py-4 px-6 bg-white",
+      className: "py-4 px-6",
     }));
 
     if (actionConfig.showDefaultActions) {
@@ -277,7 +277,7 @@ export const DynamicTable = ({
         title: <span className="font-medium">Acciones</span>,
         key: "actions",
         width: 120,
-        className: "py-4 px-6 bg-white",
+        className: "py-4 px-6",
         render: (_: unknown, record: unknown) => (
           <div className="flex items-center gap-3">
             {actionConfig.showEdit && (
@@ -422,7 +422,7 @@ export const DynamicTable = ({
               </div>
             )}
             <Title
-              level={4}
+              level={3}
               className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl"
             >
               {title}
@@ -442,7 +442,7 @@ export const DynamicTable = ({
               <Button
                 icon={<FaFileExcel />}
                 className={`${exportToExcel.buttonProps?.className ||
-                  "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
+                  "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
                   }`}
                 style={exportToExcel.buttonProps?.style || {}}
                 onClick={onExportExcel}
@@ -463,11 +463,11 @@ export const DynamicTable = ({
               {showRefreshButton && (
                 <Button
                   type="default"
-                  className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 rounded-lg px-4 h-8"
+                  className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
                   icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
-                  <span className="text-gray-700 font-medium">
+                  <span className="font-medium">
                     {actionConfig.refreshButtonText}
                   </span>
                 </Button>
