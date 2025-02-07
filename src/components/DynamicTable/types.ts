@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface ColumnsProps {
   title: string;
   dataIndex: string;
@@ -45,6 +47,7 @@ export interface ActionConfig {
     edit?: string;
     delete?: string;
     view?: string;
+    moreActions?: string;
   };
 }
 
@@ -76,7 +79,7 @@ export interface ExcelConfigProps {
 
 export interface DynamicTableProps {
   title?: string;
-  description?: string;
+  description?: ReactNode | string;
   icon?: React.ReactElement;
   headerDirection?: "horizontal" | "vertical";
   columns: ColumnsProps[];
@@ -98,4 +101,5 @@ export interface DynamicTableProps {
   searchConfig?: SearchConfig;
   themeConfig?: ThemeConfig;
   customCols?: boolean;
+  backButton?: ReactNode | boolean;
 }

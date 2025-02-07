@@ -68,7 +68,7 @@ import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
 import { ActionConfig, ColumnsProps, ExcelConfigProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
 import { PlusOutlined, EditOutlined } from '@ant-design/icons'; // Importar íconos por defecto
@@ -81,7 +81,7 @@ interface DynamicCrudProps {
   title?: string;
   formTitle?: string;
   formTitles?: string[];
-  description?: string;
+  description?: ReactNode | string;
   formDescription?: string;
   columns: ColumnsProps[];
   data?: unknown[];
@@ -111,6 +111,7 @@ interface DynamicCrudProps {
   formCustomCols?: boolean;
   showView?: boolean;
   exportToExcel?: ExcelConfigProps;
+  backButton?: ReactNode | boolean;
 }
 
 export const DynamicCrud = ({
@@ -146,6 +147,7 @@ export const DynamicCrud = ({
   formCols = 1,
   formCustomCols = false,
   exportToExcel,
+  backButton,
 }: DynamicCrudProps): React.ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
@@ -236,6 +238,7 @@ export const DynamicCrud = ({
         themeConfig={themeConfig}
         moreActions={moreActions}
         exportToExcel={exportToExcel}
+        backButton={backButton}
       />
 
       {isModalVisible && (
@@ -260,6 +263,7 @@ export const DynamicCrud = ({
                   };
                   
                   onEdit?.(dataToSend as Record<string, unknown>);
+                  setCurrentRecord(null);
                 } else {
                   onCreate?.(values as Record<string, unknown>);
                 }

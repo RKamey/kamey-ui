@@ -90,6 +90,7 @@ import {
   FaSync,
   FaEye,
   FaFileExcel,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
@@ -146,6 +147,7 @@ export const DynamicTable = ({
     customSearch: undefined,
   },
   themeConfig,
+  backButton,
 }: DynamicTableProps): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -237,6 +239,24 @@ export const DynamicTable = ({
     onRefresh?.();
   };
 
+  const renderBackButton = () => {
+    if (!backButton) return null;
+
+    if (typeof backButton === "boolean") {
+      return (
+        <Button
+          icon={<FaArrowLeft />}
+          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
+          onClick={() => window.history.back()}
+        >
+          Volver
+        </Button>
+      );
+    } else {
+      return backButton;
+    }
+  };
+
   const onExportExcel = () => {
     if (!exportToExcel) return;
     const { fileName, sheetName, data, columns } = exportToExcel;
@@ -257,154 +277,172 @@ export const DynamicTable = ({
   };
 
   const processColumns = (columns: ColumnsProps[]) => {
-    const processedColumns = columns.filter((column) => !column.isHidden).map((column) => ({
-      ...column,
-      title: column.icon ? (
-        <div className="flex items-center gap-2">
-          {React.isValidElement(column.icon)
-            ? React.cloneElement(column.icon)
-            : column.icon}
-          <span className="font-medium">{column.title}</span>
-        </div>
-      ) : (
-        <span className="font-medium">{column.title}</span>
-      ),
-      className: "py-4 px-6",
-    }));
-
-    if (actionConfig.showDefaultActions) {
-      const actionsColumn = {
-        title: <span className="font-medium">Acciones</span>,
-        key: "actions",
-        width: 120,
-        className: "py-4 px-6",
-        render: (_: unknown, record: unknown) => (
-          <div className="flex items-center gap-3">
-            {actionConfig.showEdit && (
-              typeof actionConfig.showEdit === 'function'
-                ? actionConfig.showEdit(record as Record<string, unknown>) && (
-                  <Button
-                    type="warning"
-                    className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
-                      "bg-blue-600 hover:bg-blue-500 text-white"
-                      }`}
-                    icon={actionConfig.customIcons?.edit || <FaEdit />}
-                    onClick={() => handleEdit(record as Record<string, unknown>)}
-                  />
-                )
-                : actionConfig.showEdit && (
-                  <Button
-                    type="warning"
-                    className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
-                      "bg-blue-600 hover:bg-blue-500 text-white"
-                      }`}
-                    icon={actionConfig.customIcons?.edit || <FaEdit />}
-                    onClick={() => handleEdit(record as Record<string, unknown>)}
-                  />
-                )
-            )}
-            {actionConfig.showDelete && (
-              typeof actionConfig.showDelete === 'function'
-                ? actionConfig.showDelete(record as Record<string, unknown>) && (
-                  <Popconfirm
-                    title="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={() =>
-                      handleDelete(record as Record<string, unknown>)
-                    }
-                    okText="Eliminar"
-                    cancelText="Cancelar"
-                  >
-                    <Button
-                      type="danger"
-                      className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
-                        "bg-red-600 hover:bg-red-500 text-white"
-                        }`}
-                      icon={
-                        actionConfig.customIcons?.delete?.type ? (
-                          React.createElement(actionConfig.customIcons.delete.type)
-                        ) : (
-                          <FaTrash />
-                        )
-                      }
-                    />
-                  </Popconfirm>
-                )
-                : actionConfig.showDelete && (
-                  <Popconfirm
-                    title="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={() =>
-                      handleDelete(record as Record<string, unknown>)
-                    }
-                    okText="Eliminar"
-                    cancelText="Cancelar"
-                  >
-                    <Button
-                      type="danger"
-                      className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
-                        "bg-red-600 hover:bg-red-500 text-white"
-                        }`}
-                      icon={
-                        actionConfig.customIcons?.delete?.type ? (
-                          React.createElement(actionConfig.customIcons.delete.type)
-                        ) : (
-                          <FaTrash />
-                        )
-                      }
-                    />
-                  </Popconfirm>
-                )
-            )}
-            {actionConfig.showView && onView && (
-              typeof actionConfig.showView === 'function'
-                ? actionConfig.showView(record as Record<string, unknown>) && (
-                  <Button
-                    type="view"
-                    className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                      "bg-gray-600 hover:bg-gray-500 text-white"
-                      }`}
-                    icon={actionConfig.customIcons?.view || <FaEye />}
-                    onClick={() => handleView(record as Record<string, unknown>)}
-                  />
-                )
-                : actionConfig.showView && (
-                  <Button
-                    type="view"
-                    className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                      "bg-gray-600 hover:bg-gray-500 text-white"
-                      }`}
-                    icon={actionConfig.customIcons?.view || <FaEye />}
-                    onClick={() => handleView(record as Record<string, unknown>)}
-                  />
-                )
-            )}
-            {moreActions?.map((action) => {
-              const isHidden = typeof action.hidden === 'function' ? action.hidden(record as Record<string, unknown>) : false;
-
-              return !isHidden && (
-                <Button
-                  key={action.key}
-                  type="button"
-                  className={`action-button transition-colors ${actionConfig.customActionsColor?.edit ||
-                    action.className ||
-                    ""
-                    }`}
-                  style={action.style}
-                  icon={
-                    React.isValidElement(action.icon)
-                      ? React.cloneElement(action.icon)
-                      : action.icon
-                  }
-                  onClick={() =>
-                    action.onClick(record as Record<string, unknown>)
-                  }
-                >
-                  {action.label}
-                </Button>
-              );
-            })}
+    const processedColumns = columns
+      .filter((column) => !column.isHidden)
+      .map((column) => ({
+        ...column,
+        title: column.icon ? (
+          <div className="flex items-center gap-2">
+            {React.isValidElement(column.icon)
+              ? React.cloneElement(column.icon)
+              : column.icon}
+            <span className="font-medium">{column.title}</span>
           </div>
+        ) : (
+          <span className="font-medium">{column.title}</span>
         ),
-      };
+        className: "py-4 px-6",
+      }));
+
+    const renderActions = (record: Record<string, unknown>) => (
+      <div className="flex items-center gap-3">
+        {/* Default Actions */}
+        {actionConfig.showDefaultActions && (
+          <>
+            {actionConfig.showEdit &&
+              (typeof actionConfig.showEdit === "function"
+                ? actionConfig.showEdit(record) && (
+                    <Button
+                      type="warning"
+                      className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                        actionConfig.customActionsColor?.edit ||
+                        "bg-blue-600 hover:bg-blue-500 text-white"
+                      }`}
+                      icon={actionConfig.customIcons?.edit || <FaEdit />}
+                      onClick={() => handleEdit(record)}
+                    />
+                  )
+                : actionConfig.showEdit && (
+                    <Button
+                      type="warning"
+                      className={`!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300`}
+                      icon={actionConfig.customIcons?.edit || <FaEdit />}
+                      onClick={() => handleEdit(record)}
+                    />
+                  ))}
+            {actionConfig.showDelete &&
+              (typeof actionConfig.showDelete === "function"
+                ? actionConfig.showDelete(record) && (
+                    <Popconfirm
+                      title="¿Estás seguro de que deseas eliminar este registro?"
+                      onConfirm={() => handleDelete(record)}
+                      okText="Eliminar"
+                      cancelText="Cancelar"
+                    >
+                      <Button
+                        type="danger"
+                        className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                          actionConfig.customActionsColor?.delete ||
+                          "bg-red-600 hover:bg-red-500 text-white"
+                        }`}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash />
+                          )
+                        }
+                      />
+                    </Popconfirm>
+                  )
+                : actionConfig.showDelete && (
+                    <Popconfirm
+                      title="¿Estás seguro de que deseas eliminar este registro?"
+                      onConfirm={() => handleDelete(record)}
+                      okText="Eliminar"
+                      cancelText="Cancelar"
+                    >
+                      <Button
+                        type="danger"
+                        className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300 ${
+                          actionConfig.customActionsColor?.delete || ""
+                        }`}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash />
+                          )
+                        }
+                      />
+                    </Popconfirm>
+                  ))}
+            {actionConfig.showView &&
+              onView &&
+              (typeof actionConfig.showView === "function"
+                ? actionConfig.showView(record) && (
+                    <Button
+                      type="view"
+                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                        actionConfig.customActionsColor?.view ||
+                        "bg-gray-600 hover:bg-gray-500 text-white"
+                      }`}
+                      icon={actionConfig.customIcons?.view || <FaEye />}
+                      onClick={() => handleView(record)}
+                    />
+                  )
+                : actionConfig.showView && (
+                    <Button
+                      type="view"
+                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                        actionConfig.customActionsColor?.view ||
+                        "bg-gray-600 hover:bg-gray-500 text-white"
+                      }`}
+                      icon={actionConfig.customIcons?.view || <FaEye />}
+                      onClick={() => handleView(record)}
+                    />
+                  ))}
+          </>
+        )}
+
+        {/* More Actions */}
+        {moreActions?.map((action) => {
+          const isHidden =
+            typeof action.hidden === "function" ? action.hidden(record) : false;
+
+          return (
+            !isHidden && (
+              <Button
+                key={action.key}
+                type="button"
+                className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow duration-300 
+                  ${ actionConfig.customActionsColor?.edit ||
+                  action.className ||
+                  ""
+                }`}
+                style={action.style}
+                icon={
+                  React.isValidElement(action.icon)
+                    ? React.cloneElement(action.icon)
+                    : action.icon
+                }
+                onClick={() => action.onClick(record)}
+              >
+                {action.label}
+              </Button>
+            )
+          );
+        })}
+      </div>
+    );
+
+    const actionsColumn = {
+      title: <span className="font-medium">Acciones</span>,
+      key: "actions",
+      width: 120,
+      className: "py-4 px-6",
+      render: (_: unknown, record: unknown) =>
+        renderActions(record as Record<string, unknown>),
+    };
+
+    if (
+      actionConfig.showDefaultActions ||
+      (moreActions && moreActions.length > 0)
+    ) {
       return [...processedColumns, actionsColumn];
     }
 
@@ -415,6 +453,7 @@ export const DynamicTable = ({
     <ConfigProvider theme={themeConfig}>
       <div className="p-4 bg-white rounded-xl shadow-lg">
         <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+          <div>{renderBackButton()}</div>
           <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
             {Icon && (
               <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
@@ -441,9 +480,10 @@ export const DynamicTable = ({
             {exportToExcel && (
               <Button
                 icon={<FaFileExcel />}
-                className={`${exportToExcel.buttonProps?.className ||
+                className={`${
+                  exportToExcel.buttonProps?.className ||
                   "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
-                  }`}
+                }`}
                 style={exportToExcel.buttonProps?.style || {}}
                 onClick={onExportExcel}
               >

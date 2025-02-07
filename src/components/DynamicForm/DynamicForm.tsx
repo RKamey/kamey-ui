@@ -16,7 +16,7 @@
  * @returns {React.ReactNode}
  */
 
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   Form,
   Button,
@@ -46,7 +46,7 @@ export interface ApiConfig {
 export interface DynamicFormProps {
   mode?: "create" | "update";
   title?: string;
-  description?: string;
+  description?: ReactNode | string;
   icon?: React.ReactElement;
   layout?: "vertical" | "horizontal";
   cols?: 1 | 2 | 3 | 4;
@@ -120,6 +120,7 @@ export const DynamicForm = ({
           );
         }
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (values: Record<string, unknown>) => {
@@ -145,20 +146,31 @@ export const DynamicForm = ({
   const fetchSelectOptions = async (field: FormField) => {
     if (!field.selectConfig?.apiConfig) return;
 
-    const { url, getterMethod, method, headers, valueKey, labelKey, responseDataPath } =
-      field.selectConfig.apiConfig;
+    const {
+      url,
+      getterMethod,
+      method,
+      headers,
+      valueKey,
+      labelKey,
+      responseDataPath,
+    } = field.selectConfig.apiConfig;
 
     let response: AxiosResponse | void;
 
     if (getterMethod) {
-      response = await getterMethod() as AxiosResponse;
+      response = (await getterMethod()) as AxiosResponse;
     } else {
-      response = await axios.get(url ? url : '', { method: method || "GET", headers });
+      response = await axios.get(url ? url : "", {
+        method: method || "GET",
+        headers,
+      });
     }
-    
-    const responseData = response && responseDataPath
-      ? response.data[responseDataPath]
-      : response?.data?.data;
+
+    const responseData =
+      response && responseDataPath
+        ? response.data[responseDataPath]
+        : response?.data?.data;
 
     const data =
       Array.isArray(responseData) && Array.isArray(responseData[0])
@@ -383,7 +395,11 @@ export const DynamicForm = ({
         formItem = (
           <Select
             showSearch
-            placeholder={placeholder ? placeholder : getFormattedPlaceholder(field, field.dependsOn?.field)}
+            placeholder={
+              placeholder
+                ? placeholder
+                : getFormattedPlaceholder(field, field.dependsOn?.field)
+            }
             options={
               field.dependsOn
                 ? selectOptions[name]
