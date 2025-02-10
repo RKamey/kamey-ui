@@ -108,6 +108,7 @@ export const DynamicTable = ({
   title,
   icon: Icon,
   description,
+  showSearchBar = false,
   showCreateButton,
   showRefreshButton,
   onCreate,
@@ -122,6 +123,7 @@ export const DynamicTable = ({
   data,
   loading,
   moreActions,
+  disableWrapper = false,
   actionConfig = {
     showDefaultActions: true,
     showEdit: true,
@@ -451,8 +453,8 @@ export const DynamicTable = ({
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className="p-4 bg-white rounded-xl shadow-lg">
-        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+      <div className={`${!disableWrapper ? "p-4 bg-white rounded-xl shadow-lg" : ""}`}>
+        <div className={`${!disableWrapper ? "p-4 sm:p-6 space-y-3 sm:space-y-4" : ""}`}>
           <div>{renderBackButton()}</div>
           <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
             {Icon && (
@@ -468,10 +470,10 @@ export const DynamicTable = ({
             </Title>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col md:flex-row sm:items-center sm:justify-between gap-4">
             {description && (
               <div className="w-full sm:flex-1">
-                <Text className="text-gray-600 text-sm leading-relaxed">
+                <Text className="text-gray-600 text-sm">
                   {description}
                 </Text>
               </div>
@@ -492,13 +494,15 @@ export const DynamicTable = ({
             )}
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-              <Search
-                allowClear
-                className="w-full sm:min-w-[240px]"
-                placeholder="Buscar"
-                onChange={(e) => handleSearch(e.target.value)}
-                onSearch={handleSearch}
-              />
+              {showSearchBar && (
+                <Search
+                  allowClear
+                  className="w-full sm:min-w-[240px]"
+                  placeholder="Buscar"
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onSearch={handleSearch}
+                />
+              )}
 
               {showRefreshButton && (
                 <Button

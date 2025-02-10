@@ -87,8 +87,10 @@ export interface DynamicTableProps {
   className?: string;
   loading?: boolean;
   exportToExcel?: ExcelConfigProps;
+  showSearchBar?: boolean;
   showCreateButton?: boolean;
   showRefreshButton?: boolean;
+  disableWrapper?: boolean;
   createButtonText?: string;
   createButtonIcon?: React.ReactElement;
   moreActions?: MoreActions[];

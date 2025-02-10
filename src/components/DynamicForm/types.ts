@@ -34,7 +34,7 @@ export interface SelectDependencyConfig {
   headers?: Record<string, string>;
   valueKey: string;
   labelKey: string;
-  paramKey: string;
+  paramKey?: string;
   idPlaceholder?: string;
   placeholderTemplate?: string;
   transformRequest?: (value: string | number) => Record<string, string>;
