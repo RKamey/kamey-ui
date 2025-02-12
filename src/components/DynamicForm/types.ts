@@ -16,8 +16,8 @@ export interface FormField {
   readonly?: boolean;
   dependsOn?: SelectDependencyConfig;
   checkboxConfig?: CheckboxConfig;
+  radioConfig?: RadioConfig;
   hidden?: boolean;
-  cols?: number;
 }
 
 interface ApiResponse<T> {
@@ -29,6 +29,12 @@ export interface DatepickerConfig {
   showTime?: boolean;
   picker?: PickerType;
   size?: 'large' | 'middle' | 'small';
+}
+
+export interface RadioConfig {
+  onChange?: (value: string | number) => void;
+  radioWidth?: string | number;
+  cols?: number;
 }
 
 export interface SelectConfig {

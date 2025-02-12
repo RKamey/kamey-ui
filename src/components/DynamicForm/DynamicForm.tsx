@@ -365,7 +365,6 @@ export const DynamicForm = ({
       step,
       datepickerConfig,
       hidden,
-      cols,
     } = field;
 
     if (readonly || hidden) {
@@ -497,31 +496,36 @@ export const DynamicForm = ({
           );
         }
         break;
-      case "radio":
-        formItem = (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${cols || 1}, 1fr)`,
-              gap: "1rem",
-            }}
-          >
-            <Radio.Group
-              options={options}
-              disabled={readonly}
-              onChange={(e) => {
-                form.setFieldsValue({ [name]: e.target.value });
-              }}
-              className={cols === 1 ? "ant-radio-group-vertical" : "items-center"}
-              style={{
-                display: "flex",
-                flexDirection: cols === 1 ? "column" : "row",
-                flexWrap: "wrap",
-                gap: "8px",
-              }}
-            />
-          </div>
-        );
+        case "radio":
+          formItem = (
+            <div style={{ width: field.radioConfig?.radioWidth || "40%" }}>
+              <Radio.Group
+                disabled={readonly}
+                onChange={(e) => {
+                  form.setFieldsValue({ [name]: e.target.value });
+                }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${field?.radioConfig?.cols || 1}, 1fr)`,
+                  gap: "0.5rem",
+                }}
+              >
+                {options?.map((option) => (
+                  <Radio 
+                    key={option.value} 
+                    value={option.value}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "0",
+                    }}
+                  >
+                    {option.label}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            </div>
+          );
         break;
       case "switch":
         formItem = <Switch />;
