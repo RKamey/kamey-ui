@@ -16,3 +16,4 @@ export type { DynamicTableProps, ActionIcons, ActionConfig, SearchConfig, ExcelC
 export { ApiVersioning } from './components/ApiVersioning/ApiVersioning';
 
 export { useAsync } from './components/UseAsync/UseAsync';
+export { sortOrder } from './components/SortOrder/SortOrder';
