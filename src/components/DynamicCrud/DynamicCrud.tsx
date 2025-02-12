@@ -35,6 +35,9 @@
  * @param {1 | 2 | 3 | 4} [props.formCols=1] - The number of columns to use in the form layout.
  * @param {boolean} [props.formCustomCols=false] - Whether to use a custom column layout in the form.
  * @param {boolean} [props.showView] - Whether to show the view button in the table. This is optional and will only show the view button if `onView` is provided.
+ * @param {ExcelConfigProps} [props.exportToExcel] - Configuration for exporting the table data to Excel.
+ * @param {boolean | React.ReactElement} [props.backButton] - Whether to show a back button or a custom element.
+ * @param {boolean} [props.showSearchBar] - Whether to show the search bar in the table.
  * 
  * @example
  * <DynamicCrud
@@ -112,6 +115,7 @@ interface DynamicCrudProps {
   showView?: boolean;
   exportToExcel?: ExcelConfigProps;
   backButton?: boolean | ReactElement;
+  showSearchBar?: boolean;
 }
 
 export const DynamicCrud = ({
@@ -148,6 +152,7 @@ export const DynamicCrud = ({
   formCustomCols = false,
   exportToExcel,
   backButton,
+  showSearchBar,
 }: DynamicCrudProps): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
@@ -226,6 +231,7 @@ export const DynamicCrud = ({
         searchConfig={searchConfig}
         actionConfig={actionConfig}
         headerDirection={headerDirection}
+        showSearchBar={showSearchBar}
         showRefreshButton={showRefreshButton}
         loading={loading}
         onCreate={handleCreate}

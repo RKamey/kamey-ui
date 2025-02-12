@@ -38,6 +38,13 @@
  * @param {Object} [props.searchConfig] - Configuration for the search functionality.
  * @param {string[]} [props.searchConfig.searchableFields=[]] - Fields to search within.
  * @param {(item: Record<string, unknown>, term: string) => boolean} [props.searchConfig.customSearch] - Custom search function.
+ * @param {Object} [props.exportToExcel] - Configuration for exporting data to Excel.
+ * @param {string} props.exportToExcel.fileName - The name of the Excel file.
+ * @param {string} props.exportToExcel.sheetName - The name of the Excel sheet.
+ * @param {Record<string, unknown>[]} props.exportToExcel.data - The data to export.
+ * @param {ColumnsProps[]} props.exportToExcel.columns - The columns configuration for the Excel sheet.
+ * @param {boolean} [props.disableWrapper=false] - Whether to disable the default wrapper styles.
+ * @param {React.ReactNode | boolean} [props.backButton] - Custom back button. If `true`, a default back button will be rendered.
  * @param {Object} [props.themeConfig] - Theme configuration for the table.
  *
  * @example
