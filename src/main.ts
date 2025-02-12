@@ -17,3 +17,5 @@ export { ApiVersioning } from './components/ApiVersioning/ApiVersioning';
 
 export { useAsync } from './components/UseAsync/UseAsync';
 export { sortOrder } from './components/SortOrder/SortOrder';
+export { generateColumns, generateFields } from './components/SharedField/SharedField';
+export type { SharedFieldConfig } from './components/SharedField/types';
