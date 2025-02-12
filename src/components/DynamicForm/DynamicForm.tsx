@@ -120,7 +120,7 @@ export const DynamicForm = ({
           );
         }
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (values: Record<string, unknown>) => {
@@ -365,6 +365,7 @@ export const DynamicForm = ({
       step,
       datepickerConfig,
       hidden,
+      cols,
     } = field;
 
     if (readonly || hidden) {
@@ -498,13 +499,28 @@ export const DynamicForm = ({
         break;
       case "radio":
         formItem = (
-          <Radio.Group
-            options={options}
-            disabled={readonly}
-            onChange={(e) => {
-              form.setFieldsValue({ [name]: e.target.value });
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${cols || 1}, 1fr)`,
+              gap: "1rem",
             }}
-          />
+          >
+            <Radio.Group
+              options={options}
+              disabled={readonly}
+              onChange={(e) => {
+                form.setFieldsValue({ [name]: e.target.value });
+              }}
+              className={cols === 1 ? "ant-radio-group-vertical" : "items-center"}
+              style={{
+                display: "flex",
+                flexDirection: cols === 1 ? "column" : "row",
+                flexWrap: "wrap",
+                gap: "8px",
+              }}
+            />
+          </div>
         );
         break;
       case "switch":

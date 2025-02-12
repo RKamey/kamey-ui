@@ -1,14 +1,34 @@
 export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'rangepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload' | 'custom' | 'hidden';
 export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
+
+export interface FormField {
+  type: FieldType;
+  name: string;
+  label: string;
+  min?: number | undefined;
+  max?: number | undefined;
+  step?: number | undefined;
+  validations?: Validations[];
+  options?: Options[];
+  placeholder?: string;
+  datepickerConfig?: DatepickerConfig;
+  selectConfig?: SelectConfig;
+  readonly?: boolean;
+  dependsOn?: SelectDependencyConfig;
+  checkboxConfig?: CheckboxConfig;
+  hidden?: boolean;
+  cols?: number;
+}
+
+interface ApiResponse<T> {
+  data: T | { data: T };
+}
+
 export interface DatepickerConfig {
   format?: string;
   showTime?: boolean;
   picker?: PickerType;
   size?: 'large' | 'middle' | 'small';
-}
-
-interface ApiResponse<T> {
-  data: T | { data: T };
 }
 
 export interface SelectConfig {
@@ -40,23 +60,6 @@ export interface SelectDependencyConfig {
   transformRequest?: (value: string | number) => Record<string, string>;
 }
 
-export interface FormField {
-  type: FieldType;
-  name: string;
-  label: string;
-  min?: number | undefined;
-  max?: number | undefined;
-  step?: number | undefined;
-  validations?: Validations[];
-  options?: Options[];
-  placeholder?: string;
-  datepickerConfig?: DatepickerConfig;
-  selectConfig?: SelectConfig;
-  readonly?: boolean;
-  dependsOn?: SelectDependencyConfig;
-  checkboxConfig?: CheckboxConfig;
-  hidden?: boolean;
-}
 
 export interface CheckboxConfig {
   options?: Options[];
@@ -64,7 +67,7 @@ export interface CheckboxConfig {
 }
 
 export interface Options {
-  label: string;
+  label: string | React.ReactElement;
   value: string | number;
   disabled?: boolean;
 }
