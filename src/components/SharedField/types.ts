@@ -5,7 +5,7 @@ export interface SharedFieldConfig {
   title: string;
   label: string;
   placeholder?: string;
-  validations?: Validations
+  validations?: Validations[];
   width?: string | number;
   datepickerConfig?: { format: string; showTime: boolean };
   min?: number;
