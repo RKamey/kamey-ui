@@ -1,11 +1,11 @@
-import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig } from "../DynamicForm/types";
+import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations } from "../DynamicForm/types";
 
 export interface SharedFieldConfig {
   key: string;
   title: string;
   label: string;
   placeholder?: string;
-  validations?: Array<{ required: { value: boolean; message: string } }>;
+  validations?: Validations
   width?: string | number;
   datepickerConfig?: { format: string; showTime: boolean };
   min?: number;
