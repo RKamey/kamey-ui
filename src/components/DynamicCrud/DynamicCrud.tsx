@@ -68,29 +68,29 @@ import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
 import { ActionConfig, ColumnsProps, ExcelConfigProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
-import { ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
-import { PlusOutlined, EditOutlined } from '@ant-design/icons'; // Importar íconos por defecto
+import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 
 type OnCreateHandler = 
   | ((values: Record<string, unknown>) => void)
   | (() => void);
 
 interface DynamicCrudProps {
-  title?: string;
-  formTitle?: string;
+  title?: string | ReactElement;
+  formTitle?: string | ReactElement;
   formTitles?: string[];
-  description?: ReactNode | string;
-  formDescription?: string;
+  description?: string | ReactElement;
+  formDescription?: string | ReactElement;
   columns: ColumnsProps[];
   data?: unknown[];
   fields: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;
-  createButtonIcon?: React.ReactElement;
+  createButtonIcon?: ReactElement;
   submitButtonText?: string;
-  icon?: React.ReactElement;
+  icon?: ReactElement;
   layout?: "horizontal" | "vertical";
   actionConfig?: ActionConfig;
   searchConfig?: SearchConfig;
@@ -111,7 +111,7 @@ interface DynamicCrudProps {
   formCustomCols?: boolean;
   showView?: boolean;
   exportToExcel?: ExcelConfigProps;
-  backButton?: ReactNode | boolean;
+  backButton?: boolean | ReactElement;
 }
 
 export const DynamicCrud = ({
@@ -148,7 +148,7 @@ export const DynamicCrud = ({
   formCustomCols = false,
   exportToExcel,
   backButton,
-}: DynamicCrudProps): React.ReactNode => {
+}: DynamicCrudProps): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
   const [mode, setMode] = useState(initialData ? "update" : "create");

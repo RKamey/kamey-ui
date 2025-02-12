@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
 export interface ColumnsProps {
   title: string;
@@ -78,9 +78,9 @@ export interface ExcelConfigProps {
 }
 
 export interface DynamicTableProps {
-  title?: string;
-  description?: ReactNode | string;
-  icon?: React.ReactElement;
+  title?: string | ReactElement;
+  description?: string | ReactElement;
+  icon?: ReactElement;
   headerDirection?: "horizontal" | "vertical";
   columns: ColumnsProps[];
   data: unknown[];
@@ -92,7 +92,7 @@ export interface DynamicTableProps {
   showRefreshButton?: boolean;
   disableWrapper?: boolean;
   createButtonText?: string;
-  createButtonIcon?: React.ReactElement;
+  createButtonIcon?: ReactElement;
   moreActions?: MoreActions[];
   onCreate?: () => void;
   onView?: (record: unknown) => void;
@@ -103,5 +103,5 @@ export interface DynamicTableProps {
   searchConfig?: SearchConfig;
   themeConfig?: ThemeConfig;
   customCols?: boolean;
-  backButton?: ReactNode | boolean;
+  backButton?: boolean | ReactElement;
 }

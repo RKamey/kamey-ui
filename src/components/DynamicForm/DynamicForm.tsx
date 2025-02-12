@@ -16,7 +16,7 @@
  * @returns {React.ReactNode}
  */
 
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import {
   Form,
   Button,
@@ -45,9 +45,9 @@ export interface ApiConfig {
 
 export interface DynamicFormProps {
   mode?: "create" | "update";
-  title?: string;
-  description?: ReactNode | string;
-  icon?: React.ReactElement;
+  title?: string | ReactElement;
+  description?: string | ReactElement;
+  icon?: ReactElement;
   layout?: "vertical" | "horizontal";
   cols?: 1 | 2 | 3 | 4;
   fields: FormField[] | FormField[][];
