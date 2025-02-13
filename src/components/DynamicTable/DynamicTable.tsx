@@ -130,6 +130,7 @@ export const DynamicTable = ({
   data,
   loading,
   moreActions,
+  customFilters,
   disableWrapper = false,
   actionConfig = {
     showDefaultActions: true,
@@ -498,6 +499,24 @@ export const DynamicTable = ({
               >
                 {exportToExcel.buttonProps?.text || "Exportar a Excel"}
               </Button>
+            )}
+
+            {customFilters && (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                {customFilters.map((filter) => (
+                  <Button
+                    key={filter.key}
+                    type="default"
+                    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8 ${
+                      filter.className || ""
+                    }`}
+                    icon={filter.icon}
+                    onClick={() => filter.onClick({})}
+                  >
+                    <span className="font-medium">{filter.label}</span>
+                  </Button>
+                ))}
+              </div>
             )}
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">

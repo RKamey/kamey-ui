@@ -65,6 +65,15 @@ export interface MoreActions {
   onClick: (record: Record<string, unknown>) => void;
 }
 
+export interface CustomFilters {
+  key: string;
+  label?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  icon?: React.ReactElement;
+  onClick: (record: Record<string, unknown>) => void;
+}
+
 export interface ExcelConfigProps {
   fileName: string;
   sheetName: string;
@@ -94,6 +103,7 @@ export interface DynamicTableProps {
   createButtonText?: string;
   createButtonIcon?: ReactElement;
   moreActions?: MoreActions[];
+  customFilters?: CustomFilters[];
   onCreate?: () => void;
   onView?: (record: unknown) => void;
   onEdit?: (record: unknown) => void;
