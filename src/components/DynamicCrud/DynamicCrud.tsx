@@ -80,7 +80,7 @@ type OnCreateHandler =
   | ((values: Record<string, unknown>) => void)
   | (() => void);
 
-interface DynamicCrudProps {
+export interface DynamicCrudProps {
   title?: string | ReactElement;
   formTitle?: string | ReactElement;
   formTitles?: string[];
