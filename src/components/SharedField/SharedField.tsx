@@ -14,7 +14,7 @@ const generateColumns = (fields: Record<string, SharedFieldConfig>): ColumnsProp
     key: field.key,
     title: field.title,
     dataIndex: field.key,
-    sorter: (a: any, b: any) => sortOrder(field.key)(a, b),
+    sorter: field.sorter && ((a: any, b: any) => sortOrder(field.key)(a, b)),
     width: field.width,
     align: field.align,
     icon: field.icon,

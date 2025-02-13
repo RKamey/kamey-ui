@@ -89,6 +89,7 @@ import {
   Table,
   Popconfirm,
   ConfigProvider,
+  Tooltip,
 } from "antd";
 import {
   FaPlus,
@@ -312,23 +313,28 @@ export const DynamicTable = ({
             {actionConfig.showEdit &&
               (typeof actionConfig.showEdit === "function"
                 ? actionConfig.showEdit(record) && (
-                    <Button
-                      type="warning"
-                      className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                        actionConfig.customActionsColor?.edit ||
-                        "bg-blue-600 hover:bg-blue-500 text-white"
-                      }`}
-                      icon={actionConfig.customIcons?.edit || <FaEdit />}
-                      onClick={() => handleEdit(record)}
-                    />
+                    <Tooltip title="Editar">
+                      <Button
+                        type="warning"
+                        title="Editar"
+                        className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                          actionConfig.customActionsColor?.edit ||
+                          "bg-blue-600 hover:bg-blue-500 text-white"
+                          }`}
+                        icon={actionConfig.customIcons?.edit || <FaEdit />}
+                        onClick={() => handleEdit(record)}
+                      />
+                    </Tooltip>
                   )
                 : actionConfig.showEdit && (
-                    <Button
-                      type="warning"
-                      className={`!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300`}
-                      icon={actionConfig.customIcons?.edit || <FaEdit />}
-                      onClick={() => handleEdit(record)}
-                    />
+                    <Tooltip title="Editar">
+                      <Button
+                        type="warning"
+                        className={`!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300`}
+                        icon={actionConfig.customIcons?.edit || <FaEdit />}
+                        onClick={() => handleEdit(record)}
+                      />
+                    </Tooltip>
                   ))}
             {actionConfig.showDelete &&
               (typeof actionConfig.showDelete === "function"
@@ -339,22 +345,23 @@ export const DynamicTable = ({
                       okText="Eliminar"
                       cancelText="Cancelar"
                     >
-                      <Button
-                        type="danger"
-                        className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                          actionConfig.customActionsColor?.delete ||
-                          "bg-red-600 hover:bg-red-500 text-white"
-                        }`}
-                        icon={
-                          actionConfig.customIcons?.delete?.type ? (
-                            React.createElement(
-                              actionConfig.customIcons.delete.type
-                            )
-                          ) : (
-                            <FaTrash />
-                          )
-                        }
-                      />
+                      <Tooltip title="Eliminar">
+                        <Button
+                          type="danger"
+                          className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                            actionConfig.customActionsColor?.delete ||
+                            "bg-red-600 hover:bg-red-500 text-white"
+                            }`}
+                          icon={
+                            actionConfig.customIcons?.delete?.type ? (
+                              React.createElement(
+                                actionConfig.customIcons.delete.type
+                              )
+                            ) : (
+                              <FaTrash />
+                            )}
+                          />
+                        </Tooltip>
                     </Popconfirm>
                   )
                 : actionConfig.showDelete && (
@@ -364,27 +371,31 @@ export const DynamicTable = ({
                       okText="Eliminar"
                       cancelText="Cancelar"
                     >
-                      <Button
-                        type="danger"
-                        className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300 ${
-                          actionConfig.customActionsColor?.delete || ""
-                        }`}
-                        icon={
-                          actionConfig.customIcons?.delete?.type ? (
-                            React.createElement(
-                              actionConfig.customIcons.delete.type
+                      <Tooltip title="Eliminar">
+                      
+                        <Button
+                          type="danger"
+                          className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300 ${
+                            actionConfig.customActionsColor?.delete || ""
+                          }`}
+                          icon={
+                            actionConfig.customIcons?.delete?.type ? (
+                              React.createElement(
+                                actionConfig.customIcons.delete.type
+                              )
+                            ) : (
+                              <FaTrash />
                             )
-                          ) : (
-                            <FaTrash />
-                          )
-                        }
-                      />
+                          }
+                        />
+                      </Tooltip>
                     </Popconfirm>
                   ))}
             {actionConfig.showView &&
               onView &&
               (typeof actionConfig.showView === "function"
                 ? actionConfig.showView(record) && (
+                  <Tooltip title="Ver">
                     <Button
                       type="view"
                       className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
@@ -394,17 +405,20 @@ export const DynamicTable = ({
                       icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
                     />
+                  </Tooltip>
                   )
                 : actionConfig.showView && (
-                    <Button
-                      type="view"
-                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                        actionConfig.customActionsColor?.view ||
-                        "bg-gray-600 hover:bg-gray-500 text-white"
-                      }`}
-                      icon={actionConfig.customIcons?.view || <FaEye />}
-                      onClick={() => handleView(record)}
-                    />
+                    <Tooltip title="Ver">
+                      <Button
+                        type="view"
+                        className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
+                          actionConfig.customActionsColor?.view ||
+                          "bg-gray-600 hover:bg-gray-500 text-white"
+                          }`}
+                        icon={actionConfig.customIcons?.view || <FaEye />}
+                        onClick={() => handleView(record)}
+                        />
+                    </Tooltip>
                   ))}
           </>
         )}
@@ -416,24 +430,26 @@ export const DynamicTable = ({
 
           return (
             !isHidden && (
-              <Button
-                key={action.key}
-                type="button"
-                className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow duration-300 
-                  ${ actionConfig.customActionsColor?.edit ||
-                  action.className ||
-                  ""
-                }`}
-                style={action.style}
-                icon={
-                  React.isValidElement(action.icon)
-                    ? React.cloneElement(action.icon)
-                    : action.icon
-                }
-                onClick={() => action.onClick(record)}
-              >
-                {action.label}
-              </Button>
+              <Tooltip title={action.tooltip}>
+                <Button
+                  key={action.key}
+                  type="button"
+                  className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow duration-300 
+                    ${ actionConfig.customActionsColor?.edit ||
+                    action.className ||
+                    ""
+                  }`}
+                  style={action.style}
+                  icon={
+                    React.isValidElement(action.icon)
+                      ? React.cloneElement(action.icon)
+                      : action.icon
+                  }
+                  onClick={() => action.onClick(record)}
+                >
+                  {action.label}
+                </Button>
+              </Tooltip>
             )
           );
         })}

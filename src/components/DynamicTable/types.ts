@@ -58,6 +58,7 @@ export interface SearchConfig {
 export interface MoreActions {
   key: string;
   label?: string;
+  tooltip?: string;
   className?: string;
   style?: React.CSSProperties;
   icon?: React.ReactElement;

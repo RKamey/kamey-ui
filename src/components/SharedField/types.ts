@@ -21,4 +21,5 @@ export interface SharedFieldConfig {
   max?: number;
   step?: number;
   options?: Array<{ label: string; value: string | number }>;
+  sorter?: boolean;
 }
