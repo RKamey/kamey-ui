@@ -18,7 +18,7 @@ const generateColumns = (fields: Record<string, SharedFieldConfig>): ColumnsProp
     width: field.width,
     align: field.align,
     icon: field.icon,
-    isHidden: field.hidden,
+    isHidden: field.isHidden,
     render: field.render as ((value: unknown, record: unknown) => React.ReactNode) | undefined,
   }));
 };
