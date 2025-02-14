@@ -11,7 +11,8 @@ export interface SharedFieldConfig {
   min?: number;
   render?: <T extends string = string>(value: T) => React.ReactNode;
   readonly?: boolean;
-  hidden?: boolean;
+  isHidden?: boolean; // Para ocultar la columna en la tabla
+  hidden?: boolean; // Para ocultar el campo en el formulario
   type?: FieldType;
   align?: "left" | "right" | "center";
   icon?: React.ReactElement;
