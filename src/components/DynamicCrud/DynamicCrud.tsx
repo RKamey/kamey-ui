@@ -117,6 +117,7 @@ export interface DynamicCrudProps {
   exportToExcel?: ExcelConfigProps;
   backButton?: boolean | ReactElement;
   showSearchBar?: boolean;
+  disableWrapper?: boolean;
 }
 
 export const DynamicCrud = ({
@@ -155,6 +156,7 @@ export const DynamicCrud = ({
   backButton,
   showSearchBar,
   customFilters,
+  disableWrapper = false
 }: DynamicCrudProps): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
@@ -248,6 +250,7 @@ export const DynamicCrud = ({
         customFilters={customFilters}
         exportToExcel={exportToExcel}
         backButton={backButton}
+        disableWrapper={disableWrapper}
       />
 
       {isModalVisible && (
