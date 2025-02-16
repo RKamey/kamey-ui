@@ -383,6 +383,7 @@ export const DynamicForm = ({
         formItem = (
           <InputNumber
             className="w-full"
+            style={{ width: "100%" }}
             placeholder={placeholder}
             readOnly={readonly}
             min={min}

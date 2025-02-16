@@ -147,10 +147,10 @@ export const DynamicTable = ({
       view: <FaEye />,
     },
     customActionsColor: {
-      edit: "!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+      edit: "bg-indigo-50! hover:bg-indigo-100! text-indigo-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300",
       delete:
-        "!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300",
-      view: "!bg-gray-50 hover:!bg-gray-100 !text-gray-600 !border-none shadow-sm hover:shadow transition-all duration-300",
+        "bg-rose-50! hover:bg-rose-100! text-rose-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300",
+      view: "bg-gray-50! hover:bg-gray-100! text-gray-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300",
     },
   },
   searchConfig = {
@@ -257,7 +257,7 @@ export const DynamicTable = ({
       return (
         <Button
           icon={<FaArrowLeft />}
-          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
+          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
           onClick={() => window.history.back()}
         >
           Volver
@@ -330,7 +330,7 @@ export const DynamicTable = ({
                     <Tooltip title="Editar">
                       <Button
                         type="warning"
-                        className={`!bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow transition-all duration-300`}
+                        className={`bg-indigo-50! hover:bg-indigo-100! text-indigo-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300`}
                         icon={actionConfig.customIcons?.edit || <FaEdit />}
                         onClick={() => handleEdit(record)}
                       />
@@ -375,7 +375,7 @@ export const DynamicTable = ({
                       
                         <Button
                           type="danger"
-                          className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow transition-all duration-300 ${
+                          className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${
                             actionConfig.customActionsColor?.delete || ""
                           }`}
                           icon={
@@ -434,7 +434,7 @@ export const DynamicTable = ({
                 <Button
                   key={action.key}
                   type="button"
-                  className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow duration-300 
+                  className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow-sm duration-300 
                     ${ actionConfig.customActionsColor?.edit ||
                     action.className ||
                     ""
@@ -488,7 +488,7 @@ export const DynamicTable = ({
             )}
             <Title
               level={3}
-              className="!m-0 !text-gray-900 font-bold tracking-tight text-lg sm:text-xl"
+              className="m-0! text-gray-900! font-bold tracking-tight text-lg sm:text-xl"
             >
               {title}
             </Title>
@@ -508,7 +508,7 @@ export const DynamicTable = ({
                 icon={<FaFileExcel />}
                 className={`${
                   exportToExcel.buttonProps?.className ||
-                  "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
+                  "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
                 }`}
                 style={exportToExcel.buttonProps?.style || {}}
                 onClick={onExportExcel}
@@ -523,7 +523,7 @@ export const DynamicTable = ({
                   <Button
                     key={filter.key}
                     type="default"
-                    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8 ${
+                    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${
                       filter.className || ""
                     }`}
                     icon={filter.icon}
@@ -549,7 +549,7 @@ export const DynamicTable = ({
               {showRefreshButton && (
                 <Button
                   type="default"
-                  className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300 px-4 h-8"
+                  className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
                   icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
@@ -562,7 +562,7 @@ export const DynamicTable = ({
               {showCreateButton && (
                 <Button
                   type="primary"
-                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md"
                   icon={React.cloneElement(createButtonIcon) || <FaPlus />}
                   onClick={onCreate}
                 >
