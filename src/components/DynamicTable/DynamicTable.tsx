@@ -116,7 +116,7 @@ export const DynamicTable = ({
   title,
   icon: Icon,
   description,
-  showSearchBar = false,
+  showSearchBar = true,
   showCreateButton,
   showRefreshButton,
   onCreate,
