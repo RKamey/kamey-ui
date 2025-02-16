@@ -1,6 +1,6 @@
 {
   "name": "kamey-components",
-  "version": "0.34.4",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist"
