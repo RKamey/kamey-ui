@@ -371,48 +371,43 @@ export const DynamicForm = ({
    
     // Si estamos en modo view, mostramos el valor como texto
     if (mode === 'view') {
-      const value = form.getFieldValue(name);
-      
+      const value = form.getFieldValue(name) || '-'; // Valor por defecto si es undefined
+  
       let displayValue: React.ReactNode = value;
-   
+  
       // Formatear el valor según el tipo de campo
       switch (type) {
         case 'text':
-          displayValue = value;
-          break;
-
         case 'number':
-          displayValue = value;
-          break;
-
         case 'textarea':
           displayValue = value;
           break;
-
-        case 'select':
-          { const option = (field.dependsOn 
+  
+        case 'select': {
+          const option = (field.dependsOn 
             ? selectOptions[name] 
             : field.selectConfig?.apiConfig 
               ? selectOptions[name] 
               : options
           )?.find(opt => opt.value === value);
           displayValue = option?.label || value;
-          break; }
-        
+          break;
+        }
+  
         case 'datepicker':
           if (value) {
             const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
             displayValue = dayjs(value).format(format);
           }
           break;
-        
+  
         case 'rangepicker':
           if (value && Array.isArray(value)) {
             const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
             displayValue = value.map(date => dayjs(date).format(format)).join(' - ');
           }
           break;
-        
+  
         case 'checkbox':
           if (options) {
             // Para grupos de checkbox
@@ -427,21 +422,26 @@ export const DynamicForm = ({
             displayValue = value ? 'Sí' : 'No';
           }
           break;
-        
-        case 'radio':
-          { const radioOption = options?.find(opt => opt.value === value);
+  
+        case 'radio': {
+          const radioOption = options?.find(opt => opt.value === value);
           displayValue = radioOption?.label || value;
-          break; }
-        
+          break;
+        }
+  
         case 'switch':
           displayValue = value ? 'Sí' : 'No';
           break;
+  
+        default:
+          displayValue = value;
+          break;
       }
-   
+  
       return (
         <Form.Item label={label} className="mb-4">
           <div className="text-gray-700">
-            {displayValue || '-'}
+            {displayValue}
           </div>
         </Form.Item>
       );
@@ -629,7 +629,7 @@ export const DynamicForm = ({
       <div className="flex flex-col mb-4">
         <div className="flex items-center gap-4">
           {icon && React.cloneElement(icon)}
-          <h1 className="font-semibold">{title}</h1>
+          <span className="font-semibold">{title}</span>
         </div>
         <p className="text-sm text-gray-500">{description}</p>
       </div>
