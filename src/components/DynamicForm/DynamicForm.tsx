@@ -377,6 +377,18 @@ export const DynamicForm = ({
    
       // Formatear el valor según el tipo de campo
       switch (type) {
+        case 'text':
+          displayValue = value;
+          break;
+
+        case 'number':
+          displayValue = value;
+          break;
+
+        case 'textarea':
+          displayValue = value;
+          break;
+
         case 'select':
           { const option = (field.dependsOn 
             ? selectOptions[name] 
