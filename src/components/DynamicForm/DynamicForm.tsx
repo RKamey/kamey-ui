@@ -44,7 +44,7 @@ export interface ApiConfig {
 }
 
 export interface DynamicFormProps {
-  mode?: "create" | "update";
+  mode?: "create" | "update" | "view";
   title?: string | ReactElement;
   description?: string | ReactElement;
   icon?: ReactElement;
@@ -367,9 +367,11 @@ export const DynamicForm = ({
       hidden,
     } = field;
 
-    if (readonly || hidden) {
-      return null;
-    }
+    // If field is hidden, return null
+    if (hidden) return null;
+
+    // Set readonly based on both field config and view mode
+    const isReadOnly = readonly || mode === 'view';
 
     const { format, showTime, picker, size } = datepickerConfig || {};
 
@@ -377,7 +379,7 @@ export const DynamicForm = ({
 
     switch (type) {
       case "text":
-        formItem = <Input placeholder={placeholder} readOnly={readonly} />;
+        formItem = <Input placeholder={placeholder} readOnly={isReadOnly} />;
         break;
       case "number":
         formItem = (
@@ -385,7 +387,8 @@ export const DynamicForm = ({
             className="w-full"
             style={{ width: "100%" }}
             placeholder={placeholder}
-            readOnly={readonly}
+            readOnly={isReadOnly}
+            disabled={isReadOnly}
             min={min}
             max={max}
             step={step}
@@ -396,30 +399,16 @@ export const DynamicForm = ({
         formItem = (
           <Select
             showSearch
-            placeholder={
-              placeholder
-                ? placeholder
-                : getFormattedPlaceholder(field, field.dependsOn?.field)
-            }
-            options={
-              field.dependsOn
-                ? selectOptions[name]
-                : field.selectConfig?.apiConfig
-                ? selectOptions[name]
-                : options
-            }
+            placeholder={placeholder ? placeholder : getFormattedPlaceholder(field, field.dependsOn?.field)}
+            options={field.dependsOn ? selectOptions[name] : field.selectConfig?.apiConfig ? selectOptions[name] : options}
             optionFilterProp="label"
+            disabled={isReadOnly}
             onChange={(value) => {
+              if (isReadOnly) return;
               form.setFieldsValue({ [name]: value });
-
               if (value) {
                 fields
-                  .filter(
-                    (f): f is FormField =>
-                      typeof f === "object" &&
-                      !Array.isArray(f) &&
-                      f.dependsOn?.field === name
-                  )
+                  .filter((f): f is FormField => typeof f === "object" && !Array.isArray(f) && f.dependsOn?.field === name)
                   .forEach((dependentField) => {
                     fetchDependentOptions(dependentField, value);
                   });
@@ -497,36 +486,36 @@ export const DynamicForm = ({
           );
         }
         break;
-        case "radio":
-          formItem = (
-            <div style={{ width: field.radioConfig?.radioWidth || "40%" }}>
-              <Radio.Group
-                disabled={readonly}
-                onChange={(e) => {
-                  form.setFieldsValue({ [name]: e.target.value });
-                }}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(${field?.radioConfig?.cols || 1}, 1fr)`,
-                  gap: "0.5rem",
-                }}
-              >
-                {options?.map((option) => (
-                  <Radio 
-                    key={option.value} 
-                    value={option.value}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginRight: "0",
-                    }}
-                  >
-                    {option.label}
-                  </Radio>
-                ))}
-              </Radio.Group>
-            </div>
-          );
+      case "radio":
+        formItem = (
+          <div style={{ width: field.radioConfig?.radioWidth || "40%" }}>
+            <Radio.Group
+              disabled={readonly}
+              onChange={(e) => {
+                form.setFieldsValue({ [name]: e.target.value });
+              }}
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${field?.radioConfig?.cols || 1}, 1fr)`,
+                gap: "0.5rem",
+              }}
+            >
+              {options?.map((option) => (
+                <Radio
+                  key={option.value}
+                  value={option.value}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginRight: "0",
+                  }}
+                >
+                  {option.label}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </div>
+        );
         break;
       case "switch":
         formItem = <Switch />;
@@ -551,13 +540,13 @@ export const DynamicForm = ({
     <div>
       {/* Header */}
       <div className="flex flex-col mb-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 text-lg">
           {icon && React.cloneElement(icon)}
           <h1 className="text-lg font-semibold">{title}</h1>
         </div>
         <p className="text-sm text-gray-500">{description}</p>
       </div>
-
+  
       {/* Form */}
       <Form
         form={form}
@@ -588,21 +577,24 @@ export const DynamicForm = ({
               <Input type="hidden" />
             </Form.Item>
           ))}
-        <Row justify="end">
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="bg-primary"
-              style={{ color: "white" }}
-            >
-              {submitButtonText ||
-                (mode
-                  ? { create: "Crear", update: "Actualizar" }[mode]
-                  : "Crear")}
-            </Button>
-          </Form.Item>
-        </Row>
+        {/* Only show submit button if not in view mode */}
+        {mode !== 'view' && (
+          <Row justify="end">
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="bg-primary"
+                style={{ color: "white" }}
+              >
+                {submitButtonText ||
+                  (mode
+                    ? { create: "Crear", update: "Actualizar" }[mode]
+                    : "Crear")}
+              </Button>
+            </Form.Item>
+          </Row>
+        )}
       </Form>
     </div>
   );

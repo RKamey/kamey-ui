@@ -74,7 +74,7 @@ import { FormField } from "../DynamicForm/types";
 import { ReactElement, ReactNode, useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
-import { PlusOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, InfoCircleFilled } from '@ant-design/icons';
 
 type OnCreateHandler = 
   | ((values: Record<string, unknown>) => void)
@@ -208,18 +208,29 @@ export const DynamicCrud = ({
   }
 
   const handleView = (record: unknown) => {
-    onView?.(record as Record<string, unknown>);
+    // onView?.(record as Record<string, unknown>);
+    //Hay funcion onView?, si la hay, hazla, si no, muestra el registro en modal
+    if (onView) {
+      onView(record as Record<string, unknown>);
+    } else {
+      const formattedRecord = formatRecordDates(record as Record<string, unknown>);
+      setCurrentRecord(formattedRecord);
+      setIsModalVisible(true);
+      setMode("view");
+    }
   }
 
   // ==== [ Títulos e íconos ] ====
 
   const defaultCreateTitle = formTitles?.[0] || "Crear nuevo registro";
   const defaultEditTitle = formTitles?.[1] || "Editar registro";
+  const defaultViewTitle = formTitles?.[2] || "Ver registro";
   const defaultCreateIcon = createButtonIcon || <PlusOutlined />;
   const defaultEditIcon = <EditOutlined />;
+  const defaultViewIcon = <InfoCircleFilled />;
 
-  const formTitleToShow = formTitle || (mode === "create" ? defaultCreateTitle : defaultEditTitle);
-  const formIconToShow = icon || (mode === "create" ? defaultCreateIcon : defaultEditIcon);
+  const formTitleToShow = formTitle || (mode === "create" ? defaultCreateTitle : mode === "update" ? defaultEditTitle : defaultViewTitle);
+  const formIconToShow = icon || (mode === "create" ? defaultCreateIcon : mode === "update" ? defaultEditIcon : defaultViewIcon);
 
   return (
     <div>
@@ -284,7 +295,7 @@ export const DynamicCrud = ({
                 console.error(`Error al ${mode === 'update' ? 'editar' : 'crear'} registro:`, error);
               }
             }}
-            mode={mode as "create" | "update"}
+            mode={mode as "create" | "update" | "view"}
             submitButtonText={submitButtonText}
             apiConfig={apiConfig}
             cols={formCols}
