@@ -4,11 +4,11 @@ import { sortOrder } from "../SortOrder/SortOrder";
 import { SharedFieldConfig } from "./types";
 
 /**
- * Función para generar las columnas de una tabla a partir de un objeto de campos
- * @param fields Objeto de campos
- * @returns Arreglo de columnas con el tipo ColumnsProps<T>
+ * Función para generar las columnas de una tabla a partir de un objeto de campos.
+ * @param fields Objeto de campos.
+ * @returns Arreglo de columnas con el tipo ColumnsProps<T>.
  */
-const generateColumns = <T extends Record<string, unknown>>(
+const generateColumns = <T extends object>(
   fields: Record<string, SharedFieldConfig>
 ): ColumnsProps<T>[] => {
   return Object.values(fields).map((field) => ({
@@ -29,15 +29,15 @@ const generateColumns = <T extends Record<string, unknown>>(
 };
 
 /**
- * Función para generar los campos de un formulario a partir de un objeto de campos
- * @param fields Objeto de campos
- * @returns Arreglo de campos con el tipo FormField[]
+ * Función para generar los campos de un formulario a partir de un objeto de campos.
+ * @param fields Objeto de campos.
+ * @returns Arreglo de campos con el tipo FormField[].
  */
 const generateFields = (
   fields: Record<string, SharedFieldConfig>
 ): FormField[] => {
   return Object.entries(fields).map(([name, field]) => ({
-    type: field.type || "text", // Asignar un tipo por defecto si no está definido
+    type: field.type || "text", // Asigna un tipo por defecto si no está definido
     name,
     label: field.label,
     placeholder: field.placeholder,

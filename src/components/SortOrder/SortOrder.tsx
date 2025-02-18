@@ -1,19 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type SortFunction<T> = (a: T, b: T) => number;
-
+// sortOrder.ts
+export type SortFunction<T> = (a: T, b: T) => number;
 
 /**
  * Función para ordenar un arreglo de objetos por una propiedad específica.
  * @param key Propiedad por la que se va a ordenar.
  * @returns Función de comparación para usar en el método `sort` de un arreglo.
- * @example
- * const data = [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }];
- * data.sort(sortOrder('name'));
  */
-export const sortOrder = <T extends Record<string, any>>(key: keyof T): SortFunction<T> => {
+export const sortOrder = <T extends object>(key: keyof T): SortFunction<T> => {
   return (a: T, b: T): number => {
-    const valueA: any = a[key];
-    const valueB: any = b[key];
+    const valueA = a[key];
+    const valueB = b[key];
 
     // Manejo de nulos y undefined
     if (valueA === null || valueA === undefined) return -1;
@@ -31,7 +27,6 @@ export const sortOrder = <T extends Record<string, any>>(key: keyof T): SortFunc
 
     // Strings
     if (typeof valueA === 'string' && typeof valueB === 'string') {
-      // Intenta convertir a número si es posible
       const numA = Number(valueA);
       const numB = Number(valueB);
       if (!isNaN(numA) && !isNaN(numB)) {
