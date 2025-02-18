@@ -109,7 +109,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   apiConfig?: ApiConfig;
   initialData?: T;
   themeConfig?: ThemeConfig;
-  moreActions?: MoreActions[];
+  moreActions?: MoreActions<T>[];
   customFilters?: CustomFilters[];
   formCols?: 1 | 2 | 3 | 4;
   formCustomCols?: boolean;
