@@ -77,28 +77,21 @@ export const DynamicForm = ({
   );
 
   useEffect(() => {
-    if ((mode === "update" && initialData) || initialData || mode === "view") {
-      const newInitialData = { ...initialData };
+  if (initialData && Object.keys(initialData).length > 0) {
+    const formattedData = { ...initialData };
+    
+    // Formatear fechas si es necesario
+    fields.filter((field): field is FormField => 
+      typeof field === "object" && !Array.isArray(field)
+    ).forEach(field => {
+      if (field.type === "datepicker" && formattedData[field.name]) {
+        formattedData[field.name] = dayjs(formattedData[field.name] as string | number | Date | null | undefined);
+      }
+    });
 
-      fields
-        .filter(
-          (field): field is FormField =>
-            typeof field === "object" && !Array.isArray(field)
-        )
-        .forEach((field) => {
-          const value = newInitialData[field.name];
-
-          if (field.type === "datepicker" && value) {
-            const converted = dayjs(value as string);
-            if (converted.isValid()) {
-              newInitialData[field.name] = converted;
-            }
-          }
-        });
-
-      form.setFieldsValue(newInitialData);
-    }
-  }, [form, mode, initialData, fields]);
+    form.setFieldsValue(formattedData);
+  }
+}, [form, initialData, fields]);
 
   useEffect(() => {
     fields
@@ -371,46 +364,39 @@ export const DynamicForm = ({
    
     // Si estamos en modo view, mostramos el valor como texto
     if (mode === 'view') {
-      const value = form.getFieldValue(name) || '-'; // Valor por defecto si es undefined
-  
+      // Obtener el valor actual del campo
+      const value = initialData?.[name] ?? form.getFieldValue(name) ?? '-';
       let displayValue: React.ReactNode = value;
   
-      // Formatear el valor según el tipo de campo
       switch (type) {
         case 'text':
         case 'number':
         case 'textarea':
+        case 'email':
+        case 'password':
           displayValue = value;
           break;
-  
+      
         case 'select': {
-          const option = (field.dependsOn 
+          const optionsList = field.dependsOn 
             ? selectOptions[name] 
             : field.selectConfig?.apiConfig 
               ? selectOptions[name] 
-              : options
-          )?.find(opt => opt.value === value);
+              : options;
+          const option = optionsList?.find(opt => opt.value === value);
           displayValue = option?.label || value;
           break;
         }
-  
+      
         case 'datepicker':
-          if (value) {
+          if (value && dayjs.isDayjs(value)) {
             const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
-            displayValue = dayjs(value).format(format);
+            displayValue = value.format(format);
           }
           break;
-  
-        case 'rangepicker':
-          if (value && Array.isArray(value)) {
-            const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
-            displayValue = value.map(date => dayjs(date).format(format)).join(' - ');
-          }
-          break;
-  
+      
         case 'checkbox':
           if (options) {
-            // Para grupos de checkbox
             if (Array.isArray(value)) {
               const selectedLabels = options
                 .filter(opt => value.includes(opt.value))
@@ -418,21 +404,20 @@ export const DynamicForm = ({
               displayValue = selectedLabels.join(', ');
             }
           } else {
-            // Para checkbox individual
             displayValue = value ? 'Sí' : 'No';
           }
           break;
-  
+      
         case 'radio': {
-          const radioOption = options?.find(opt => opt.value === value);
-          displayValue = radioOption?.label || value;
+          const option = options?.find(opt => opt.value === value);
+          displayValue = option?.label || value;
           break;
         }
-  
+      
         case 'switch':
           displayValue = value ? 'Sí' : 'No';
           break;
-  
+      
         default:
           displayValue = value;
           break;
@@ -441,7 +426,7 @@ export const DynamicForm = ({
       return (
         <Form.Item label={label} className="mb-4">
           <div className="text-gray-700">
-            {displayValue}
+            {String(displayValue)}
           </div>
         </Form.Item>
       );

@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-export interface ColumnsProps {
+export interface ColumnsProps<T = Record<string, unknown>> {
   title: string;
   dataIndex: string;
   isPrimaryKey?: boolean;
@@ -9,8 +9,8 @@ export interface ColumnsProps {
   width?: string | number;
   align?: "left" | "right" | "center";
   icon?: React.ReactElement;
-  render?: (value: unknown, record: unknown) => React.ReactNode;
-  sorter?: boolean | ((a: unknown, b: unknown) => number);
+  render?: (value: T[keyof T], record: T) => React.ReactNode;
+  sorter?: boolean | ((a: T, b: T) => number);
 }
 
 export interface ThemeConfig {
@@ -36,11 +36,11 @@ export interface ActionIcons {
   view?: React.ReactElement;
 }
 
-export interface ActionConfig {
+export interface ActionConfig<T = Record<string, unknown>> {
   showDefaultActions?: boolean;
-  showEdit?: boolean | ((record: Record<string, unknown>) => boolean);
-  showDelete?: boolean | ((record: Record<string, unknown>) => boolean);
-  showView?: boolean | ((record: Record<string, unknown>) => boolean);
+  showEdit?: boolean | ((record: T) => boolean);
+  showDelete?: boolean | ((record: T) => boolean);
+  showView?: boolean | ((record: T) => boolean);
   customIcons?: ActionIcons;
   refreshButtonText?: string;
   customActionsColor?: {
@@ -51,35 +51,36 @@ export interface ActionConfig {
   };
 }
 
-export interface SearchConfig {
+export interface SearchConfig<T> {
   searchableFields?: string[];
-  customSearch?: (item: unknown, term: string) => boolean;
+  customSearch?: (item: T, term: string) => boolean;
 }
-export interface MoreActions {
+
+export interface MoreActions<T = Record<string, unknown>> {
   key: string;
   label?: string;
   tooltip?: string;
   className?: string;
   style?: React.CSSProperties;
   icon?: React.ReactElement;
-  hidden?: (record: Record<string, unknown>) => boolean;
-  onClick: (record: Record<string, unknown>) => void;
+  hidden?: (record: T) => boolean;
+  onClick: (record: T) => void;
 }
 
-export interface CustomFilters {
+export interface CustomFilters<T = Record<string, unknown>> {
   key: string;
   label?: string;
   className?: string;
   style?: React.CSSProperties;
   icon?: React.ReactElement;
-  onClick: (record: Record<string, unknown>) => void;
+  onClick: (record: T) => void;
 }
 
-export interface ExcelConfigProps {
+export interface ExcelConfigProps<T = Record<string, unknown>> {
   fileName: string;
   sheetName: string;
-  data: unknown[];
-  columns: ColumnsProps[];
+  data: T[];
+  columns: ColumnsProps<T>[];
   buttonProps?: {
     className?: string;
     style?: React.CSSProperties;
@@ -87,31 +88,31 @@ export interface ExcelConfigProps {
   }
 }
 
-export interface DynamicTableProps {
+export interface DynamicTableProps<T = Record<string, unknown>> {
   title?: string | ReactElement;
   description?: string | ReactElement;
   icon?: ReactElement;
   headerDirection?: "horizontal" | "vertical";
-  columns: ColumnsProps[];
-  data: unknown[];
+  columns: ColumnsProps<T>[];
+  data: [];
   className?: string;
   loading?: boolean;
-  exportToExcel?: ExcelConfigProps;
+  exportToExcel?: ExcelConfigProps<T>;
   showSearchBar?: boolean;
   showCreateButton?: boolean;
   showRefreshButton?: boolean;
   disableWrapper?: boolean;
   createButtonText?: string;
   createButtonIcon?: ReactElement;
-  moreActions?: MoreActions[];
-  customFilters?: CustomFilters[];
+  moreActions?: MoreActions<T>[];
+  customFilters?: CustomFilters<T>[];
   onCreate?: () => void;
-  onView?: (record: unknown) => void;
-  onEdit?: (record: unknown) => void;
-  onDelete?: (record: unknown) => void;
+  onView?: (record: T) => void;
+  onEdit?: (record: T) => void;
+  onDelete?: (record: T) => void;
   onRefresh?: () => void;
   actionConfig?: ActionConfig;
-  searchConfig?: SearchConfig;
+  searchConfig?: SearchConfig<T>;
   themeConfig?: ThemeConfig;
   customCols?: boolean;
   backButton?: boolean | ReactElement;

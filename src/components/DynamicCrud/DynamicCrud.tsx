@@ -76,18 +76,18 @@ import { Modal } from "antd";
 import dayjs from "dayjs";
 import { PlusOutlined, EditOutlined, InfoCircleFilled } from '@ant-design/icons';
 
-type OnCreateHandler = 
-  | ((values: Record<string, unknown>) => void)
+type OnCreateHandler<T = Record<string, unknown>> =
+  | ((values: T) => void)
   | (() => void);
 
-export interface DynamicCrudProps {
+export interface DynamicCrudProps<T = Record<string, unknown>> {
   title?: string | ReactElement;
   formTitle?: string | ReactElement;
   formTitles?: string[];
   description?: string | ReactElement;
   formDescription?: string | ReactElement;
-  columns: ColumnsProps[];
-  data?: unknown[];
+  columns: ColumnsProps<T>[];
+  data?: [];
   fields: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;
@@ -96,31 +96,31 @@ export interface DynamicCrudProps {
   icon?: ReactElement;
   layout?: "horizontal" | "vertical";
   actionConfig?: ActionConfig;
-  searchConfig?: SearchConfig;
+  searchConfig?: SearchConfig<T>;
   showRefreshButton?: boolean;
   onRefresh?: () => void;
   headerDirection?: "horizontal" | "vertical";
   loading?: boolean;
   onCreate?: OnCreateHandler;
   createRedirect?: boolean;
-  onEdit?: (record: unknown) => void;
-  onDelete?: (record: unknown) => void;
-  onView?: (record: unknown) => void;
+  onEdit?: (record: T) => void;
+  onDelete?: (record: T) => void;
+  onView?: (record: T) => void;
   apiConfig?: ApiConfig;
-  initialData?: Record<string, unknown>;
+  initialData?: T;
   themeConfig?: ThemeConfig;
   moreActions?: MoreActions[];
   customFilters?: CustomFilters[];
   formCols?: 1 | 2 | 3 | 4;
   formCustomCols?: boolean;
   showView?: boolean;
-  exportToExcel?: ExcelConfigProps;
+  exportToExcel?: ExcelConfigProps<T>;
   backButton?: boolean | ReactElement;
   showSearchBar?: boolean;
   disableWrapper?: boolean;
 }
 
-export const DynamicCrud = ({
+export const DynamicCrud = <T extends Record<string, unknown>>({
   columns,
   data,
   title,
@@ -157,30 +157,30 @@ export const DynamicCrud = ({
   showSearchBar,
   customFilters,
   disableWrapper = false
-}: DynamicCrudProps): ReactNode => {
+}: DynamicCrudProps<T>): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<Record<string, unknown> | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<T | null>(null);
   const [mode, setMode] = useState(initialData ? "update" : "create");
 
   // ==== [ Handlers ] ====
   const primaryKeyField = columns.find((col => col.isPrimaryKey))?.dataIndex || 'id';
 
-  const formatRecordDates = (record: Record<string, unknown>): Record<string, unknown> => {
-    const formattedRecord = {...record};
-    
+  const formatRecordDates = (record: T): T => {
+    const formattedRecord = { ...record };
+
     fields.forEach((field) => {
       if (field.type === 'datepicker' && formattedRecord[field.name as string]) {
-        formattedRecord[field.name as string] = dayjs(formattedRecord[field.name] as string | number | Date | null | undefined);
+        (formattedRecord as Record<string, unknown>)[field.name as string] = dayjs(formattedRecord[field.name] as string | number | Date | null | undefined);
       }
     });
 
     return formattedRecord;
   }
-  
+
   const handleCreate = () => {
     if (createRedirect) {
       if (typeof onCreate === 'function') {
-        onCreate({});
+        onCreate({} as T);
       }
     } else {
       setIsModalVisible(true);
@@ -194,26 +194,23 @@ export const DynamicCrud = ({
     setMode(initialData ? "update" : "create");
   }
 
-  const handleEdit = (record: unknown) => {
-    const formattedRecord = formatRecordDates(record as Record<string, unknown>);
+  const handleEdit = (record: T) => {
+    const formattedRecord = formatRecordDates(record);
     
     setCurrentRecord(formattedRecord);
     setIsModalVisible(true);
     setMode("update");
   };
-  
 
-  const handleDelete = (record: unknown) => {
-    onDelete?.(record as Record<string, unknown>);
+  const handleDelete = (record: T) => {
+    onDelete?.(record);
   }
 
-  const handleView = (record: unknown) => {
-    // onView?.(record as Record<string, unknown>);
-    //Hay funcion onView?, si la hay, hazla, si no, muestra el registro en modal
+  const handleView = (record: T) => {
     if (onView) {
-      onView(record as Record<string, unknown>);
+      onView(record);
     } else {
-      const formattedRecord = formatRecordDates(record as Record<string, unknown>);
+      const formattedRecord = formatRecordDates(record);
       setCurrentRecord(formattedRecord);
       setIsModalVisible(true);
       setMode("view");
@@ -234,8 +231,8 @@ export const DynamicCrud = ({
 
   return (
     <div>
-      <DynamicTable
-        title={title} 
+      <DynamicTable<T>
+        title={title}
         description={description}
         icon={icon}
         columns={columns}
@@ -270,7 +267,7 @@ export const DynamicCrud = ({
           onCancel={handleCancel}
           footer={null}
         >
-          <DynamicForm 
+          <DynamicForm
             title={formTitleToShow}
             description={formDescription || description}
             fields={fields}
@@ -284,14 +281,14 @@ export const DynamicCrud = ({
                     ...(typeof values === 'object' && values !== null ? values : {}),
                     [primaryKeyField]: currentRecord?.[primaryKeyField]
                   };
-                  
-                  onEdit?.(dataToSend as Record<string, unknown>);
+
+                  onEdit?.(dataToSend as T);
                   setCurrentRecord(null);
                 } else {
                   onCreate?.(values as Record<string, unknown>);
                 }
                 setIsModalVisible(false);
-                } catch (error) {
+              } catch (error) {
                 console.error(`Error al ${mode === 'update' ? 'editar' : 'crear'} registro:`, error);
               }
             }}

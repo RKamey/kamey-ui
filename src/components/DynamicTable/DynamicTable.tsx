@@ -112,7 +112,7 @@ interface ExportData {
   [key: string]: any;
 }
 
-export const DynamicTable = ({
+export const DynamicTable = <T extends Record<string, unknown>>({
   title,
   icon: Icon,
   description,
@@ -159,18 +159,17 @@ export const DynamicTable = ({
   },
   themeConfig,
   backButton,
-}: DynamicTableProps): React.ReactNode => {
+}: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const dataWithKey = useMemo(
-    () =>
-      data.map((item, index) =>
-        typeof item === "object" && item !== null
-          ? { ...item, key: index }
-          : { key: index }
-      ),
-    [data]
-  );
+  () =>
+    data.map((item, index) => ({
+      ...(item as T),
+      key: index
+    })),
+  [data]
+);
 
   const searchInObject = (
     obj: Record<string, unknown>,
@@ -192,12 +191,12 @@ export const DynamicTable = ({
   };
 
   const searchByFields = (
-    item: Record<string, unknown>,
+    item: T,
     term: string,
     fields: string[]
   ) => {
     return fields.some((field) => {
-      const value = item[field];
+      const value = item[field as keyof T];
       if (value === null || value === undefined) return false;
       return value.toString().toLowerCase().includes(term.toLowerCase());
     });
@@ -207,18 +206,20 @@ export const DynamicTable = ({
     if (!searchTerm) return dataWithKey;
 
     return dataWithKey.filter((item) => {
+      const typedItem = item as unknown as T; // First cast to unknown, then to T
+
       if (searchConfig.customSearch) {
-        return searchConfig.customSearch(item, searchTerm);
+        return searchConfig.customSearch(typedItem, searchTerm);
       }
 
       if (
         searchConfig.searchableFields &&
         searchConfig.searchableFields.length > 0
       ) {
-        return searchByFields(item, searchTerm, searchConfig.searchableFields);
+        return searchByFields(typedItem, searchTerm, searchConfig.searchableFields);
       }
 
-      return searchInObject(item, searchTerm);
+      return searchInObject(item as Record<string, unknown>, searchTerm);
     });
   }, [dataWithKey, searchTerm, searchConfig]);
 
@@ -234,15 +235,15 @@ export const DynamicTable = ({
     className: "custom-pagination",
   };
 
-  const handleEdit = (record: Record<string, unknown>) => {
+  const handleEdit = (record: T) => {
     onEdit?.(record);
   };
 
-  const handleDelete = (record: Record<string, unknown>) => {
+  const handleDelete = (record: T) => {
     onDelete?.(record);
   };
 
-  const handleView = (record: Record<string, unknown>) => {
+  const handleView = (record: T) => {
     onView?.(record);
   };
 
@@ -287,7 +288,7 @@ export const DynamicTable = ({
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
 
-  const processColumns = (columns: ColumnsProps[]) => {
+  const processColumns = (columns: ColumnsProps<T>[]) => {
     const processedColumns = columns
       .filter((column) => !column.isHidden)
       .map((column) => ({
@@ -305,92 +306,89 @@ export const DynamicTable = ({
         className: "py-4 px-6",
       }));
 
-    const renderActions = (record: Record<string, unknown>) => (
+    const renderActions = (record: T) => (
       <div className="flex items-center gap-3">
         {/* Default Actions */}
         {actionConfig.showDefaultActions && (
           <>
             {actionConfig.showEdit &&
               (typeof actionConfig.showEdit === "function"
-                ? actionConfig.showEdit(record) && (
-                    <Tooltip title="Editar">
-                      <Button
-                        type="warning"
-                        title="Editar"
-                        className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                          actionConfig.customActionsColor?.edit ||
-                          "bg-blue-600 hover:bg-blue-500 text-white"
-                          }`}
-                        icon={actionConfig.customIcons?.edit || <FaEdit />}
-                        onClick={() => handleEdit(record)}
-                      />
-                    </Tooltip>
-                  )
+                ? actionConfig.showEdit(record as T) && (
+                  <Tooltip title="Editar">
+                    <Button
+                      type="warning"
+                      title="Editar"
+                      className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
+                        "bg-blue-600 hover:bg-blue-500 text-white"
+                        }`}
+                      icon={actionConfig.customIcons?.edit || <FaEdit />}
+                      onClick={() => handleEdit(record)}
+                    />
+                  </Tooltip>
+                )
                 : actionConfig.showEdit && (
-                    <Tooltip title="Editar">
-                      <Button
-                        type="warning"
-                        className={`bg-indigo-50! hover:bg-indigo-100! text-indigo-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300`}
-                        icon={actionConfig.customIcons?.edit || <FaEdit />}
-                        onClick={() => handleEdit(record)}
-                      />
-                    </Tooltip>
-                  ))}
+                  <Tooltip title="Editar">
+                    <Button
+                      type="warning"
+                      className={`bg-indigo-50! hover:bg-indigo-100! text-indigo-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300`}
+                      icon={actionConfig.customIcons?.edit || <FaEdit />}
+                      onClick={() => handleEdit(record)}
+                    />
+                  </Tooltip>
+                ))}
             {actionConfig.showDelete &&
               (typeof actionConfig.showDelete === "function"
                 ? actionConfig.showDelete(record) && (
-                    <Popconfirm
-                      title="¿Estás seguro de que deseas eliminar este registro?"
-                      onConfirm={() => handleDelete(record)}
-                      okText="Eliminar"
-                      cancelText="Cancelar"
-                    >
-                      <Tooltip title="Eliminar">
-                        <Button
-                          type="danger"
-                          className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                            actionConfig.customActionsColor?.delete ||
-                            "bg-red-600 hover:bg-red-500 text-white"
-                            }`}
-                          icon={
-                            actionConfig.customIcons?.delete?.type ? (
-                              React.createElement(
-                                actionConfig.customIcons.delete.type
-                              )
-                            ) : (
-                              <FaTrash />
-                            )}
-                          />
-                        </Tooltip>
-                    </Popconfirm>
-                  )
-                : actionConfig.showDelete && (
-                    <Popconfirm
-                      title="¿Estás seguro de que deseas eliminar este registro?"
-                      onConfirm={() => handleDelete(record)}
-                      okText="Eliminar"
-                      cancelText="Cancelar"
-                    >
-                      <Tooltip title="Eliminar">
-                      
-                        <Button
-                          type="danger"
-                          className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${
-                            actionConfig.customActionsColor?.delete || ""
+                  <Popconfirm
+                    title="¿Estás seguro de que deseas eliminar este registro?"
+                    onConfirm={() => handleDelete(record)}
+                    okText="Eliminar"
+                    cancelText="Cancelar"
+                  >
+                    <Tooltip title="Eliminar">
+                      <Button
+                        type="danger"
+                        className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
+                          "bg-red-600 hover:bg-red-500 text-white"
                           }`}
-                          icon={
-                            actionConfig.customIcons?.delete?.type ? (
-                              React.createElement(
-                                actionConfig.customIcons.delete.type
-                              )
-                            ) : (
-                              <FaTrash />
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
                             )
-                          }
-                        />
-                      </Tooltip>
-                    </Popconfirm>
-                  ))}
+                          ) : (
+                            <FaTrash />
+                          )}
+                      />
+                    </Tooltip>
+                  </Popconfirm>
+                )
+                : actionConfig.showDelete && (
+                  <Popconfirm
+                    title="¿Estás seguro de que deseas eliminar este registro?"
+                    onConfirm={() => handleDelete(record)}
+                    okText="Eliminar"
+                    cancelText="Cancelar"
+                  >
+                    <Tooltip title="Eliminar">
+
+                      <Button
+                        type="danger"
+                        className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${actionConfig.customActionsColor?.delete || ""
+                          }`}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash />
+                          )
+                        }
+                      />
+                    </Tooltip>
+                  </Popconfirm>
+                ))}
             {actionConfig.showView &&
               onView &&
               (typeof actionConfig.showView === "function"
@@ -398,28 +396,26 @@ export const DynamicTable = ({
                   <Tooltip title="Ver">
                     <Button
                       type="view"
-                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                        actionConfig.customActionsColor?.view ||
+                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
                         "bg-gray-600 hover:bg-gray-500 text-white"
-                      }`}
+                        }`}
                       icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
                     />
                   </Tooltip>
-                  )
+                )
                 : actionConfig.showView && (
-                    <Tooltip title="Ver">
-                      <Button
-                        type="view"
-                        className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${
-                          actionConfig.customActionsColor?.view ||
-                          "bg-gray-600 hover:bg-gray-500 text-white"
-                          }`}
-                        icon={actionConfig.customIcons?.view || <FaEye />}
-                        onClick={() => handleView(record)}
-                        />
-                    </Tooltip>
-                  ))}
+                  <Tooltip title="Ver">
+                    <Button
+                      type="view"
+                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
+                        "bg-gray-600 hover:bg-gray-500 text-white"
+                        }`}
+                      icon={actionConfig.customIcons?.view || <FaEye />}
+                      onClick={() => handleView(record)}
+                    />
+                  </Tooltip>
+                ))}
           </>
         )}
 
@@ -435,10 +431,10 @@ export const DynamicTable = ({
                   key={action.key}
                   type="button"
                   className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow-sm duration-300 
-                    ${ actionConfig.customActionsColor?.edit ||
+                    ${actionConfig.customActionsColor?.edit ||
                     action.className ||
                     ""
-                  }`}
+                    }`}
                   style={action.style}
                   icon={
                     React.isValidElement(action.icon)
@@ -461,17 +457,16 @@ export const DynamicTable = ({
       key: "actions",
       width: 120,
       className: "py-4 px-6",
-      render: (_: unknown, record: unknown) =>
-        renderActions(record as Record<string, unknown>),
+      render: (_: unknown, record: T) => renderActions(record),
     };
-
+  
     if (
       actionConfig.showDefaultActions ||
       (moreActions && moreActions.length > 0)
     ) {
       return [...processedColumns, actionsColumn];
     }
-
+  
     return processedColumns;
   };
 
@@ -506,10 +501,9 @@ export const DynamicTable = ({
             {exportToExcel && (
               <Button
                 icon={<FaFileExcel />}
-                className={`${
-                  exportToExcel.buttonProps?.className ||
+                className={`${exportToExcel.buttonProps?.className ||
                   "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
-                }`}
+                  }`}
                 style={exportToExcel.buttonProps?.style || {}}
                 onClick={onExportExcel}
               >
@@ -523,11 +517,10 @@ export const DynamicTable = ({
                   <Button
                     key={filter.key}
                     type="default"
-                    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${
-                      filter.className || ""
-                    }`}
+                    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""
+                      }`}
                     icon={filter.icon}
-                    onClick={() => filter.onClick({})}
+                    onClick={() => filter.onClick({} as T)}
                   >
                     <span className="font-medium">{filter.label}</span>
                   </Button>
