@@ -366,20 +366,82 @@ export const DynamicForm = ({
       datepickerConfig,
       hidden,
     } = field;
-
-    // If field is hidden, return null
+   
     if (hidden) return null;
-
-    // Set readonly based on both field config and view mode
-    const isReadOnly = readonly || mode === 'view';
-
+   
+    // Si estamos en modo view, mostramos el valor como texto
+    if (mode === 'view') {
+      const value = form.getFieldValue(name);
+      
+      let displayValue: React.ReactNode = value;
+   
+      // Formatear el valor según el tipo de campo
+      switch (type) {
+        case 'select':
+          { const option = (field.dependsOn 
+            ? selectOptions[name] 
+            : field.selectConfig?.apiConfig 
+              ? selectOptions[name] 
+              : options
+          )?.find(opt => opt.value === value);
+          displayValue = option?.label || value;
+          break; }
+        
+        case 'datepicker':
+          if (value) {
+            const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
+            displayValue = dayjs(value).format(format);
+          }
+          break;
+        
+        case 'rangepicker':
+          if (value && Array.isArray(value)) {
+            const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
+            displayValue = value.map(date => dayjs(date).format(format)).join(' - ');
+          }
+          break;
+        
+        case 'checkbox':
+          if (options) {
+            // Para grupos de checkbox
+            if (Array.isArray(value)) {
+              const selectedLabels = options
+                .filter(opt => value.includes(opt.value))
+                .map(opt => opt.label);
+              displayValue = selectedLabels.join(', ');
+            }
+          } else {
+            // Para checkbox individual
+            displayValue = value ? 'Sí' : 'No';
+          }
+          break;
+        
+        case 'radio':
+          { const radioOption = options?.find(opt => opt.value === value);
+          displayValue = radioOption?.label || value;
+          break; }
+        
+        case 'switch':
+          displayValue = value ? 'Sí' : 'No';
+          break;
+      }
+   
+      return (
+        <Form.Item label={label} className="mb-4">
+          <div className="text-gray-700">
+            {displayValue || '-'}
+          </div>
+        </Form.Item>
+      );
+    }
+   
     const { format, showTime, picker, size } = datepickerConfig || {};
-
+   
     let formItem;
-
+   
     switch (type) {
       case "text":
-        formItem = <Input placeholder={placeholder} readOnly={isReadOnly} />;
+        formItem = <Input placeholder={placeholder} readOnly={readonly} />;
         break;
       case "number":
         formItem = (
@@ -387,8 +449,7 @@ export const DynamicForm = ({
             className="w-full"
             style={{ width: "100%" }}
             placeholder={placeholder}
-            readOnly={isReadOnly}
-            disabled={isReadOnly}
+            readOnly={readonly}
             min={min}
             max={max}
             step={step}
@@ -399,16 +460,30 @@ export const DynamicForm = ({
         formItem = (
           <Select
             showSearch
-            placeholder={placeholder ? placeholder : getFormattedPlaceholder(field, field.dependsOn?.field)}
-            options={field.dependsOn ? selectOptions[name] : field.selectConfig?.apiConfig ? selectOptions[name] : options}
+            placeholder={
+              placeholder
+                ? placeholder
+                : getFormattedPlaceholder(field, field.dependsOn?.field)
+            }
+            options={
+              field.dependsOn
+                ? selectOptions[name]
+                : field.selectConfig?.apiConfig
+                ? selectOptions[name]
+                : options
+            }
             optionFilterProp="label"
-            disabled={isReadOnly}
             onChange={(value) => {
-              if (isReadOnly) return;
               form.setFieldsValue({ [name]: value });
+   
               if (value) {
                 fields
-                  .filter((f): f is FormField => typeof f === "object" && !Array.isArray(f) && f.dependsOn?.field === name)
+                  .filter(
+                    (f): f is FormField =>
+                      typeof f === "object" &&
+                      !Array.isArray(f) &&
+                      f.dependsOn?.field === name
+                  )
                   .forEach((dependentField) => {
                     fetchDependentOptions(dependentField, value);
                   });
@@ -501,8 +576,8 @@ export const DynamicForm = ({
               }}
             >
               {options?.map((option) => (
-                <Radio
-                  key={option.value}
+                <Radio 
+                  key={option.value} 
                   value={option.value}
                   style={{
                     display: "flex",
@@ -526,23 +601,23 @@ export const DynamicForm = ({
       default:
         break;
     }
-
+   
     if (!formItem) return null;
-
+   
     return (
       <Form.Item label={label} name={name} rules={getRules(validations)}>
         {React.cloneElement(formItem)}
       </Form.Item>
     );
-  };
+   };
 
   return (
     <div>
       {/* Header */}
       <div className="flex flex-col mb-4">
-        <div className="flex items-center gap-4 text-lg">
+        <div className="flex items-center gap-4">
           {icon && React.cloneElement(icon)}
-          <h1 className="text-lg font-semibold">{title}</h1>
+          <h1 className="font-semibold">{title}</h1>
         </div>
         <p className="text-sm text-gray-500">{description}</p>
       </div>
