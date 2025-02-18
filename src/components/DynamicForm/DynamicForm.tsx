@@ -79,21 +79,22 @@ export const DynamicForm = ({
   );
 
   useEffect(() => {
-  if (initialData && Object.keys(initialData).length > 0) {
-    const formattedData = { ...initialData };
-    
-    // Formatear fechas si es necesario
-    fields.filter((field): field is FormField => 
-      typeof field === "object" && !Array.isArray(field)
-    ).forEach(field => {
-      if (field.type === "datepicker" && formattedData[field.name]) {
-        formattedData[field.name] = dayjs(formattedData[field.name] as string | number | Date | null | undefined);
-      }
-    });
-
-    form.setFieldsValue(formattedData);
-  }
-}, [form, initialData, fields]);
+    if (initialData && Object.keys(initialData).length > 0) {
+      const formattedData = { ...initialData };
+      console.log(formattedData);
+      
+      // Formatear fechas si es necesario
+      fields.filter((field): field is FormField => 
+        typeof field === "object" && !Array.isArray(field)
+      ).forEach(field => {
+        if (field.type === "datepicker" && formattedData[field.name]) {
+          formattedData[field.name] = dayjs(formattedData[field.name] as string | number | Date | null | undefined);
+        }
+      });
+      console.log(formattedData, 'calva');
+      form.setFieldsValue(formattedData);
+    }
+  }, [form, initialData, fields]);
 
   useEffect(() => {
     fields
@@ -254,6 +255,10 @@ export const DynamicForm = ({
       selectedOption?.label || parentValue
     );
   };
+
+  useEffect(() => {
+    console.log(initialData);
+  }, [initialData]);
 
   const getRules = (validations?: Validations[]) => {
     if (!validations) return [];
@@ -561,11 +566,12 @@ export const DynamicForm = ({
           );
         }
         break;
-      case "radio":
+      case "radio": {
         formItem = (
           <div style={{ width: field.radioConfig?.radioWidth || "40%" }}>
             <Radio.Group
               disabled={readonly}
+              defaultValue={initialData[name]}
               onChange={(e) => {
                 form.setFieldsValue({ [name]: e.target.value });
               }}
@@ -575,9 +581,10 @@ export const DynamicForm = ({
                 gap: "0.5rem",
               }}
             >
-              {options?.map((option) => (
+              {options?.map((option, index) => {
+                return (
                 <Radio 
-                  key={option.value} 
+                  key={index} 
                   value={option.value}
                   style={{
                     display: "flex",
@@ -587,11 +594,12 @@ export const DynamicForm = ({
                 >
                   {option.label}
                 </Radio>
-              ))}
+              )})}
             </Radio.Group>
           </div>
         );
         break;
+      }
       case "switch":
         formItem = <Switch />;
         break;
@@ -614,7 +622,9 @@ export const DynamicForm = ({
     }
    
     if (!formItem) return null;
-   
+    if (type == "radio") {
+      console.log(label, name);
+    }
     return (
       <Form.Item label={label} name={name} rules={getRules(validations)}>
         {React.cloneElement(formItem)}
@@ -643,11 +653,13 @@ export const DynamicForm = ({
         {/* Render the formItems from json */}
         {processFields(fields).map((row, rowIndex) => (
           <Row key={rowIndex} gutter={16}>
-            {row.map((field: FormField, colIndex: number) => (
+            {row.map((field: FormField, colIndex: number) => {
+              console.log(field);
+              return (
               <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
                 {renderFormField(field)}
               </Col>
-            ))}
+            )})}
           </Row>
         ))}
         {/* Add hidden fields */}
