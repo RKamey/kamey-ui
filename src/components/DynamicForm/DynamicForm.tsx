@@ -77,7 +77,7 @@ export const DynamicForm = ({
   );
 
   useEffect(() => {
-    if ((mode === "update" && initialData) || initialData) {
+    if ((mode === "update" && initialData) || initialData || mode === "view") {
       const newInitialData = { ...initialData };
 
       fields
