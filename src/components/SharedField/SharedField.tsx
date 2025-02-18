@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ColumnsProps } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
 import { sortOrder } from "../SortOrder/SortOrder";
@@ -6,29 +5,37 @@ import { SharedFieldConfig } from "./types";
 
 /**
  * Función para generar las columnas de una tabla a partir de un objeto de campos
- * @param fields: Record<string, SharedFieldConfig> - Objeto de campos
- * @returns ColumnsProps[] - Arreglo de columnas
+ * @param fields Objeto de campos
+ * @returns Arreglo de columnas con el tipo ColumnsProps<T>
  */
-const generateColumns = (fields: Record<string, SharedFieldConfig>): ColumnsProps[] => {
+const generateColumns = <T extends Record<string, unknown>>(
+  fields: Record<string, SharedFieldConfig>
+): ColumnsProps<T>[] => {
   return Object.values(fields).map((field) => ({
     key: field.key,
     title: field.title,
     dataIndex: field.key,
-    sorter: field.sorter && ((a: any, b: any) => sortOrder(field.key)(a, b)),
+    sorter: field.sorter
+      ? (a: T, b: T) => sortOrder<T>(field.key as keyof T)(a, b)
+      : undefined,
     width: field.width,
     align: field.align,
     icon: field.icon,
     isHidden: field.isHidden,
-    render: field.render as ((value: unknown, record: unknown) => React.ReactNode) | undefined,
+    render: field.render as
+      | ((value: T[keyof T], record: T) => React.ReactNode)
+      | undefined,
   }));
 };
 
 /**
  * Función para generar los campos de un formulario a partir de un objeto de campos
- * @param fields: Record<string, SharedFieldConfig> - Objeto de campos
- * @returns FormField[] - Arreglo de campos
+ * @param fields Objeto de campos
+ * @returns Arreglo de campos con el tipo FormField[]
  */
-const generateFields = (fields: Record<string, SharedFieldConfig>): FormField[] => {
+const generateFields = (
+  fields: Record<string, SharedFieldConfig>
+): FormField[] => {
   return Object.entries(fields).map(([name, field]) => ({
     type: field.type || "text", // Asignar un tipo por defecto si no está definido
     name,
