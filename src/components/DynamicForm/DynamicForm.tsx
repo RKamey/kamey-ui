@@ -30,10 +30,12 @@ import {
   Slider,
   Row,
   Col,
+  Upload,
 } from "antd";
 import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
 import axios, { AxiosResponse } from "axios";
+import { BiUpload } from "react-icons/bi";
 
 export interface ApiConfig {
   url: string;
@@ -595,6 +597,17 @@ export const DynamicForm = ({
         break;
       case "slider":
         formItem = <Slider />;
+        break;
+      case "upload":
+        formItem = (
+          <Upload>
+            <Button
+              icon={<BiUpload />}
+            >
+              Subir
+            </Button>
+          </Upload>
+        );
         break;
       default:
         break;

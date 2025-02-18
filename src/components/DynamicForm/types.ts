@@ -16,6 +16,7 @@ export interface FormField {
   readonly?: boolean;
   dependsOn?: SelectDependencyConfig;
   checkboxConfig?: CheckboxConfig;
+  uploadConfig?: UploadConfig;
   radioConfig?: RadioConfig;
   hidden?: boolean;
 }
@@ -29,6 +30,11 @@ export interface DatepickerConfig {
   showTime?: boolean;
   picker?: PickerType;
   size?: 'large' | 'middle' | 'small';
+}
+
+export interface UploadConfig {
+  textButton?: string;
+  iconButton?: string;
 }
 
 export interface RadioConfig {
