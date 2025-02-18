@@ -40,7 +40,7 @@
  * @param {boolean} [props.showSearchBar] - Whether to show the search bar in the table.
  * 
  * @example
- * <DynamicCrud
+ * <DynamicCrud<T>
  *   title="User Management"
  *   description="Manage users in the system"
  *   columns={[

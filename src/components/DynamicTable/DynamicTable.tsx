@@ -547,7 +547,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   onClick={handleRefresh}
                 >
                   <span className="font-medium">
-                    {actionConfig.refreshButtonText}
+                    {actionConfig.refreshButtonText || "Refrescar"}
                   </span>
                 </Button>
               )}
