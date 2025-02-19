@@ -87,7 +87,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   description?: string | ReactElement;
   formDescription?: string | ReactElement;
   columns: ColumnsProps<T>[];
-  data?: [];
+  data?: T[];
   fields: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;

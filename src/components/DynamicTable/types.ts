@@ -94,7 +94,7 @@ export interface DynamicTableProps<T = Record<string, unknown>> {
   icon?: ReactElement;
   headerDirection?: "horizontal" | "vertical";
   columns: ColumnsProps<T>[];
-  data: [];
+  data: T[];
   className?: string;
   loading?: boolean;
   exportToExcel?: ExcelConfigProps<T>;
