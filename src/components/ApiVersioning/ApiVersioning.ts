@@ -1,55 +1,61 @@
-import axios from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 /**
- * Clase para gestionar la creación y obtención de instancias de Axios con versionado de API.
- * Permite crear instancias de Axios con una URL base y un número de versión específico.
+ * Clase para gestionar la creación y obtención de instancias de Axios.
+ * Permite crear instancias de Axios con una URL base, configuración personalizada
+ * y opcionalmente un número de versión específico.
  *
  * @example
  * ```typescript
- * // Crear una instancia de ApiVersioning con la URL base de la API.
- * const apiVersioning = new ApiVersioning(import.meta.env.VITE_API_URL);
+ * // Configuración básica
+ * const api = new ApiVersioning(import.meta.env.VITE_API_URL);
  *
- * // Obtener una instancia de Axios para la versión 'v1'.
- * const apiV1 = apiVersioning.getInstance('v1');
+ * // Configuración personalizada
+ * const api = new ApiVersioning(import.meta.env.VITE_API_URL, {
+ *   headers: { 'Authorization': 'Bearer token' },
+ *   withCredentials: true
+ * });
  *
- * // En una sola línea:
- * const api = new ApiVersioning(import.meta.env.VITE_API_URL).getInstance('v1');
+ * // Con versión
+ * const apiV1 = api.getInstance('v1');
+ * 
+ * // Sin versión - petición GET
+ * const response = await api.get('/users');
+ * 
+ * // Con versión - petición Get
+ * const response = await apiV1.get('/users');
  * ```
  */
 export class ApiVersioning {
-  /** URL base de la API. */
   private baseUrl: string;
+  private config?: AxiosRequestConfig;
+  private instances: Record<string, AxiosInstance>;
 
-  /** Objeto que almacena las instancias de Axios creadas, indexadas por versión. */
-  private instances: Record<string, ReturnType<typeof axios.create>>;
-
-  /**
-   * Constructor de la clase ApiVersioning.
-   * @param baseUrl - La URL base de la API.
-   */
-  constructor(baseUrl: string) {
+  constructor(baseUrl: string, config?: AxiosRequestConfig) {
     this.baseUrl = baseUrl;
+    this.config = config;
     this.instances = {};
+
+    const axiosInstance = axios.create({
+      baseURL: this.baseUrl,
+      ...this.config
+    });
+
+    Object.assign(axiosInstance, {
+      getInstance: this.getInstance.bind(this)
+    });
+
+    this.instances['default'] = axiosInstance;
   }
 
-  /**
-   * Crea una nueva instancia de Axios con la URL base y la versión especificada.
-   * @param version - La versión de la API (por ejemplo, 'v1', 'v2').
-   * @returns Una instancia de Axios configurada con la URL base y la versión.
-   */
-  private createApiInstance(version: string) {
+  private createApiInstance(version: string): AxiosInstance {
     return axios.create({
       baseURL: `${this.baseUrl}/${version}`,
+      ...this.config
     });
   }
 
-  /**
-   * Obtiene una instancia de Axios para la versión especificada.
-   * Si la instancia no existe, la crea y la almacena para futuras solicitudes.
-   * @param version - La versión de la API (por ejemplo, 'v1', 'v2').
-   * @returns La instancia de Axios correspondiente a la versión especificada.
-   */
-  public getInstance(version: string) {
+  public getInstance(version: string): AxiosInstance {
     if (!this.instances[version]) {
       this.instances[version] = this.createApiInstance(version);
     }
