@@ -105,4 +105,12 @@ export interface Validations {
     value: boolean;
     message?: string;
   };
+  isGreaterThan?: {
+    target: string;
+    message: string;
+  },
+  isLessThan?: {
+    target: string;
+    message: string;
+  },
 }

@@ -16,7 +16,7 @@
  * @returns {React.ReactNode}
  */
 
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import {
   Form,
   Button,
@@ -74,6 +74,7 @@ export const DynamicForm = ({
   customCols = false,
 }: DynamicFormProps): React.ReactNode => {
   const [form] = Form.useForm();
+  const [validationMap, setValidationMap] = useState<Record<string, string>>({});
   const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>(
     {}
   );
@@ -81,9 +82,7 @@ export const DynamicForm = ({
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
       const formattedData = { ...initialData };
-      console.log(formattedData);
       
-      // Formatear fechas si es necesario
       fields.filter((field): field is FormField => 
         typeof field === "object" && !Array.isArray(field)
       ).forEach(field => {
@@ -91,7 +90,6 @@ export const DynamicForm = ({
           formattedData[field.name] = dayjs(formattedData[field.name] as string | number | Date | null | undefined);
         }
       });
-      console.log(formattedData, 'calva');
       form.setFieldsValue(formattedData);
     }
   }, [form, initialData, fields]);
@@ -118,6 +116,56 @@ export const DynamicForm = ({
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const fieldsWithDateValidation = fields.filter(
+      (field): field is FormField =>
+        typeof field === "object" &&
+        !Array.isArray(field) &&
+        !!field.validations?.some((v) => v.isGreaterThan)
+    );
+
+    const map = fieldsWithDateValidation.reduce((acc: Record<string, string>, field) => {
+      const validation = field.validations?.find((v) => v.isGreaterThan);
+      if (validation?.isGreaterThan?.target) {
+        acc[field.name] = validation.isGreaterThan.target;
+      }
+      return acc;
+    }, {});
+    setValidationMap(map);
+  }, [fields]);
+
+  const validateDates = useCallback(() => {
+    const fieldsToValidate = new Set();
+    Object.entries(validationMap).forEach(([field, target]) => {
+      fieldsToValidate.add(field);
+      fieldsToValidate.add(target);
+    });
+
+    if (fieldsToValidate.size > 0) {
+      form
+        .validateFields([...fieldsToValidate])
+    }
+  }, [form, validationMap]);
+
+
+  interface ChangedValues {
+    [key: string]: unknown;
+  }
+
+  const handleValuesChange = useCallback(
+    (changedValues: ChangedValues) => {
+      const changedFieldNames = Object.keys(changedValues);
+      const shouldValidate = changedFieldNames.some((fieldName) => {
+        return validationMap[fieldName] || Object.values(validationMap).includes(fieldName);
+      });
+
+      if (shouldValidate) {
+        validateDates();
+      }
+    },
+    [validationMap, validateDates]
+  );
 
   const handleSubmit = (values: Record<string, unknown>) => {
     const formattedValues = { ...values };
@@ -256,10 +304,6 @@ export const DynamicForm = ({
     );
   };
 
-  useEffect(() => {
-    console.log(initialData);
-  }, [initialData]);
-
   const getRules = (validations?: Validations[]) => {
     if (!validations) return [];
 
@@ -313,6 +357,46 @@ export const DynamicForm = ({
           rules.message = emailConfig.message;
         }
       }
+
+      if (validation.isGreaterThan) {
+        const { target, message } = validation.isGreaterThan;
+
+        rules.validator = async(_: unknown, value: string | number | Date | dayjs.Dayjs | null | undefined) => {
+          if (!value) return Promise.resolve();
+
+          const targetValue = form.getFieldValue(target);
+          if (!targetValue) return Promise.resolve();
+
+          const currentDate = dayjs(value);
+          const targetDate = dayjs(targetValue);
+
+          if (currentDate.isAfter(targetDate)) {
+            return Promise.reject(new Error(message));
+          }
+
+          return Promise.resolve();
+        };
+      }
+      
+      if (validation.isLessThan) {
+        const { target, message } = validation.isLessThan;
+
+        rules.validator = async(_: unknown, value: string | number | Date | dayjs.Dayjs | null | undefined) => {
+          if (!value) return Promise.resolve();
+
+          const targetValue = form.getFieldValue(target);
+          if (!targetValue) return Promise.resolve();
+
+          const currentDate = dayjs(value);
+          const targetDate = dayjs(targetValue);
+
+          if (currentDate.isBefore(targetDate)) {
+            return Promise.reject(new Error(message));
+          }
+
+          return Promise.resolve();
+      }
+    }
 
       return rules;
     });
@@ -622,9 +706,7 @@ export const DynamicForm = ({
     }
    
     if (!formItem) return null;
-    if (type == "radio") {
-      console.log(label, name);
-    }
+    
     return (
       <Form.Item label={label} name={name} rules={getRules(validations)}>
         {React.cloneElement(formItem)}
@@ -649,12 +731,12 @@ export const DynamicForm = ({
         layout={layout}
         initialValues={initialData}
         onFinish={handleSubmit}
+        onValuesChange={handleValuesChange}
       >
         {/* Render the formItems from json */}
         {processFields(fields).map((row, rowIndex) => (
           <Row key={rowIndex} gutter={16}>
             {row.map((field: FormField, colIndex: number) => {
-              console.log(field);
               return (
               <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
                 {renderFormField(field)}
