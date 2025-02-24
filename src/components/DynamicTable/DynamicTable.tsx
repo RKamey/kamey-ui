@@ -474,6 +474,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     <ConfigProvider theme={themeConfig}>
       <div className={`p-4 ${!disableWrapper ? "bg-white rounded-xl shadow-lg" : ""}`}>
         <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+          {/* Header: Botón de volver, Icono y Título */}
           <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
             {renderBackButton && (
               <div>{renderBackButton()}</div>
@@ -490,10 +491,25 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
           </div>
 
+          {/* Descripción */}
           {description && (
             <Text className="text-gray-600 text-sm mb-3 sm:mb-4">{description}</Text>
           )}
 
+          {/* Barra de búsqueda a full width */}
+          {showSearchBar && (
+            <div className="w-full mb-3">
+              <Search
+                allowClear
+                className="w-full"
+                placeholder="Buscar"
+                onChange={(e) => handleSearch(e.target.value)}
+                onSearch={handleSearch}
+              />
+            </div>
+          )}
+
+          {/* Fila de botones */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-3 items-center">
               {exportToExcel && (
@@ -525,15 +541,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
 
             <div className="flex flex-wrap gap-3 items-center">
-              {showSearchBar && (
-                <Search
-                  allowClear
-                  className="w-full sm:min-w-[240px]"
-                  placeholder="Buscar"
-                  onChange={(e) => handleSearch(e.target.value)}
-                  onSearch={handleSearch}
-                />
-              )}
               {showRefreshButton && (
                 <Button
                   type="default"
