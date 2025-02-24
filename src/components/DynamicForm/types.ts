@@ -11,6 +11,7 @@ export interface FormField {
   validations?: Validations[];
   options?: Options[];
   placeholder?: string;
+  onChange?: (value: string | number) => void;
   datepickerConfig?: DatepickerConfig;
   selectConfig?: SelectConfig;
   readonly?: boolean;

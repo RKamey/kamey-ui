@@ -449,6 +449,7 @@ export const DynamicForm = ({
       step,
       datepickerConfig,
       hidden,
+      onChange,
     } = field;
    
     if (hidden) return null;
@@ -522,7 +523,6 @@ export const DynamicForm = ({
         </Form.Item>
       );
     }
-  
    
     const { format, showTime, picker, size } = datepickerConfig || {};
    
@@ -589,6 +589,7 @@ export const DynamicForm = ({
             size={size}
             format={format}
             showTime={showTime}
+            onChange={onChange}
           />
         );
         break;
