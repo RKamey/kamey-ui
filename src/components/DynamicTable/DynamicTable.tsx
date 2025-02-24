@@ -163,13 +163,13 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   const [searchTerm, setSearchTerm] = useState("");
 
   const dataWithKey = useMemo(
-  () =>
-    data.map((item, index) => ({
-      ...(item as T),
-      key: index
-    })),
-  [data]
-);
+    () =>
+      data.map((item, index) => ({
+        ...(item as T),
+        key: index
+      })),
+    [data]
+  );
 
   const searchInObject = (
     obj: Record<string, unknown>,
@@ -459,14 +459,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       className: "py-4 px-6",
       render: (_: unknown, record: T) => renderActions(record),
     };
-  
+
     if (
       actionConfig.showDefaultActions ||
       (moreActions && moreActions.length > 0)
     ) {
       return [...processedColumns, actionsColumn];
     }
-  
+
     return processedColumns;
   };
 
@@ -475,80 +475,73 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       <div className={`${!disableWrapper ? "p-4 bg-white rounded-xl shadow-lg" : ""}`}>
         <div className={`${!disableWrapper ? "p-4 sm:p-6 space-y-3 sm:space-y-4" : ""}`}>
           <div>{renderBackButton()}</div>
-          <div className="flex items-center space-x-3 gap-2 sm:space-x-4 mb-3 sm:mb-4">
+
+          <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
             {Icon && (
-              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
                 {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
               </div>
             )}
-            <Title
-              level={3}
-              className="m-0! text-gray-900! font-bold tracking-tight text-lg sm:text-xl"
-            >
+            <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
               {title}
             </Title>
           </div>
 
-          <div className="flex flex-col md:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center">
             {description && (
-              <div className="w-full sm:flex-1">
-                <Text className="text-gray-600 text-sm">
-                  {description}
-                </Text>
-              </div>
+              <Text className="text-gray-600 text-sm">{description}</Text>
             )}
 
-            {exportToExcel && (
-              <Button
-                icon={<FaFileExcel />}
-                className={`${exportToExcel.buttonProps?.className ||
-                  "flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
-                  }`}
-                style={exportToExcel.buttonProps?.style || {}}
-                onClick={onExportExcel}
-              >
-                {exportToExcel.buttonProps?.text || "Exportar a Excel"}
-              </Button>
-            )}
-
-            {customFilters && (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-                {customFilters.map((filter) => (
-                  <Button
-                    key={filter.key}
-                    type="default"
-                    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""
-                      }`}
-                    icon={filter.icon}
-                    onClick={() => filter.onClick({} as T)}
-                  >
-                    <span className="font-medium">{filter.label}</span>
-                  </Button>
-                ))}
-              </div>
-            )}
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-              {showSearchBar && (
-                <Search
-                  allowClear
-                  className="w-full sm:min-w-[240px]"
-                  placeholder="Buscar"
-                  onChange={(e) => handleSearch(e.target.value)}
-                  onSearch={handleSearch}
-                />
+            <div className="flex flex-wrap items-center gap-3">
+              {exportToExcel && (
+                <Button
+                  icon={<FaFileExcel />}
+                  className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 ${exportToExcel.buttonProps?.className || ""}`}
+                  style={exportToExcel.buttonProps?.style || {}}
+                  onClick={onExportExcel}
+                >
+                  {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+                </Button>
               )}
 
+              {customFilters && (
+                <div className="flex flex-wrap gap-3">
+                  {customFilters.map((filter) => (
+                    <Button
+                      key={filter.key}
+                      type="default"
+                      className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""}`}
+                      icon={filter.icon}
+                      onClick={() => filter.onClick({} as T)}
+                    >
+                      <span className="font-medium">{filter.label}</span>
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-auto md:grid-cols-[1fr_auto] gap-4 items-center">
+            {showSearchBar && (
+              <Search
+                allowClear
+                className="w-full sm:min-w-[240px]"
+                placeholder="Buscar"
+                onChange={(e) => handleSearch(e.target.value)}
+                onSearch={handleSearch}
+              />
+            )}
+
+            <div className="flex flex-wrap gap-3">
               {showRefreshButton && (
                 <Button
                   type="default"
-                  className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
+                  className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
                   icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
-                  <span className="font-medium">
-                    {actionConfig.refreshButtonText || "Refrescar"}
-                  </span>
+                  <span className="font-medium">{actionConfig.refreshButtonText || "Refrescar"}</span>
                 </Button>
               )}
 
