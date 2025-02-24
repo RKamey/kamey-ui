@@ -474,15 +474,20 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     <ConfigProvider theme={themeConfig}>
       <div className={`p-4 ${!disableWrapper ? "bg-white rounded-xl shadow-lg" : ""}`}>
         <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-            {Icon && (
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-              </div>
+          <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            {renderBackButton && (
+              <div>{renderBackButton()}</div>
             )}
-            <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
-              {title}
-            </Title>
+            <div className="flex items-center gap-3">
+              {Icon && (
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                  {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+                </div>
+              )}
+              <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
+                {title}
+              </Title>
+            </div>
           </div>
 
           {description && (
@@ -569,6 +574,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           />
         </div>
       </div>
+
     </ConfigProvider>
   );
 };
