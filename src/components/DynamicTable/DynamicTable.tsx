@@ -472,27 +472,30 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={`${!disableWrapper ? "p-4 bg-white rounded-xl shadow-lg" : ""}`}>
-        <div className={`${!disableWrapper ? "p-4 sm:p-6 space-y-3 sm:space-y-4" : ""}`}>
-          <div>{renderBackButton()}</div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-            {Icon && (
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-              </div>
+      <div className={`p-4 ${!disableWrapper ? "bg-white rounded-xl shadow-lg" : ""}`}>
+        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+          <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            {renderBackButton && (
+              <div>{renderBackButton()}</div>
             )}
-            <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
-              {title}
-            </Title>
+            <div className="flex items-center gap-3">
+              {Icon && (
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                  {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+                </div>
+              )}
+              <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
+                {title}
+              </Title>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center">
-            {description && (
-              <Text className="text-gray-600 text-sm">{description}</Text>
-            )}
+          {description && (
+            <Text className="text-gray-600 text-sm mb-3 sm:mb-4">{description}</Text>
+          )}
 
-            <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-3 items-center">
               {exportToExcel && (
                 <Button
                   icon={<FaFileExcel />}
@@ -520,20 +523,17 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 </div>
               )}
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-auto md:grid-cols-[1fr_auto] gap-4 items-center">
-            {showSearchBar && (
-              <Search
-                allowClear
-                className="w-full sm:min-w-[240px]"
-                placeholder="Buscar"
-                onChange={(e) => handleSearch(e.target.value)}
-                onSearch={handleSearch}
-              />
-            )}
-
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 items-center">
+              {showSearchBar && (
+                <Search
+                  allowClear
+                  className="w-full sm:min-w-[240px]"
+                  placeholder="Buscar"
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onSearch={handleSearch}
+                />
+              )}
               {showRefreshButton && (
                 <Button
                   type="default"
@@ -544,7 +544,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <span className="font-medium">{actionConfig.refreshButtonText || "Refrescar"}</span>
                 </Button>
               )}
-
               {showCreateButton && (
                 <Button
                   type="primary"
@@ -575,6 +574,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           />
         </div>
       </div>
+
     </ConfigProvider>
   );
 };
