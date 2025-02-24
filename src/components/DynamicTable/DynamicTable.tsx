@@ -472,9 +472,42 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={`${!disableWrapper ? "p-4 bg-white rounded-xl shadow-lg" : ""}`}>
-        <div className={`${!disableWrapper ? "p-4 sm:p-6 space-y-3 sm:space-y-4" : ""}`}>
-          <div>{renderBackButton()}</div>
+      <div className={`p-4 ${!disableWrapper ? "bg-white rounded-xl shadow-lg" : ""}`}>
+        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+          <div className="flex items-center justify-between">
+            {renderBackButton()}
+            <div className="flex flex-wrap gap-3 items-center">
+              {showSearchBar && (
+                <Search
+                  allowClear
+                  className="w-full sm:min-w-[240px]"
+                  placeholder="Buscar"
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onSearch={handleSearch}
+                />
+              )}
+              {showRefreshButton && (
+                <Button
+                  type="default"
+                  className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
+                  icon={actionConfig.customIcons?.refresh || <FaSync />}
+                  onClick={handleRefresh}
+                >
+                  <span className="font-medium">{actionConfig.refreshButtonText || "Refrescar"}</span>
+                </Button>
+              )}
+              {showCreateButton && (
+                <Button
+                  type="primary"
+                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md"
+                  icon={React.cloneElement(createButtonIcon) || <FaPlus />}
+                  onClick={onCreate}
+                >
+                  {createButtonText}
+                </Button>
+              )}
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
             {Icon && (
@@ -518,42 +551,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     </Button>
                   ))}
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-auto md:grid-cols-[1fr_auto] gap-4 items-center">
-            {showSearchBar && (
-              <Search
-                allowClear
-                className="w-full sm:min-w-[240px]"
-                placeholder="Buscar"
-                onChange={(e) => handleSearch(e.target.value)}
-                onSearch={handleSearch}
-              />
-            )}
-
-            <div className="flex flex-wrap gap-3">
-              {showRefreshButton && (
-                <Button
-                  type="default"
-                  className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
-                  icon={actionConfig.customIcons?.refresh || <FaSync />}
-                  onClick={handleRefresh}
-                >
-                  <span className="font-medium">{actionConfig.refreshButtonText || "Refrescar"}</span>
-                </Button>
-              )}
-
-              {showCreateButton && (
-                <Button
-                  type="primary"
-                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md"
-                  icon={React.cloneElement(createButtonIcon) || <FaPlus />}
-                  onClick={onCreate}
-                >
-                  {createButtonText}
-                </Button>
               )}
             </div>
           </div>
