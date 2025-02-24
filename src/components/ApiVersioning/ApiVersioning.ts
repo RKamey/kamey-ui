@@ -4,6 +4,12 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
  * Clase para gestionar la creación y obtención de instancias de Axios.
  * Permite crear instancias de Axios con una URL base, configuración personalizada
  * y opcionalmente un número de versión específico.
+ * 
+ * @param baseUrl URL base de la API
+ * @param config Configuración personalizada de Axios
+ * 
+ * @method version(version: string): AxiosInstance
+ * @method getInstance(version: string): AxiosInstance
  *
  * @example
  * ```typescript
@@ -53,6 +59,10 @@ export class ApiVersioning {
       baseURL: `${this.baseUrl}/${version}`,
       ...this.config
     });
+  }
+
+  public version(version: string): AxiosInstance {
+    return this.getInstance(version);
   }
 
   public getInstance(version: string): AxiosInstance {
