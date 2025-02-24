@@ -496,10 +496,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             <Text className="text-gray-600 text-sm mb-3 sm:mb-4">{description}</Text>
           )}
 
-          {/* Fila única: Barra de búsqueda (full width) y botones a la derecha */}
-          <div className="flex items-center justify-between gap-3">
+          {/* Barra de búsqueda y botones en la misma fila */}
+          <div className="flex items-center w-full gap-3">
+            {/* SearchBar a la izquierda (flex-grow para ocupar todo el espacio disponible) */}
             {showSearchBar && (
-              <div className="flex-grow">
+              <div className="flex-1">
                 <Search
                   allowClear
                   className="w-full"
@@ -509,7 +510,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 />
               </div>
             )}
-            <div className="flex flex-wrap gap-3 items-center">
+
+            {/* Contenedor de botones alineados a la derecha (ml-auto forzado si no hay Search) */}
+            <div className={`flex flex-wrap gap-3 items-center ${!showSearchBar ? "ml-auto" : ""}`}>
               {exportToExcel && (
                 <Button
                   icon={<FaFileExcel />}
@@ -520,6 +523,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   {exportToExcel.buttonProps?.text || "Exportar a Excel"}
                 </Button>
               )}
+
               {customFilters && (
                 <div className="flex flex-wrap gap-3">
                   {customFilters.map((filter) => (
@@ -535,6 +539,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   ))}
                 </div>
               )}
+
               {showRefreshButton && (
                 <Button
                   type="default"
@@ -545,6 +550,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <span className="font-medium">{actionConfig.refreshButtonText || "Refrescar"}</span>
                 </Button>
               )}
+
               {showCreateButton && (
                 <Button
                   type="primary"
