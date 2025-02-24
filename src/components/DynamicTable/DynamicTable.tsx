@@ -496,21 +496,19 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             <Text className="text-gray-600 text-sm mb-3 sm:mb-4">{description}</Text>
           )}
 
-          {/* Barra de búsqueda a full width */}
-          {showSearchBar && (
-            <div className="w-full mb-3">
-              <Search
-                allowClear
-                className="w-full"
-                placeholder="Buscar"
-                onChange={(e) => handleSearch(e.target.value)}
-                onSearch={handleSearch}
-              />
-            </div>
-          )}
-
-          {/* Fila de botones */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          {/* Fila única: Barra de búsqueda (full width) y botones a la derecha */}
+          <div className="flex items-center justify-between gap-3">
+            {showSearchBar && (
+              <div className="flex-grow">
+                <Search
+                  allowClear
+                  className="w-full"
+                  placeholder="Buscar"
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onSearch={handleSearch}
+                />
+              </div>
+            )}
             <div className="flex flex-wrap gap-3 items-center">
               {exportToExcel && (
                 <Button
@@ -522,7 +520,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   {exportToExcel.buttonProps?.text || "Exportar a Excel"}
                 </Button>
               )}
-
               {customFilters && (
                 <div className="flex flex-wrap gap-3">
                   {customFilters.map((filter) => (
@@ -538,9 +535,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   ))}
                 </div>
               )}
-            </div>
-
-            <div className="flex flex-wrap gap-3 items-center">
               {showRefreshButton && (
                 <Button
                   type="default"
@@ -581,7 +575,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           />
         </div>
       </div>
-
     </ConfigProvider>
   );
 };
