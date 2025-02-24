@@ -474,8 +474,51 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     <ConfigProvider theme={themeConfig}>
       <div className={`p-4 ${!disableWrapper ? "bg-white rounded-xl shadow-lg" : ""}`}>
         <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-          <div className="flex items-center justify-between">
-            {renderBackButton()}
+          <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            {Icon && (
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+              </div>
+            )}
+            <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
+              {title}
+            </Title>
+          </div>
+
+          {description && (
+            <Text className="text-gray-600 text-sm mb-3 sm:mb-4">{description}</Text>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-3 items-center">
+              {exportToExcel && (
+                <Button
+                  icon={<FaFileExcel />}
+                  className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 ${exportToExcel.buttonProps?.className || ""}`}
+                  style={exportToExcel.buttonProps?.style || {}}
+                  onClick={onExportExcel}
+                >
+                  {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+                </Button>
+              )}
+
+              {customFilters && (
+                <div className="flex flex-wrap gap-3">
+                  {customFilters.map((filter) => (
+                    <Button
+                      key={filter.key}
+                      type="default"
+                      className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""}`}
+                      icon={filter.icon}
+                      onClick={() => filter.onClick({} as T)}
+                    >
+                      <span className="font-medium">{filter.label}</span>
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div className="flex flex-wrap gap-3 items-center">
               {showSearchBar && (
                 <Search
@@ -505,52 +548,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 >
                   {createButtonText}
                 </Button>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-            {Icon && (
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-              </div>
-            )}
-            <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
-              {title}
-            </Title>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center">
-            {description && (
-              <Text className="text-gray-600 text-sm">{description}</Text>
-            )}
-
-            <div className="flex flex-wrap items-center gap-3">
-              {exportToExcel && (
-                <Button
-                  icon={<FaFileExcel />}
-                  className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 ${exportToExcel.buttonProps?.className || ""}`}
-                  style={exportToExcel.buttonProps?.style || {}}
-                  onClick={onExportExcel}
-                >
-                  {exportToExcel.buttonProps?.text || "Exportar a Excel"}
-                </Button>
-              )}
-
-              {customFilters && (
-                <div className="flex flex-wrap gap-3">
-                  {customFilters.map((filter) => (
-                    <Button
-                      key={filter.key}
-                      type="default"
-                      className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""}`}
-                      icon={filter.icon}
-                      onClick={() => filter.onClick({} as T)}
-                    >
-                      <span className="font-medium">{filter.label}</span>
-                    </Button>
-                  ))}
-                </div>
               )}
             </div>
           </div>
