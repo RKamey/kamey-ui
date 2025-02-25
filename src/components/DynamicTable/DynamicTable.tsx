@@ -83,7 +83,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState } from "react";
 import {
-  Typography,
   Button,
   Input,
   Table,
@@ -103,7 +102,6 @@ import {
 import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
 
-const { Title, Text } = Typography;
 const { Search } = Input;
 
 interface ExportData {
@@ -485,15 +483,16 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
                 </div>
               )}
-              <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
+              <h1>{title}</h1>
+              {/* <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
                 {title}
-              </Title>
+              </Title> */}
             </div>
           </div>
 
           {/* Descripción */}
           {description && (
-            <Text className="text-gray-600 text-sm mb-3 sm:mb-4">{description}</Text>
+            <p className="text-gray-200">{description}</p>
           )}
 
           {/* Barra de búsqueda y botones en la misma fila */}
