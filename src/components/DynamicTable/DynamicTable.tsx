@@ -318,7 +318,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 <Button
                   key={action.key}
                   type="button"
-                  className={`action-button transition-colors !bg-indigo-500 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow-sm duration-300 
+                  className={`action-button transition-colors !bg-slate-500 hover:!bg-slate-700 !text-white !border-none shadow-sm hover:shadow-sm duration-300 
                     ${actionConfig.customActionsColor?.edit ||
                     action.className ||
                     ""
@@ -349,7 +349,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       type="warning"
                       title="Editar"
                       className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
-                        "!bg-yellow-500 !hover:bg-yellow-700 text-white"
+                        "!bg-yellow-500 hover:!bg-yellow-700 text-white"
                         }`}
                       icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
@@ -360,7 +360,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <Tooltip title="Editar">
                     <Button
                       type="warning"
-                      className={`!bg-yellow-500 !hover:bg-yellow-100 !text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300`}
+                      className={`!bg-yellow-500 hover:!bg-yellow-700 !text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300`}
                       icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
                     />
@@ -379,7 +379,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Button
                         type="danger"
                         className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
-                          "!bg-red-600 !hover:bg-red-500 !text-white"
+                          "!bg-red-500 hover:!bg-red-600 !text-white"
                           }`}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -404,7 +404,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
                       <Button
                         type="danger"
-                        className={`!bg-rose-50 hover:!bg-rose-100 !text-rose-600 !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${actionConfig.customActionsColor?.delete || ""
+                        className={`!bg-red-500 hover:!bg-red-600 !text-white !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${actionConfig.customActionsColor?.delete || ""
                           }`}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -427,7 +427,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="view"
                       className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                        "bg-gray-600 hover:bg-gray-500 text-white"
+                        "!bg-sky-600 hover:!bg-sky-800 text-white"
                         }`}
                       icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
@@ -439,7 +439,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="view"
                       className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                        "bg-gray-600 hover:bg-gray-500 text-white"
+                        "!bg-sky-600 hover:!bg-sky-800 text-white"
                         }`}
                       icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
