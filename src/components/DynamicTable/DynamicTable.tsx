@@ -306,6 +306,38 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
     const renderActions = (record: T) => (
       <div className="flex items-center gap-3">
+      
+        {/* More Actions */}
+        {moreActions?.map((action) => {
+          const isHidden =
+            typeof action.hidden === "function" ? action.hidden(record) : false;
+
+          return (
+            !isHidden && (
+              <Tooltip title={action.tooltip}>
+                <Button
+                  key={action.key}
+                  type="button"
+                  className={`action-button transition-colors !bg-indigo-500 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow-sm duration-300 
+                    ${actionConfig.customActionsColor?.edit ||
+                    action.className ||
+                    ""
+                    }`}
+                  style={action.style}
+                  icon={
+                    React.isValidElement(action.icon)
+                      ? React.cloneElement(action.icon)
+                      : action.icon
+                  }
+                  onClick={() => action.onClick(record)}
+                >
+                  {action.label}
+                </Button>
+              </Tooltip>
+            )
+          );
+        })}
+
         {/* Default Actions */}
         {actionConfig.showDefaultActions && (
           <>
@@ -317,7 +349,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       type="warning"
                       title="Editar"
                       className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
-                        "bg-blue-600 hover:bg-blue-500 text-white"
+                        "!bg-yellow-500 !hover:bg-yellow-700 text-white"
                         }`}
                       icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
@@ -328,7 +360,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <Tooltip title="Editar">
                     <Button
                       type="warning"
-                      className={`bg-indigo-50! hover:bg-indigo-100! text-indigo-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300`}
+                      className={`!bg-yellow-500 !hover:bg-yellow-100 !text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300`}
                       icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
                     />
@@ -347,7 +379,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Button
                         type="danger"
                         className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
-                          "bg-red-600 hover:bg-red-500 text-white"
+                          "!bg-red-600 !hover:bg-red-500 !text-white"
                           }`}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -417,36 +449,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </>
         )}
 
-        {/* More Actions */}
-        {moreActions?.map((action) => {
-          const isHidden =
-            typeof action.hidden === "function" ? action.hidden(record) : false;
-
-          return (
-            !isHidden && (
-              <Tooltip title={action.tooltip}>
-                <Button
-                  key={action.key}
-                  type="button"
-                  className={`action-button transition-colors !bg-indigo-50 hover:!bg-indigo-100 !text-indigo-600 !border-none shadow-sm hover:shadow-sm duration-300 
-                    ${actionConfig.customActionsColor?.edit ||
-                    action.className ||
-                    ""
-                    }`}
-                  style={action.style}
-                  icon={
-                    React.isValidElement(action.icon)
-                      ? React.cloneElement(action.icon)
-                      : action.icon
-                  }
-                  onClick={() => action.onClick(record)}
-                >
-                  {action.label}
-                </Button>
-              </Tooltip>
-            )
-          );
-        })}
       </div>
     );
 
