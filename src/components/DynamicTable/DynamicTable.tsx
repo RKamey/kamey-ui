@@ -145,10 +145,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       view: <FaEye />,
     },
     customActionsColor: {
-      edit: "bg-indigo-50! hover:bg-indigo-100! text-indigo-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300",
-      delete:
-        "bg-rose-50! hover:bg-rose-100! text-rose-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300",
-      view: "bg-gray-50! hover:bg-gray-100! text-gray-600! border-none! shadow-xs hover:shadow-sm transition-all duration-300",
+      edit: "!bg-sky-600 hover:!bg-sky-800 text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300",
+      delete: "!bg-red-500 hover:!bg-red-600 text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300",
+      view: "!bg-sky-600 hover:!bg-sky-800 text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300",
     },
   },
   searchConfig = {
