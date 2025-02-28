@@ -318,7 +318,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   type="button"
                   className={clsx(
                     "action-button transition-colors shadow-sm hover:shadow-sm duration-300",
-                    action.className ? action.className : "!bg-slate-500 hover:!bg-slate-700 !text-white !border-none"
+                    action.className ? action.className : "!bg-slate-500 hover:!bg-slate-700 !border-none"
                   )}
                   style={action.style}
                   icon={
@@ -350,7 +350,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       actionConfig.customActionsColor?.edit ||
                         "!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                       )}
-                      icon={actionConfig.customIcons?.edit || <FaEdit />}
+                      icon={actionConfig.customIcons?.edit || <FaEdit className="text-yellow-500 hover:text-white" />}
                       onClick={() => handleEdit(record)}
                     />
                     </Tooltip>
@@ -360,7 +360,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="warning"
                       className={`!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300 `}
-                      icon={actionConfig.customIcons?.edit || <FaEdit />}
+                      icon={actionConfig.customIcons?.edit || <FaEdit className="text-yellow-500 hover:text-white" />}
                       onClick={() => handleEdit(record)}
                     />
                   </Tooltip>
@@ -388,7 +388,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                           actionConfig.customIcons.delete.type
                         )
                         ) : (
-                        <FaTrash />
+                        <FaTrash className="text-red-500 hover:text-white" />
                         )}
                       />
                     </Tooltip>
@@ -414,7 +414,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                           actionConfig.customIcons.delete.type
                         )
                         ) : (
-                        <FaTrash />
+                        <FaTrash className="text-red-500 hover:text-white" />
                         )
                       }
                       />
@@ -433,7 +433,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       actionConfig.customActionsColor?.view ||
                         "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                       )}
-                      icon={actionConfig.customIcons?.view || <FaEye />}
+                      icon={actionConfig.customIcons?.view || <FaEye className="text-sky-500 hover:text-white" />}
                       onClick={() => handleView(record)}
                     />
                     </Tooltip>
@@ -447,7 +447,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       actionConfig.customActionsColor?.view ||
                         "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                       )}
-                      icon={actionConfig.customIcons?.view || <FaEye />}
+                      icon={actionConfig.customIcons?.view || <FaEye className="text-sky-500 hover:text-white" />}
                       onClick={() => handleView(record)}
                     />
                     </Tooltip>
