@@ -270,6 +270,16 @@ export const DynamicForm = ({
     }
   };
 
+  const convertOptions = (options: Options[] | undefined, field: FormField): Options[] => {
+    if (!options) return [];
+
+    if (field.selectConfig?.customOption) {
+      return [field.selectConfig.customOption as Options, ...options];
+    }
+
+    return options;
+  }
+
   const getFormattedPlaceholder = (
     field: FormField,
     parentFieldName?: string
@@ -559,11 +569,17 @@ export const DynamicForm = ({
                 ? selectOptions[name]
                 : field.selectConfig?.apiConfig
                 ? selectOptions[name]
-                : options
+                : convertOptions(options, field)
             }
             optionFilterProp="label"
             onChange={(value) => {
               form.setFieldsValue({ [name]: value });
+
+              if (field.selectConfig?.customOption) {
+                if (value === field.selectConfig.customOption.value) {
+                  field.selectConfig.customOption.onClick?.();
+                }
+              }
    
               if (value) {
                 fields

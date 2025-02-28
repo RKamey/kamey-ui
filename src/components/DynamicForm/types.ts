@@ -56,6 +56,7 @@ export interface SelectConfig {
     labelKey: string;
     responseDataPath?: string;
   };
+  customOption?: CustomOption;
   dependsOn?: SelectDependencyConfig;
   onChange?: (value: string | number) => void;
 }
@@ -83,6 +84,10 @@ export interface Options {
   label: string | React.ReactElement;
   value: string | number;
   disabled?: boolean;
+}
+
+export interface CustomOption extends Partial<Options> {
+  onClick: () => void;
 }
 
 export interface Validations {
