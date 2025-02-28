@@ -101,7 +101,6 @@ import {
 } from "react-icons/fa";
 import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
-import clsx from "clsx";
 
 const { Search } = Input;
 
@@ -146,9 +145,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       view: <FaEye />,
     },
     customActionsColor: {
-      edit: "!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300",
-      delete: "!bg-white !text-red-500 !border !border-red-500 hover:!bg-red-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300",
-      view: "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300",
+      edit: "!bg-sky-600 hover:!bg-sky-800 text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300",
+      delete: "!bg-red-500 hover:!bg-red-600 text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300",
+      view: "!bg-sky-600 hover:!bg-sky-800 text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300",
     },
   },
   searchConfig = {
@@ -228,7 +227,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   const paginationConfig = {
     pageSize: 10,
     showSizeChanger: true,
-    showTotal: (total: number) => `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
+    showTotal: (total: number) =>
+      `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
+    className: "custom-pagination",
   };
 
   const handleEdit = (record: T) => {
@@ -304,7 +305,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
     const renderActions = (record: T) => (
       <div className="flex items-center gap-3">
-
+      
         {/* More Actions */}
         {moreActions?.map((action) => {
           const isHidden =
@@ -316,10 +317,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 <Button
                   key={action.key}
                   type="button"
-                  className={clsx(
-                    "action-button transition-colors shadow-sm hover:shadow-sm duration-300",
-                    action.className ? action.className : "!bg-slate-500 hover:!bg-slate-700 !border-none"
-                  )}
+                  className={`action-button transition-colors !bg-slate-500 hover:!bg-slate-700 !text-white !border-none shadow-sm hover:shadow-sm duration-300 
+                    ${actionConfig.customActionsColor?.edit ||
+                    action.className ||
+                    ""
+                    }`}
                   style={action.style}
                   icon={
                     React.isValidElement(action.icon)
@@ -341,26 +343,24 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {actionConfig.showEdit &&
               (typeof actionConfig.showEdit === "function"
                 ? actionConfig.showEdit(record as T) && (
-                    <Tooltip title="Editar">
+                  <Tooltip title="Editar">
                     <Button
                       type="warning"
                       title="Editar"
-                      className={clsx(
-                      "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                      actionConfig.customActionsColor?.edit ||
-                        "!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
-                      )}
-                      icon={actionConfig.customIcons?.edit || <FaEdit className="text-yellow-500 hover:text-white" />}
+                      className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
+                        "!bg-yellow-500 hover:!bg-yellow-700 text-white"
+                        }`}
+                      icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
                     />
-                    </Tooltip>
+                  </Tooltip>
                 )
                 : actionConfig.showEdit && (
                   <Tooltip title="Editar">
                     <Button
                       type="warning"
-                      className={`!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300 `}
-                      icon={actionConfig.customIcons?.edit || <FaEdit className="text-yellow-500 hover:text-white" />}
+                      className={`!bg-yellow-500 hover:!bg-yellow-700 !text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300`}
+                      icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
                     />
                   </Tooltip>
@@ -376,20 +376,18 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   >
                     <Tooltip title="Eliminar">
                       <Button
-                      type="danger"
-                      className={clsx(
-                        "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                        actionConfig.customActionsColor?.delete ||
-                        "!bg-white !text-red-500 !border !border-red-500 hover:!bg-red-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
-                      )}
-                      icon={
-                        actionConfig.customIcons?.delete?.type ? (
-                        React.createElement(
-                          actionConfig.customIcons.delete.type
-                        )
-                        ) : (
-                        <FaTrash className="text-red-500 hover:text-white" />
-                        )}
+                        type="danger"
+                        className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
+                          "!bg-red-500 hover:!bg-red-600 !text-white"
+                          }`}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash />
+                          )}
                       />
                     </Tooltip>
                   </Popconfirm>
@@ -402,21 +400,20 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     cancelText="Cancelar"
                   >
                     <Tooltip title="Eliminar">
+
                       <Button
-                      type="danger"
-                      className={clsx(
-                        "!bg-white !text-red-500 !border !border-red-500 hover:!bg-red-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300",
-                        actionConfig.customActionsColor?.delete || ""
-                      )}
-                      icon={
-                        actionConfig.customIcons?.delete?.type ? (
-                        React.createElement(
-                          actionConfig.customIcons.delete.type
-                        )
-                        ) : (
-                        <FaTrash className="text-red-500 hover:text-white" />
-                        )
-                      }
+                        type="danger"
+                        className={`!bg-red-500 hover:!bg-red-600 !text-white !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${actionConfig.customActionsColor?.delete || ""
+                          }`}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash />
+                          )
+                        }
                       />
                     </Tooltip>
                   </Popconfirm>
@@ -425,32 +422,28 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               onView &&
               (typeof actionConfig.showView === "function"
                 ? actionConfig.showView(record) && (
-                    <Tooltip title="Ver">
+                  <Tooltip title="Ver">
                     <Button
                       type="view"
-                      className={clsx(
-                      "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                      actionConfig.customActionsColor?.view ||
-                        "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
-                      )}
-                      icon={actionConfig.customIcons?.view || <FaEye className="text-sky-500 hover:text-white" />}
+                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
+                        "!bg-sky-600 hover:!bg-sky-800 text-white"
+                        }`}
+                      icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
                     />
-                    </Tooltip>
+                  </Tooltip>
                 )
                 : actionConfig.showView && (
-                    <Tooltip title="Ver">
+                  <Tooltip title="Ver">
                     <Button
                       type="view"
-                      className={clsx(
-                      "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                      actionConfig.customActionsColor?.view ||
-                        "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
-                      )}
-                      icon={actionConfig.customIcons?.view || <FaEye className="text-sky-500 hover:text-white" />}
+                      className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
+                        "!bg-sky-600 hover:!bg-sky-800 text-white"
+                        }`}
+                      icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
                     />
-                    </Tooltip>
+                  </Tooltip>
                 ))}
           </>
         )}
@@ -478,7 +471,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={clsx("p-4", { "bg-white rounded-xl shadow-lg": !disableWrapper })}>
+      <div className={`p-4 ${!disableWrapper ? "bg-white rounded-xl shadow-lg" : ""}`}>
         <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
           {/* Header: Botón de volver, Icono y Título */}
           <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
@@ -492,6 +485,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 </div>
               )}
               <h1>{title}</h1>
+              {/* <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
+                {title}
+              </Title> */}
             </div>
           </div>
 
@@ -520,11 +516,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               {exportToExcel && (
                 <Button
                   icon={<FaFileExcel />}
-                  className={clsx(
-                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8",
-                  exportToExcel.buttonProps?.className
-                  )}
-                  style={exportToExcel.buttonProps?.style}
+                  className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 ${exportToExcel.buttonProps?.className || ""}`}
+                  style={exportToExcel.buttonProps?.style || {}}
                   onClick={onExportExcel}
                 >
                   {exportToExcel.buttonProps?.text || "Exportar a Excel"}
@@ -537,10 +530,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       key={filter.key}
                       type="default"
-                      className={clsx(
-                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8",
-                      filter.className
-                      )}
+                      className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""}`}
                       icon={filter.icon}
                       onClick={() => filter.onClick({} as T)}
                     >
@@ -580,13 +570,12 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             columns={processColumns(columns)}
             dataSource={filteredData}
             loading={loading}
-            // pagination={{
-            //   ...paginationConfig,
-            //   total: filteredData.length,
-            //   responsive: true,
-            //   className: "px-4 sm:px-6 py-3 sm:py-4",
-            // }}
-            pagination={paginationConfig} // Apply without additional modifications
+            pagination={{
+              ...paginationConfig,
+              total: filteredData.length,
+              responsive: true,
+              className: "px-4 sm:px-6 py-3 sm:py-4",
+            }}
             className="dynamic-table"
             scroll={{ x: "max-content" }}
           />
