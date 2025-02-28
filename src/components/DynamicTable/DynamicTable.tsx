@@ -227,9 +227,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   const paginationConfig = {
     pageSize: 10,
     showSizeChanger: true,
-    showTotal: (total: number) =>
-      `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
-    className: "custom-pagination",
+    showTotal: (total: number) => `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
   };
 
   const handleEdit = (record: T) => {
@@ -348,7 +346,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       type="warning"
                       title="Editar"
                       className={`action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit ||
-                        "!bg-yellow-500 hover:!bg-yellow-700 text-white"
+                        "!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                         }`}
                       icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
@@ -359,7 +357,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <Tooltip title="Editar">
                     <Button
                       type="warning"
-                      className={`!bg-yellow-500 hover:!bg-yellow-700 !text-white !border-none shadow-xs hover:shadow-sm transition-all duration-300`}
+                      className={`!bg-white !text-yellow-500 !border !border-yellow-500 hover:!bg-yellow-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300 `}
                       icon={actionConfig.customIcons?.edit || <FaEdit />}
                       onClick={() => handleEdit(record)}
                     />
@@ -378,7 +376,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Button
                         type="danger"
                         className={`action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.delete ||
-                          "!bg-red-500 hover:!bg-red-600 !text-white"
+                          "!bg-white !text-red-500 !border !border-red-500 hover:!bg-red-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                           }`}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -403,7 +401,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
                       <Button
                         type="danger"
-                        className={`!bg-red-500 hover:!bg-red-600 !text-white !border-none shadow-sm hover:shadow-sm transition-all duration-300 ${actionConfig.customActionsColor?.delete || ""
+                        className={`!bg-white !text-red-500 !border !border-red-500 hover:!bg-red-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300 ${actionConfig.customActionsColor?.delete || ""
                           }`}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -426,7 +424,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="view"
                       className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                        "!bg-sky-600 hover:!bg-sky-800 text-white"
+                        "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                         }`}
                       icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
@@ -438,7 +436,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="view"
                       className={`action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.view ||
-                        "!bg-sky-600 hover:!bg-sky-800 text-white"
+                        "!bg-white !text-sky-500 !border !border-sky-500 hover:!bg-sky-500 hover:!text-white hover:!border-none shadow-xs hover:shadow-sm transition-all duration-300"
                         }`}
                       icon={actionConfig.customIcons?.view || <FaEye />}
                       onClick={() => handleView(record)}
@@ -485,9 +483,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 </div>
               )}
               <h1>{title}</h1>
-              {/* <Title level={3} className="text-gray-900 font-bold tracking-tight text-lg sm:text-xl">
-                {title}
-              </Title> */}
             </div>
           </div>
 
@@ -570,12 +565,13 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             columns={processColumns(columns)}
             dataSource={filteredData}
             loading={loading}
-            pagination={{
-              ...paginationConfig,
-              total: filteredData.length,
-              responsive: true,
-              className: "px-4 sm:px-6 py-3 sm:py-4",
-            }}
+            // pagination={{
+            //   ...paginationConfig,
+            //   total: filteredData.length,
+            //   responsive: true,
+            //   className: "px-4 sm:px-6 py-3 sm:py-4",
+            // }}
+            pagination={paginationConfig} // Apply without additional modifications
             className="dynamic-table"
             scroll={{ x: "max-content" }}
           />
