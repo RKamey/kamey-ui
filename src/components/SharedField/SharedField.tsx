@@ -44,15 +44,18 @@ const generateFields = (
     validations: field.validations,
     datepickerConfig: field.datepickerConfig,
     min: field.min,
+    max: field.max,
+    step: field.step,
     width: field.width,
     readonly: field.readonly,
-    hidden: field.hidden,
+    hiddenInForm: field.hiddenInForm,
     checkboxConfig: field.checkboxConfig,
     selectConfig: field.selectConfig,
     dependsOn: field.dependsOn,
-    max: field.max,
     options: field.options,
-    step: field.step,
+    onChange: field.onChange,
+    uploadConfig: field.uploadConfig,
+    radioConfig: field.radioConfig,
   }));
 };
 

@@ -1,4 +1,4 @@
-import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations } from "../DynamicForm/types";
+import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations, UploadConfig, RadioConfig } from "../DynamicForm/types";
 
 export interface SharedFieldConfig {
   key: string;
@@ -12,7 +12,7 @@ export interface SharedFieldConfig {
   render?: <T extends string = string>(value: T) => React.ReactNode;
   readonly?: boolean;
   isHidden?: boolean; // Para ocultar la columna en la tabla
-  hidden?: boolean; // Para ocultar el campo en el formulario
+  hiddenInForm?: boolean; // Para ocultar el campo en el formulario
   type?: FieldType;
   align?: "left" | "right" | "center";
   icon?: React.ReactElement;
@@ -23,4 +23,7 @@ export interface SharedFieldConfig {
   step?: number;
   options?: Array<{ label: string; value: string | number }>;
   sorter?: boolean;
+  onChange?: (value: string | number) => void;
+  uploadConfig?: UploadConfig;
+  radioConfig?: RadioConfig;
 }

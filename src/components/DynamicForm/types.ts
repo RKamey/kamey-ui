@@ -36,6 +36,11 @@ export interface DatepickerConfig {
 export interface UploadConfig {
   textButton?: string;
   iconButton?: string;
+  accept?: string;
+  multiple?: boolean;
+  maxSize?: number;
+  beforeUpload?: (file: File) => boolean;
+  action?: string;
 }
 
 export interface RadioConfig {
