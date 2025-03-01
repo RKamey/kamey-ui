@@ -36,6 +36,7 @@ import { FormField, Options, Validations } from "./types";
 import dayjs from "dayjs";
 import axios, { AxiosResponse } from "axios";
 import { BiUpload } from "react-icons/bi";
+import { message } from "antd";
 
 export interface ApiConfig {
   url: string;
@@ -82,8 +83,8 @@ export const DynamicForm = ({
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
       const formattedData = { ...initialData };
-      
-      fields.filter((field): field is FormField => 
+
+      fields.filter((field): field is FormField =>
         typeof field === "object" && !Array.isArray(field)
       ).forEach(field => {
         if (field.type === "datepicker" && formattedData[field.name]) {
@@ -371,7 +372,7 @@ export const DynamicForm = ({
       if (validation.isGreaterThan) {
         const { target, message } = validation.isGreaterThan;
 
-        rules.validator = async(_: unknown, value: string | number | Date | dayjs.Dayjs | null | undefined) => {
+        rules.validator = async (_: unknown, value: string | number | Date | dayjs.Dayjs | null | undefined) => {
           if (!value) return Promise.resolve();
 
           const targetValue = form.getFieldValue(target);
@@ -387,11 +388,11 @@ export const DynamicForm = ({
           return Promise.resolve();
         };
       }
-      
+
       if (validation.isLessThan) {
         const { target, message } = validation.isLessThan;
 
-        rules.validator = async(_: unknown, value: string | number | Date | dayjs.Dayjs | null | undefined) => {
+        rules.validator = async (_: unknown, value: string | number | Date | dayjs.Dayjs | null | undefined) => {
           if (!value) return Promise.resolve();
 
           const targetValue = form.getFieldValue(target);
@@ -405,8 +406,8 @@ export const DynamicForm = ({
           }
 
           return Promise.resolve();
+        }
       }
-    }
 
       return rules;
     });
@@ -461,15 +462,15 @@ export const DynamicForm = ({
       hidden,
       onChange,
     } = field;
-   
+
     if (hidden) return null;
-   
+
     // Si estamos en modo view, mostramos el valor como texto
     if (mode === 'view') {
       // Obtener el valor actual del campo
       const value = initialData?.[name] ?? form.getFieldValue(name) ?? '-';
       let displayValue: React.ReactNode = value;
-  
+
       switch (type) {
         case 'text':
         case 'number':
@@ -478,25 +479,25 @@ export const DynamicForm = ({
         case 'password':
           displayValue = value;
           break;
-      
+
         case 'select': {
-          const optionsList = field.dependsOn 
-            ? selectOptions[name] 
-            : field.selectConfig?.apiConfig 
-              ? selectOptions[name] 
+          const optionsList = field.dependsOn
+            ? selectOptions[name]
+            : field.selectConfig?.apiConfig
+              ? selectOptions[name]
               : options;
           const option = optionsList?.find(opt => opt.value === value);
           displayValue = option?.label || value;
           break;
         }
-      
+
         case 'datepicker':
           if (value && dayjs.isDayjs(value)) {
             const { format = 'YYYY-MM-DD' } = datepickerConfig || {};
             displayValue = value.format(format);
           }
           break;
-      
+
         case 'checkbox':
           if (options) {
             if (Array.isArray(value)) {
@@ -509,22 +510,22 @@ export const DynamicForm = ({
             displayValue = value ? 'Sí' : 'No';
           }
           break;
-      
+
         case 'radio': {
           const option = options?.find(opt => opt.value === value);
           displayValue = option?.label || value;
           break;
         }
-      
+
         case 'switch':
           displayValue = value ? 'Sí' : 'No';
           break;
-      
+
         default:
           displayValue = value;
           break;
       }
-  
+
       return (
         <Form.Item label={label} className="mb-4">
           <div className="text-gray-700">
@@ -533,11 +534,11 @@ export const DynamicForm = ({
         </Form.Item>
       );
     }
-   
+
     const { format, showTime, picker, size } = datepickerConfig || {};
-   
+
     let formItem;
-   
+
     switch (type) {
       case "text":
         formItem = <Input placeholder={placeholder} readOnly={readonly} />;
@@ -568,8 +569,8 @@ export const DynamicForm = ({
               field.dependsOn
                 ? selectOptions[name]
                 : field.selectConfig?.apiConfig
-                ? selectOptions[name]
-                : convertOptions(options, field)
+                  ? selectOptions[name]
+                  : convertOptions(options, field)
             }
             optionFilterProp="label"
             onChange={(value) => {
@@ -580,7 +581,7 @@ export const DynamicForm = ({
                   field.selectConfig.customOption.onClick?.();
                 }
               }
-   
+
               if (value) {
                 fields
                   .filter(
@@ -684,18 +685,19 @@ export const DynamicForm = ({
             >
               {options?.map((option, index) => {
                 return (
-                <Radio 
-                  key={index} 
-                  value={option.value}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginRight: "0",
-                  }}
-                >
-                  {option.label}
-                </Radio>
-              )})}
+                  <Radio
+                    key={index}
+                    value={option.value}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "0",
+                    }}
+                  >
+                    {option.label}
+                  </Radio>
+                )
+              })}
             </Radio.Group>
           </div>
         );
@@ -707,13 +709,47 @@ export const DynamicForm = ({
       case "slider":
         formItem = <Slider />;
         break;
+      // En la sección donde se renderiza el campo upload
       case "upload":
         formItem = (
-          <Upload>
+          <Upload
+            name={field.uploadConfig?.name || name}
+            action={field.uploadConfig?.action}
+            accept={field.uploadConfig?.accept}
+            multiple={field.uploadConfig?.multiple}
+            maxCount={field.uploadConfig?.maxCount}
+            beforeUpload={(file) => {
+              if (field.uploadConfig?.maxSize && file.size > field.uploadConfig.maxSize) {
+                const maxSizeMB = Math.round(field.uploadConfig.maxSize / (1024 * 1024));
+                message.error(`El archivo no debe exceder ${maxSizeMB}MB`);
+                return Upload.LIST_IGNORE;
+              }
+              return field.uploadConfig?.beforeUpload ? field.uploadConfig.beforeUpload(file) : true;
+            }}
+            onChange={(info) => {
+              const { status, response } = info.file;
+
+              if (status === 'done') {
+                // Extraer el valor del archivo de la respuesta según la estructura esperada
+                const fileId = response?.data?.archivo;
+                if (fileId) {
+                  // Guardar el ID del archivo en el formulario
+                  form.setFieldValue(name, fileId);
+                  message.success(`${info.file.name} se subió correctamente`);
+                }
+              } else if (status === 'error') {
+                message.error(`${info.file.name} falló al subirse.`);
+              }
+
+              // Llamar al onChange personalizado si existe
+              field.uploadConfig?.onChange?.(info);
+            }}
+            customRequest={field.uploadConfig?.customRequest ? field.uploadConfig.customRequest : undefined}
+          >
             <Button
-              icon={<BiUpload />}
+              icon={field.uploadConfig?.iconButton ? <span className={field.uploadConfig.iconButton}></span> : <BiUpload />}
             >
-              Subir
+              {field.uploadConfig?.textButton || "Subir archivo"}
             </Button>
           </Upload>
         );
@@ -721,15 +757,15 @@ export const DynamicForm = ({
       default:
         break;
     }
-   
+
     if (!formItem) return null;
-    
+
     return (
       <Form.Item label={label} name={name} rules={getRules(validations)}>
         {React.cloneElement(formItem)}
       </Form.Item>
     );
-   };
+  };
 
   return (
     <div>
@@ -741,7 +777,7 @@ export const DynamicForm = ({
         </div>
         <p className="text-sm text-gray-500">{description}</p>
       </div>
-  
+
       {/* Form */}
       <Form
         form={form}
@@ -755,10 +791,11 @@ export const DynamicForm = ({
           <Row key={rowIndex} gutter={16}>
             {row.map((field: FormField, colIndex: number) => {
               return (
-              <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
-                {renderFormField(field)}
-              </Col>
-            )})}
+                <Col key={`${rowIndex}-${colIndex}`} span={24 / row.length}>
+                  {renderFormField(field)}
+                </Col>
+              )
+            })}
           </Row>
         ))}
         {/* Add hidden fields */}

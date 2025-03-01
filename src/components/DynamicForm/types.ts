@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'rangepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload' | 'custom' | 'hidden';
 export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
 
@@ -38,9 +39,17 @@ export interface UploadConfig {
   iconButton?: string;
   accept?: string;
   multiple?: boolean;
-  maxSize?: number;
+  maxSize?: number; // en bytes
+  maxCount?: number;
+  name?: string; // nombre del campo en el FormData
+  action?: string; // URL a la que se subirá el archivo
   beforeUpload?: (file: File) => boolean;
-  action?: string;
+  onChange?: (info: any) => void;
+  customRequest?: (options: any) => void;
+  responseTransform?: (response: any) => string; // función para transformar la respuesta
+  formData?: boolean; // indicar si debe usar FormData
+  formDataName?: string; // nombre del campo en FormData
+  headers?: Record<string, string>; // cabeceras adicionales
 }
 
 export interface RadioConfig {
