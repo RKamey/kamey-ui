@@ -728,19 +728,19 @@ export const DynamicForm = ({
             }}
             onChange={(info) => {
               const { status, response } = info.file;
-
+      
               if (status === 'done') {
-                // Extraer el valor del archivo de la respuesta según la estructura esperada
-                const fileId = response?.data?.archivo;
+                // Si response es directamente una string, es el ID del archivo
+                const fileId = typeof response === 'string' ? response : response?.data?.archivo;
                 if (fileId) {
-                  // Guardar el ID del archivo en el formulario
+                  // Guardar solo el ID del archivo en el formulario
                   form.setFieldValue(name, fileId);
                   message.success(`${info.file.name} se subió correctamente`);
                 }
               } else if (status === 'error') {
                 message.error(`${info.file.name} falló al subirse.`);
               }
-
+      
               // Llamar al onChange personalizado si existe
               field.uploadConfig?.onChange?.(info);
             }}
