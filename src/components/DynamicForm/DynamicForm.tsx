@@ -731,7 +731,9 @@ export const DynamicForm = ({
       
               if (status === 'done') {
                 // Si response es directamente una string, es el ID del archivo
-                const fileId = typeof response === 'string' ? response : response?.data?.archivo;
+                console.log(response);
+                const fileId = response;
+                console.log(name, fileId);
                 if (fileId) {
                   // Guardar solo el ID del archivo en el formulario
                   form.setFieldValue(name, fileId);
