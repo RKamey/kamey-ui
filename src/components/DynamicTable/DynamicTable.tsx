@@ -102,6 +102,7 @@ import {
 import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
 import clsx from "clsx";
+import { sortOrder } from "../SortOrder/SortOrder";
 
 const { Search } = Input;
 
@@ -300,6 +301,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           <span className="font-medium">{column.title}</span>
         ),
         className: "py-4 px-6",
+        sorter: column.sorter ? (a: T, b: T) => sortOrder<T>(column.key as keyof T)(a, b) : undefined,
       }));
 
     const renderActions = (record: T) => (
