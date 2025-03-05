@@ -521,6 +521,24 @@ export const DynamicForm = ({
           displayValue = value ? 'Sí' : 'No';
           break;
 
+        case 'upload': {
+          const value = initialData?.[name] ?? form.getFieldValue(name) ?? '-';
+          let displayValue: React.ReactNode = value;
+
+          // If there's a renderPreview method, use it
+          if (field.uploadConfig?.renderPreview) {
+            displayValue = field.uploadConfig.renderPreview(value);
+          }
+
+          return (
+            <Form.Item label={label} className="mb-4">
+              <div className="text-gray-700">
+                {displayValue}
+              </div>
+            </Form.Item>
+          );
+        }
+
         default:
           displayValue = value;
           break;
@@ -718,6 +736,7 @@ export const DynamicForm = ({
             accept={field.uploadConfig?.accept}
             multiple={field.uploadConfig?.multiple}
             maxCount={field.uploadConfig?.maxCount}
+            listType={field.uploadConfig?.listType || 'text'}
             beforeUpload={(file) => {
               if (field.uploadConfig?.maxSize && file.size > field.uploadConfig.maxSize) {
                 const maxSizeMB = Math.round(field.uploadConfig.maxSize / (1024 * 1024));
@@ -728,31 +747,33 @@ export const DynamicForm = ({
             }}
             onChange={(info) => {
               const { status, response } = info.file;
-      
+
               if (status === 'done') {
-                // Si response es directamente una string, es el ID del archivo
-                console.log(response);
                 const fileId = response;
-                console.log(name, fileId);
                 if (fileId) {
-                  // Guardar solo el ID del archivo en el formulario
                   form.setFieldValue(name, fileId);
                   message.success(`${info.file.name} se subió correctamente`);
                 }
               } else if (status === 'error') {
                 message.error(`${info.file.name} falló al subirse.`);
               }
-      
-              // Llamar al onChange personalizado si existe
+
               field.uploadConfig?.onChange?.(info);
             }}
-            customRequest={field.uploadConfig?.customRequest ? field.uploadConfig.customRequest : undefined}
+            customRequest={field.uploadConfig?.customRequest}
           >
-            <Button
-              icon={field.uploadConfig?.iconButton ? <span className={field.uploadConfig.iconButton}></span> : <BiUpload />}
-            >
-              {field.uploadConfig?.textButton || "Subir archivo"}
-            </Button>
+            {field.uploadConfig?.renderPreview && form.getFieldValue(name) ? (
+              <div>
+                {field.uploadConfig.renderPreview(form.getFieldValue(name))}
+                <div>Cambiar imagen</div>
+              </div>
+            ) : (
+              <Button
+                icon={field.uploadConfig?.iconButton ? <span className={field.uploadConfig.iconButton}></span> : <BiUpload />}
+              >
+                {field.uploadConfig?.textButton || "Subir archivo"}
+              </Button>
+            )}
           </Upload>
         );
         break;
