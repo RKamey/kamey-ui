@@ -51,7 +51,7 @@ export interface UploadConfig {
   formDataName?: string; // nombre del campo en FormData
   headers?: Record<string, string>; // cabeceras adicionales
   listType?: 'text' | 'picture' | 'picture-card';
-  renderPreview?: (file: File) => React.ReactNode;
+  renderPreview?: (value: string) => React.ReactNode;
 }
 
 export interface RadioConfig {
