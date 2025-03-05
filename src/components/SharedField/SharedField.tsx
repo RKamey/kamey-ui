@@ -48,7 +48,7 @@ const generateFields = (
     step: field.step,
     width: field.width,
     readonly: field.readonly,
-    hiddenInForm: field.hiddenInForm,
+    hidden: field.hiddenInForm,
     checkboxConfig: field.checkboxConfig,
     selectConfig: field.selectConfig,
     dependsOn: field.dependsOn,
