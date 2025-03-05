@@ -765,7 +765,11 @@ export const DynamicForm = ({
             {field.uploadConfig?.renderPreview && form.getFieldValue(name) ? (
               <div>
                 {field.uploadConfig.renderPreview(form.getFieldValue(name))}
-                <div>Cambiar imagen</div>
+                <Button
+                  icon={field.uploadConfig?.iconButton ? <span className={field.uploadConfig.iconButton}></span> : <BiUpload />}
+                >
+                  Cambiar archivo
+                </Button>
               </div>
             ) : (
               <Button
