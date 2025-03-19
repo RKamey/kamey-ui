@@ -98,7 +98,7 @@ export interface CheckboxConfig {
 
 export interface Options {
   label: string | React.ReactElement;
-  value: string | number;
+  value: string | number | boolean;
   disabled?: boolean;
 }
 
