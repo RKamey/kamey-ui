@@ -1,3 +1,8 @@
+/**
+ * Title component
+ * @description Custom title component
+ */
+
 import { Typography } from 'antd';
 import { CSSProperties } from 'react';
 
