@@ -1,0 +1,240 @@
+/* @import url('https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i'); */
+@import "tailwindcss";
+
+@theme {
+	--font-sans: --apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+	--color-raisin_black-100: #06080b;
+	--color-raisin_black-200: #0d0f16;
+	--color-raisin_black-300: #131721;
+	--color-raisin_black-400: #1a1e2c;
+	--color-raisin_black-500: #202636;
+	--color-raisin_black-600: #3f4b6c;
+	--color-raisin_black-700: #5f71a1;
+	--color-raisin_black-800: #94a0c0;
+	--color-raisin_black-900: #cad0e0;
+	--color-raisin_black: #202636;
+
+	--color-azure-100: #001a3a;
+	--color-azure-200: #003474;
+	--color-azure-300: #004eae;
+	--color-azure-400: #0069e9;
+	--color-azure-500: #2287ff;
+	--color-azure-600: #509fff;
+	--color-azure-700: #7bb7ff;
+	--color-azure-800: #a7cfff;
+	--color-azure-900: #d3e7ff;
+	--color-azure: #2287ff;
+
+	--color-screamin_green-100: #053c0a;
+	--color-screamin_green-200: #0a7913;
+	--color-screamin_green-300: #0fb51d;
+	--color-screamin_green-400: #19ec2a;
+	--color-screamin_green-500: #56f163;
+	--color-screamin_green-600: #77f482;
+	--color-screamin_green-700: #99f7a1;
+	--color-screamin_green-800: #bbf9c0;
+	--color-screamin_green-900: #ddfce0;
+	--color-screamin_green: #56f163;
+
+	--color-emerald-100: #002615;
+	--color-emerald-200: #004b2a;
+	--color-emerald-300: #00713e;
+	--color-emerald-400: #009753;
+	--color-emerald-500: #00bd69;
+	--color-emerald-600: #00fd8b;
+	--color-emerald-700: #3effa8;
+	--color-emerald-800: #7effc5;
+	--color-emerald-900: #bfffe2;
+	--color-emerald: #00bd69;
+
+	--color-orange_web-100: #3d2601;
+	--color-orange_web-200: #7a4c02;
+	--color-orange_web-300: #b77204;
+	--color-orange_web-400: #f49805;
+	--color-orange_web-500: #fbb03b;
+	--color-orange_web-600: #fcc163;
+	--color-orange_web-700: #fdd18a;
+	--color-orange_web-800: #fde0b1;
+	--color-orange_web-900: #fef0d8;
+	--color-orange_web: #fbb03b;
+
+	--color-safety_orange-100: #331801;
+	--color-safety_orange-200: #662f02;
+	--color-safety_orange-300: #994703;
+	--color-safety_orange-400: #cc5e04;
+	--color-safety_orange-500: #fa770a;
+	--color-safety_orange-600: #fb913b;
+	--color-safety_orange-700: #fcad6c;
+	--color-safety_orange-800: #fdc89d;
+	--color-safety_orange-900: #fee4ce;
+	--color-safety_orange: #fa770a;
+
+	--color-white-100: #003366;
+	--color-white-200: #0066cc;
+	--color-white-300: #3399ff;
+	--color-white-400: #99ccff;
+	--color-white-500: #fdfeff;
+	--color-white-600: #ffffff;
+	--color-white-700: #ffffff;
+	--color-white-800: #ffffff;
+	--color-white-900: #ffffff;
+	--color-white: #fdfeff;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	}
+}
+
+/* Colors variables */
+:root {
+	--raisin-black: #202636ff;
+	--azure: #2287ffff;
+	--screamin-green: #56f163ff;
+	--emerald: #00bd69ff;
+	--orange-web: #fbb03bff;
+	--safety-orange: #fa770aff;
+	--white: #fdfeffff;
+	--font-sans: --apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--danger: #ff4d4f;
+	--warning: #faad14;
+	--success: #52c41a;
+	--view: #05858e;
+}
+
+html,
+body,
+* {
+	font-family: var(--font-sans);
+}
+
+/* Personalización de la barra de desplazamiento */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--white);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--raisin-black);
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--raisin-black);
+}
+
+.draggable-item {
+	margin-bottom: 1rem;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.drag-handle {
+	cursor: grab;
+}
+
+/* Botones antd */
+.ant-btn {
+	font-family: var(--font-sans);
+}
+
+.ant-btn.ant-btn-primary {
+	background-color: var(--azure);
+	border-color: var(--azure);
+}
+
+.ant-btn.ant-btn-primary:hover {
+	background-color: var(--azure);
+	border-color: var(--azure);
+}
+
+.ant-btn.ant-btn-primary:focus {
+	background-color: var(--azure);
+	border-color: var(--azure);
+}
+
+.ant-btn.ant-btn-warning {
+	background-color: var(--warning);
+	border-color: var(--warning);
+	color: var(--white);
+}
+
+.ant-btn.action-button-edit:hover {
+	background-color: #fa8c16;
+	border-color: #fa8c16;
+}
+
+.ant-btn.ant-btn-danger {
+	background-color: var(--danger);
+	border-color: var(--danger);
+	color: var(--white);
+}
+
+.ant-btn.ant-btn-danger:hover {
+	background-color: #ff7875;
+	border-color: #ff7875;
+}
+
+.ant-btn.ant-btn-view {
+	background-color: var(--view);
+	border-color: var(--view);
+	color: var(--white);
+}
+
+.ant-btn.ant-btn-view:hover {
+	background-color: #36cfc9;
+	border-color: #36cfc9;
+}
+
+:where(.css-dev-only-do-not-override-u2o6fy).ant-table-wrapper
+	.ant-table-column-sorter-up,
+:where(.css-dev-only-do-not-override-u2o6fy).ant-table-wrapper
+	.ant-table-column-sorter-down {
+	color: #686868 !important;
+}
+
+:where(.css-dev-only-do-not-override-u2o6fy).ant-table-wrapper
+	.ant-table-column-sorter-up.active,
+:where(.css-dev-only-do-not-override-u2o6fy).ant-table-wrapper
+	.ant-table-column-sorter-down.active {
+	color: white !important;
+}
+
+/* Components tailwindcss */
+@layer components {
+	.card {
+		@apply relative 
+    rounded-[2rem] 
+    overflow-hidden
+    transition-all duration-500
+    backdrop-blur-xl
+    border border-white/20
+    shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]
+    bg-gradient-to-br from-white/20 to-white/5;
+	}
+
+  .flex-col-center {
+    @apply flex flex-col justify-center items-center;
+  }
+
+  .flex-row-center {
+    @apply flex flex-row justify-center items-center;
+  }
+}

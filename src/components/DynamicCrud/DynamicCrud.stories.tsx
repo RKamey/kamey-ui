@@ -43,7 +43,7 @@ const meta: Meta<typeof DynamicCrud> = {
     columns: {
       description: 'Configura las columnas de la tabla.',
       table: {
-        type: { summary: 'Array<{ title: string; dataIndex: string; key: string }>' },
+        type: { summary: 'Array<{ title: string; dataIndex: string; key: string, sorter?: boolean| { compare: (a: any, b: any) => number }, render?: (text: string, record: Record<string, unknown>) => React.ReactNode }>' },
       },
     },
     fields: {
@@ -255,7 +255,7 @@ const Template: StoryFn<typeof DynamicCrud> = (args) => <DynamicCrud {...args} /
 export const Default = Template.bind({});
 Default.args = {
   columns: [
-    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Name', dataIndex: 'name', key: 'name', sorter: true },
     { title: 'Age', dataIndex: 'age', key: 'age' },
     { title: 'Address', dataIndex: 'address', key: 'address' },
   ],
@@ -275,4 +275,25 @@ Default.args = {
   showRefreshButton: true,
   showSearchBar: true,
   formCols: 2 as 1 | 2 | 3 | 4,
+  moreActions: [
+    {
+      key: 'Action1',
+      label: 'Action 1',
+      className: '!text-blue-500',
+      onClick: () => alert('Action 1 clicked'),
+    },
+    {
+      key: 'Action2',
+      label: 'Action 2',
+      className: '!text-red-500',
+      onClick: () => alert('Action 2 clicked'),
+    },
+  ],
+  themeConfig: {
+    components: {
+      Table: {
+        headerBg: '#e0e0e0',
+      },
+    },
+  },
 };

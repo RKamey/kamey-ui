@@ -1,29 +1,69 @@
 import { Meta } from "@storybook/blocks";
+import { useState } from "react";
 
-<Meta title="Kamey Components" />
+<Meta title="kamey-components" />
 
 <div className="sb-container">
-  <div className='sb-section-title'>
-    # Kamey Components
-
+  <div className='flex items-center gap-2'>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" alt="npm logo" width="50" />
+    # kamey-components
+  </div>
+  <div className='sb-section-content'>
     Esta es la documentación de la librería de kamey-components, la cual contiene componentes de React para ser utilizados en aplicaciones web.
 
     ## Instalación
 
-    Para instalar la librería de kamey-components, se debe ejecutar el siguiente comando:
-
-    ```bash
-
-    npm install kamey-components
-
-    ```
+    {(() => {
+      const [activeTab, setActiveTab] = useState('npm');
+      
+      return (
+        <div className="my-4">
+          <div className="flex border-b">
+            <button 
+              className={`px-4 py-2 font-medium ${activeTab === 'npm' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('npm')}
+            >
+              npm
+            </button>
+            <button 
+              className={`px-4 py-2 font-medium ${activeTab === 'yarn' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('yarn')}
+            >
+              yarn
+            </button>
+            <button 
+              className={`px-4 py-2 font-medium ${activeTab === 'bun' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('bun')}
+            >
+              bun
+            </button>
+          </div>
+          <div className="mt-2">
+            {activeTab === 'npm' && (
+              <div className='bg-gray-100 p-2 rounded-md'>
+                <code>npm install kamey-components</code>
+              </div>
+            )}
+            {activeTab === 'yarn' && (
+              <div className='bg-gray-100 p-2 rounded-md'>
+                <code>yarn add kamey-components</code>
+              </div>
+            )}
+            {activeTab === 'bun' && (
+              <div className='bg-gray-100 p-2 rounded-md'>
+                <code>bun add kamey-components</code>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    })()}
 
     ## Uso
 
     Para utilizar los componentes de kamey-components, se debe importar el componente deseado y utilizarlo en el código de la siguiente manera:
 
     ```jsx
-
     import { Button } from 'kamey-components';
 
     const App = () => {
@@ -31,8 +71,6 @@ import { Meta } from "@storybook/blocks";
         <Button>Click me!</Button>
       );
     }
-    
     ```
   </div>
 </div>
-  

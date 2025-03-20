@@ -499,7 +499,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
           {/* Descripción */}
           {description && (
-            <p className="text-gray-200">{description}</p>
+            <p className="text-gray-400">{description}</p>
           )}
 
           {/* Barra de búsqueda y botones en la misma fila */}
