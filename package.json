@@ -1,77 +1,98 @@
 {
-	"name": "kamey-components",
-	"version": "1.11.5",
-	"type": "module",
-	"files": [
-		"dist"
-	],
-	"main": "./dist/kamey-components.js",
-	"module": "./dist/kamey-components.js",
-	"types": "./dist/kamey-components.d.ts",
-	"exports": {
-		".": {
-			"import": "./dist/kamey-components.js",
-			"require": "./dist/kamey-components.umd.cjs"
-		},
-		"./dist/style.css": "./dist/style.css"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/RKamey/kamey-ui.git"
-	},
-	"keywords": [
-		"react",
-		"components",
-		"antd",
-		"tailwindcss",
-		"typescript"
-	],
-	"homepage": "https://github.com/RKamey/kamey-ui#readme",
-	"scripts": {
-		"dev": "vite",
-		"build": "tsc -b && vite build",
-		"prepare": "npm run build",
-		"lint": "eslint .",
-		"preview": "vite preview"
-	},
-	"peerDependencies": {
-		"antd": "^5.24.0",
-		"axios": "^1.7.9",
-		"dayjs": "^1.11.13",
-		"react": "18.3.1 || ^19.0.0",
-		"react-dom": "18.3.1 || ^19.0.0"
-	},
-	"dependencies": {
-		"@tailwindcss/vite": "^4.0.9",
-		"@tanstack/react-query": "^5.67.3",
-		"clsx": "^2.1.1",
-		"jspdf": "^2.5.2",
-		"jspdf-autotable": "^3.8.4",
-		"antd": "^5.24.0",
-		"react-icons": "^5.4.0",
-		"axios": "^1.7.9",
-		"dayjs": "^1.11.13",
-		"tailwindcss": "^4.0.9",
-		"xlsx": "^0.18.5"
-	},
-	"devDependencies": {
-		"@ant-design/v5-patch-for-react-19": "^1.0.3",
-		"@eslint/js": "^9.17.0",
-		"@types/react": "18.0.0 || 19.0.0",
-		"@types/react-dom": "18.0.0 || 19.0.0",
-		"@vitejs/plugin-react": "^4.3.4",
-		"autoprefixer": "^10.4.20",
-		"eslint": "^9.17.0",
-		"eslint-plugin-react-hooks": "^5.0.0",
-		"eslint-plugin-react-refresh": "^0.4.16",
-		"globals": "^15.14.0",
-		"postcss": "^8.4.49",
-		"react": "19.0.0",
-		"react-dom": "19.0.0",
-		"terser": "^5.37.0",
-		"typescript": "^5.7.3",
-		"typescript-eslint": "^8.18.2",
-		"vite": "^6.0.7",
-		"vite-plugin-dts": "^4.5.0"
-	}
+  "name": "kamey-components",
+  "version": "1.11.5",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/kamey-components.js",
+  "module": "./dist/kamey-components.js",
+  "types": "./dist/kamey-components.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/kamey-components.js",
+      "require": "./dist/kamey-components.umd.cjs"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RKamey/kamey-ui.git"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "antd",
+    "tailwindcss",
+    "typescript"
+  ],
+  "homepage": "https://github.com/RKamey/kamey-ui#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "prepare": "npm run build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "antd": "^5.24.0",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "react": "18.3.1 || ^19.0.0",
+    "react-dom": "18.3.1 || ^19.0.0"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.9",
+    "@tanstack/react-query": "^5.67.3",
+    "antd": "^5.24.0",
+    "axios": "^1.7.9",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "react-icons": "^5.4.0",
+    "tailwindcss": "^4.0.9",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@chromatic-com/storybook": "^3.2.6",
+    "@eslint/js": "^9.17.0",
+    "@storybook/addon-docs": "^8.6.7",
+    "@storybook/addon-essentials": "^8.6.7",
+    "@storybook/addon-interactions": "^8.6.7",
+    "@storybook/addon-onboarding": "^8.6.7",
+    "@storybook/addon-storysource": "^8.6.7",
+    "@storybook/addon-styling-webpack": "^1.0.1",
+    "@storybook/blocks": "^8.6.7",
+    "@storybook/react": "^8.6.7",
+    "@storybook/react-vite": "^8.6.7",
+    "@storybook/test": "^8.6.7",
+    "@types/react": "18.0.0 || 19.0.0",
+    "@types/react-dom": "18.0.0 || 19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "eslint-plugin-storybook": "^0.11.6",
+    "globals": "^15.14.0",
+    "postcss": "^8.4.49",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "storybook": "^8.6.7",
+    "storybook-addon-customize-antd-theme": "^1.1.0",
+    "terser": "^5.37.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.7",
+    "vite-plugin-dts": "^4.5.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
 }
