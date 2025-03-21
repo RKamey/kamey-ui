@@ -26,7 +26,7 @@
     "tailwindcss",
     "typescript"
   ],
-  "homepage": "https://github.com/RKamey/kamey-ui#readme",
+  "homepage": "https://kamey-components.netlify.app/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
