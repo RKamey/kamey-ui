@@ -11,7 +11,7 @@ import { SharedFieldConfig } from "./types";
 const generateColumns = <T extends object>(
   fields: Record<string, SharedFieldConfig>
 ): ColumnsProps<T>[] => {
-  return Object.values(fields).map((field) => ({
+  return Object.values(fields).map((field) => ({    
     key: field.key,
     title: field.title,
     dataIndex: field.key,
