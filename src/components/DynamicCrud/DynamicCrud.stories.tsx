@@ -8,7 +8,8 @@ const meta: Meta<typeof DynamicCrud> = {
     docs: {
       description: {
         component:
-          'El componente DynamicCrud permite generar un CRUD dinámico basado en configuraciones de columnas, campos y datos.',
+          `El componente DynamicCrud permite generar un CRUD dinámico basado en configuraciones de columnas, campos y datos.
+          Este componente es una recopilacion de los componentes DynamicTable y DynamicForm, permitiendo la creación, edición y eliminación de registros de una tabla.`,
       },
     },
   },
@@ -43,7 +44,8 @@ const meta: Meta<typeof DynamicCrud> = {
     columns: {
       description: 'Configura las columnas de la tabla.',
       table: {
-        type: { summary: 'Array<{ title: string; dataIndex: string; key: string, sorter?: boolean| { compare: (a: any, b: any) => number }, render?: (text: string, record: Record<string, unknown>) => React.ReactNode }>' },
+        type: { summary: 'ColumnProps[]' },
+        defaultValue: { summary: '[]' },
       },
     },
     fields: {
