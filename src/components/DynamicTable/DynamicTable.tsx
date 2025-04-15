@@ -160,6 +160,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   backButton,
 }: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [pageSize, setPageSize] = useState(10);
 
   const dataWithKey = useMemo(
     () =>
@@ -227,9 +228,12 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   };
 
   const paginationConfig = {
-    pageSize: 10,
+    pageSize: pageSize,
     showSizeChanger: true,
     showTotal: (total: number) => `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
+    onShowSizeChange: (_: number, size: number) => {
+      setPageSize(size);
+    },
   };
 
   const handleEdit = (record: T) => {
