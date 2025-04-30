@@ -228,12 +228,12 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   };
 
   const paginationConfig = {
-    pageSize: pageSize,
+    defaultPageSize: 10,       // ← aquí
     showSizeChanger: true,
-    showTotal: (total: number) => `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
-    onShowSizeChange: (_: number, size: number) => {
-      setPageSize(size);
-    },
+    showTotal: (total: number) =>
+      `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
+    // opcional: explícita los tamaños disponibles
+    pageSizeOptions: ["10", "20", "50", "100"],
   };
 
   const handleEdit = (record: T) => {
@@ -586,13 +586,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             columns={processColumns(columns)}
             dataSource={filteredData}
             loading={loading}
-            // pagination={{
-            //   ...paginationConfig,
-            //   total: filteredData.length,
-            //   responsive: true,
-            //   className: "px-4 sm:px-6 py-3 sm:py-4",
-            // }}
-            pagination={paginationConfig} // Apply without additional modifications
+            pagination={paginationConfig}
             className="dynamic-table"
             scroll={{ x: "max-content" }}
           />
