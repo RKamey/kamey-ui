@@ -160,7 +160,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   backButton,
 }: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [pageSize, setPageSize] = useState(10);
 
   const dataWithKey = useMemo(
     () =>
