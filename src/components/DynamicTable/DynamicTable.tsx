@@ -346,19 +346,19 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {actionConfig.showEdit &&
               (typeof actionConfig.showEdit === "function"
                 ? actionConfig.showEdit(record as T) && (
-                    <Tooltip title="Editar">
+                  <Tooltip title="Editar">
                     <Button
                       type="warning"
                       title="Editar"
                       className={clsx(
-                      "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                      actionConfig.customActionsColor?.edit ||
+                        "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
+                        actionConfig.customActionsColor?.edit ||
                         "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-yellow-500 hover:!border hover:!border-yellow-500 transition-all duration-300"
                       )}
                       icon={actionConfig.customIcons?.edit || <FaEdit className="text-white hover:text-yellow-500" />}
                       onClick={() => handleEdit(record)}
                     />
-                    </Tooltip>
+                  </Tooltip>
                 )
                 : actionConfig.showEdit && (
                   <Tooltip title="Editar">
@@ -381,20 +381,20 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   >
                     <Tooltip title="Eliminar">
                       <Button
-                      type="danger"
-                      className={clsx(
-                        "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                        actionConfig.customActionsColor?.delete ||
-                        "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300"
-                      )}
-                      icon={
-                        actionConfig.customIcons?.delete?.type ? (
-                        React.createElement(
-                          actionConfig.customIcons.delete.type
-                        )
-                        ) : (
-                        <FaTrash className="text-white hover:text-red-500" />
+                        type="danger"
+                        className={clsx(
+                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
+                          actionConfig.customActionsColor?.delete ||
+                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300"
                         )}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash className="text-white hover:text-red-500" />
+                          )}
                       />
                     </Tooltip>
                   </Popconfirm>
@@ -408,20 +408,20 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   >
                     <Tooltip title="Eliminar">
                       <Button
-                      type="danger"
-                      className={clsx(
-                        "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300",
-                        actionConfig.customActionsColor?.delete || ""
-                      )}
-                      icon={
-                        actionConfig.customIcons?.delete?.type ? (
-                        React.createElement(
-                          actionConfig.customIcons.delete.type
-                        )
-                        ) : (
-                        <FaTrash className="text-white hover:text-red-500" />
-                        )
-                      }
+                        type="danger"
+                        className={clsx(
+                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300",
+                          actionConfig.customActionsColor?.delete || ""
+                        )}
+                        icon={
+                          actionConfig.customIcons?.delete?.type ? (
+                            React.createElement(
+                              actionConfig.customIcons.delete.type
+                            )
+                          ) : (
+                            <FaTrash className="text-white hover:text-red-500" />
+                          )
+                        }
                       />
                     </Tooltip>
                   </Popconfirm>
@@ -430,32 +430,32 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               onView &&
               (typeof actionConfig.showView === "function"
                 ? actionConfig.showView(record) && (
-                    <Tooltip title="Ver">
+                  <Tooltip title="Ver">
                     <Button
                       type="view"
                       className={clsx(
-                      "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                      actionConfig.customActionsColor?.view ||
+                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
+                        actionConfig.customActionsColor?.view ||
                         "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300"
                       )}
                       icon={actionConfig.customIcons?.view || <FaEye className="text-white hover:text-sky-500" />}
                       onClick={() => handleView(record)}
                     />
-                    </Tooltip>
+                  </Tooltip>
                 )
                 : actionConfig.showView && (
-                    <Tooltip title="Ver">
+                  <Tooltip title="Ver">
                     <Button
                       type="view"
                       className={clsx(
-                      "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                      actionConfig.customActionsColor?.view ||
+                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
+                        actionConfig.customActionsColor?.view ||
                         "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300"
                       )}
                       icon={actionConfig.customIcons?.view || <FaEye className="text-white hover:text-sky-500" />}
                       onClick={() => handleView(record)}
                     />
-                    </Tooltip>
+                  </Tooltip>
                 ))}
           </>
         )}
@@ -483,33 +483,37 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={clsx("p-4", { "bg-white rounded-xl shadow-lg": !disableWrapper })}>
-        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-          {/* Header: Botón de volver, Icono y Título */}
-          <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-            {renderBackButton && (
-              <div>{renderBackButton()}</div>
-            )}
-            <div className="flex items-center gap-3">
-              {Icon && (
-                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                  {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+      <div
+        className={clsx("my-1", {
+          "bg-white rounded-xl shadow-lg": !disableWrapper,
+        })}
+      >
+        {/* Header: Botón de volver, Icono y Título */}
+        <div className="mb-2 space-y-3 sm:space-y-3">
+          {title && (
+            <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+              {renderBackButton && <div>{renderBackButton()}</div>}
+              {Icon ? (
+                <div className="flex items-center gap-3">
+                  {Icon && (
+                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                      {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+                    </div>
+                  )}
+                  <h1>{title}</h1>
                 </div>
+              ) : (
+                <h2 className="text-xl font-semibold">{title}</h2>
               )}
-              <h1>{title}</h1>
+              {description && <span className="text-gray-200">{description}</span>}
             </div>
-          </div>
-
-          {/* Descripción */}
-          {description && (
-            <p className="text-gray-400">{description}</p>
           )}
 
           {/* Barra de búsqueda y botones en la misma fila */}
-          <div className="flex items-center w-full gap-3">
-            {/* SearchBar a la izquierda (flex-grow para ocupar todo el espacio disponible) */}
+          <div className="flex flex-col md:flex-row w-full gap-3">
+            {/* SearchBar */}
             {showSearchBar && (
-              <div className="flex-1">
+              <div className="w-full md:flex-1">
                 <Search
                   allowClear
                   className="w-full"
@@ -520,14 +524,19 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               </div>
             )}
 
-            {/* Contenedor de botones alineados a la derecha (ml-auto forzado si no hay Search) */}
-            <div className={`flex flex-wrap gap-3 items-center ${!showSearchBar ? "ml-auto" : ""}`}>
+            {/* Botones alineados a la derecha */}
+            <div
+              className={clsx(
+                "w-full md:w-auto",
+                "flex flex-wrap gap-3 items-start md:items-center md:justify-end"
+              )}
+            >
               {exportToExcel && (
                 <Button
                   icon={<FaFileExcel />}
                   className={clsx(
-                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8",
-                  exportToExcel.buttonProps?.className
+                    "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8",
+                    exportToExcel.buttonProps?.className
                   )}
                   style={exportToExcel.buttonProps?.style}
                   onClick={onExportExcel}
@@ -537,14 +546,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               )}
 
               {customFilters && (
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 w-full md:w-auto">
                   {customFilters.map((filter) => (
                     <Button
                       key={filter.key}
                       type="default"
                       className={clsx(
-                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8",
-                      filter.className
+                        "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8",
+                        filter.className
                       )}
                       icon={filter.icon}
                       onClick={() => filter.onClick({} as T)}
@@ -562,7 +571,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   icon={actionConfig.customIcons?.refresh || <FaSync />}
                   onClick={handleRefresh}
                 >
-                  <span className="font-medium">{actionConfig.refreshButtonText || "Refrescar"}</span>
+                  <span className="font-medium">
+                    {actionConfig.refreshButtonText || "Refrescar"}
+                  </span>
                 </Button>
               )}
 
