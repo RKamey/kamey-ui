@@ -491,21 +491,24 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         {/* Header: Título, descripción, ícono y botón de volver */}
         <div className="mb-2 space-y-3 sm:space-y-3">
           {title && (
-            <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              {renderBackButton && <div>{renderBackButton()}</div>}
+            <div className="mb-3 sm:mb-4 space-y-2">
+              <div className="flex items-center gap-3">
+                {renderBackButton && <div>{renderBackButton()}</div>}
 
-              {Icon ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                {Icon && (
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
                     {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
                   </div>
-                  <h1>{title}</h1>
-                </div>
-              ) : (
-                <h2 className="text-xl font-semibold">{title}</h2>
-              )}
+                )}
 
-              {description && <span className="text-gray-200">{description}</span>}
+                <h1 className="text-xl font-semibold">{title}</h1>
+              </div>
+
+              {description && (
+                <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem]">
+                  {description}
+                </span>
+              )}
             </div>
           )}
 
