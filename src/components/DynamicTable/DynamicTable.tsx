@@ -87,7 +87,6 @@ import {
   Input,
   Table,
   Popconfirm,
-  ConfigProvider,
   Tooltip,
 } from "antd";
 import {
@@ -156,7 +155,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     searchableFields: [],
     customSearch: undefined,
   },
-  themeConfig,
   backButton,
 }: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -482,135 +480,133 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   };
 
   return (
-    <ConfigProvider theme={themeConfig}>
-      <div
-        className={clsx("my-1", {
-          "bg-white rounded-xl shadow-lg": !disableWrapper,
-        })}
-      >
-        {/* Header: Título, descripción, ícono y botón de volver */}
-        <div className="mb-2 space-y-3 sm:space-y-3">
-          {title && (
-            <div className="mb-3 sm:mb-4 space-y-2">
-              <div className="flex items-center gap-3">
-                {renderBackButton && <div>{renderBackButton()}</div>}
+    <div
+      className={clsx("my-1", {
+        "bg-white rounded-xl shadow-lg p-1": !disableWrapper,
+      })}
+    >
+      {/* Header: Título, descripción, ícono y botón de volver */}
+      <div className="mb-2 space-y-3 sm:space-y-3">
+        {title && (
+          <div className="mb-3 sm:mb-4 space-y-2">
+            <div className="flex items-center gap-3">
+              {renderBackButton && <div>{renderBackButton()}</div>}
 
-                {Icon && (
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                    {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-                  </div>
-                )}
-
-                <h1 className="text-xl font-semibold">{title}</h1>
-              </div>
-
-              {description && (
-                <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem]">
-                  {description}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Barra de búsqueda y botones */}
-          <div className="flex flex-col md:flex-row w-full gap-3">
-            {/* Buscador */}
-            {showSearchBar && (
-              <div className="w-full md:flex-1">
-                <Search
-                  allowClear
-                  className="w-full"
-                  placeholder="Buscar"
-                  onChange={(e) => handleSearch(e.target.value)}
-                  onSearch={handleSearch}
-                />
-              </div>
-            )}
-
-            {/* Botones de acción */}
-            <div
-              className={clsx(
-                "w-full md:w-auto",
-                "flex flex-wrap gap-3 items-start md:items-center md:justify-end"
-              )}
-            >
-              {/* Exportar a Excel */}
-              {exportToExcel && (
-                <Button
-                  icon={<FaFileExcel />}
-                  className={clsx(
-                    "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8",
-                    exportToExcel.buttonProps?.className
-                  )}
-                  style={exportToExcel.buttonProps?.style}
-                  onClick={onExportExcel}
-                >
-                  {exportToExcel.buttonProps?.text || "Exportar a Excel"}
-                </Button>
-              )}
-
-              {/* Filtros personalizados */}
-              {customFilters && (
-                <div className="flex flex-wrap gap-3 w-full md:w-auto">
-                  {customFilters.map((filter) => (
-                    <Button
-                      key={filter.key}
-                      type="default"
-                      className={clsx(
-                        "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8",
-                        filter.className
-                      )}
-                      icon={filter.icon}
-                      onClick={() => filter.onClick({} as T)}
-                    >
-                      <span className="font-medium">{filter.label}</span>
-                    </Button>
-                  ))}
+              {Icon && (
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                  {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
                 </div>
               )}
 
-              {/* Botón de refrescar */}
-              {showRefreshButton && (
-                <Button
-                  type="default"
-                  className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
-                  icon={actionConfig.customIcons?.refresh || <FaSync />}
-                  onClick={handleRefresh}
-                >
-                  <span className="font-medium">
-                    {actionConfig.refreshButtonText || "Refrescar"}
-                  </span>
-                </Button>
-              )}
-
-              {/* Botón de crear */}
-              {showCreateButton && (
-                <Button
-                  type="primary"
-                  className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md"
-                  icon={React.cloneElement(createButtonIcon) || <FaPlus />}
-                  onClick={onCreate}
-                >
-                  {createButtonText}
-                </Button>
-              )}
+              <h1 className="text-xl font-semibold">{title}</h1>
             </div>
+
+            {description && (
+              <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem]">
+                {description}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Barra de búsqueda y botones */}
+        <div className="flex flex-col md:flex-row w-full gap-3">
+          {/* Buscador */}
+          {showSearchBar && (
+            <div className="w-full md:flex-1">
+              <Search
+                allowClear
+                className="w-full"
+                placeholder="Buscar"
+                onChange={(e) => handleSearch(e.target.value)}
+                onSearch={handleSearch}
+              />
+            </div>
+          )}
+
+          {/* Botones de acción */}
+          <div
+            className={clsx(
+              "w-full md:w-auto",
+              "flex flex-wrap gap-3 items-start md:items-center md:justify-end"
+            )}
+          >
+            {/* Exportar a Excel */}
+            {exportToExcel && (
+              <Button
+                icon={<FaFileExcel />}
+                className={clsx(
+                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8",
+                  exportToExcel.buttonProps?.className
+                )}
+                style={exportToExcel.buttonProps?.style}
+                onClick={onExportExcel}
+              >
+                {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+              </Button>
+            )}
+
+            {/* Filtros personalizados */}
+            {customFilters && (
+              <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                {customFilters.map((filter) => (
+                  <Button
+                    key={filter.key}
+                    type="default"
+                    className={clsx(
+                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8",
+                      filter.className
+                    )}
+                    icon={filter.icon}
+                    onClick={() => filter.onClick({} as T)}
+                  >
+                    <span className="font-medium">{filter.label}</span>
+                  </Button>
+                ))}
+              </div>
+            )}
+
+            {/* Botón de refrescar */}
+            {showRefreshButton && (
+              <Button
+                type="default"
+                className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
+                icon={actionConfig.customIcons?.refresh || <FaSync />}
+                onClick={handleRefresh}
+              >
+                <span className="font-medium">
+                  {actionConfig.refreshButtonText || "Refrescar"}
+                </span>
+              </Button>
+            )}
+
+            {/* Botón de crear */}
+            {showCreateButton && (
+              <Button
+                type="primary"
+                className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md"
+                icon={React.cloneElement(createButtonIcon) || <FaPlus />}
+                onClick={onCreate}
+              >
+                {createButtonText}
+              </Button>
+            )}
           </div>
         </div>
-
-        {/* Tabla */}
-        <div className="overflow-x-auto">
-          <Table
-            columns={processColumns(columns)}
-            dataSource={filteredData}
-            loading={loading}
-            pagination={paginationConfig}
-            className="dynamic-table"
-            scroll={{ x: "max-content" }}
-          />
-        </div>
       </div>
-    </ConfigProvider>
+
+      {/* Tabla */}
+      <div className="overflow-x-auto">
+        <Table
+          columns={processColumns(columns)}
+          dataSource={filteredData}
+          loading={loading}
+          pagination={paginationConfig}
+          className="dynamic-table"
+          scroll={{ x: "max-content" }}
+        />
+      </div>
+    </div>
   );
 
 };
