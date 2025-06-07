@@ -488,30 +488,30 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           "bg-white rounded-xl shadow-lg": !disableWrapper,
         })}
       >
-        {/* Header: Botón de volver, Icono y Título */}
+        {/* Header: Título, descripción, ícono y botón de volver */}
         <div className="mb-2 space-y-3 sm:space-y-3">
           {title && (
             <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
               {renderBackButton && <div>{renderBackButton()}</div>}
+
               {Icon ? (
                 <div className="flex items-center gap-3">
-                  {Icon && (
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
-                      {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-                    </div>
-                  )}
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                    {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+                  </div>
                   <h1>{title}</h1>
                 </div>
               ) : (
                 <h2 className="text-xl font-semibold">{title}</h2>
               )}
+
               {description && <span className="text-gray-200">{description}</span>}
             </div>
           )}
 
-          {/* Barra de búsqueda y botones en la misma fila */}
+          {/* Barra de búsqueda y botones */}
           <div className="flex flex-col md:flex-row w-full gap-3">
-            {/* SearchBar */}
+            {/* Buscador */}
             {showSearchBar && (
               <div className="w-full md:flex-1">
                 <Search
@@ -524,13 +524,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               </div>
             )}
 
-            {/* Botones alineados a la derecha */}
+            {/* Botones de acción */}
             <div
               className={clsx(
                 "w-full md:w-auto",
                 "flex flex-wrap gap-3 items-start md:items-center md:justify-end"
               )}
             >
+              {/* Exportar a Excel */}
               {exportToExcel && (
                 <Button
                   icon={<FaFileExcel />}
@@ -545,6 +546,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 </Button>
               )}
 
+              {/* Filtros personalizados */}
               {customFilters && (
                 <div className="flex flex-wrap gap-3 w-full md:w-auto">
                   {customFilters.map((filter) => (
@@ -564,6 +566,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 </div>
               )}
 
+              {/* Botón de refrescar */}
               {showRefreshButton && (
                 <Button
                   type="default"
@@ -577,6 +580,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 </Button>
               )}
 
+              {/* Botón de crear */}
               {showCreateButton && (
                 <Button
                   type="primary"
@@ -591,6 +595,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </div>
         </div>
 
+        {/* Tabla */}
         <div className="overflow-x-auto">
           <Table
             columns={processColumns(columns)}
@@ -604,4 +609,5 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       </div>
     </ConfigProvider>
   );
+
 };
