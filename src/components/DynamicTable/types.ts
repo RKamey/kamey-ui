@@ -69,7 +69,7 @@ export interface MoreActions<T = Record<string, unknown>> {
 
 export interface CustomFilters<T = Record<string, unknown>> {
   key: string;
-  label?: string;
+  label?: string | ReactElement;
   className?: string;
   style?: React.CSSProperties;
   icon?: React.ReactElement;
@@ -105,7 +105,7 @@ export interface DynamicTableProps<T = Record<string, unknown>> {
   createButtonText?: string;
   createButtonIcon?: ReactElement;
   moreActions?: MoreActions<T>[];
-  customFilters?: CustomFilters<T>[];
+  customFilters?: CustomFilters<T>[]
   onCreate?: () => void;
   onView?: (record: T) => void;
   onEdit?: (record: T) => void;
