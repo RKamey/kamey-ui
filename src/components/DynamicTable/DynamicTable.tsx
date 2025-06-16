@@ -512,7 +512,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
           {/* Buscador: Flexible y ocupa el espacio disponible */}
           {showSearchBar && (
-            <div className="flex-grow w-full md:w-auto">
+            <div className="flex-grow sm:w-full w-auto">
               <Search
                 allowClear
                 className="w-full"
