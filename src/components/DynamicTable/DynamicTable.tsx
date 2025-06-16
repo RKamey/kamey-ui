@@ -509,12 +509,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </div>
         )}
 
-        {/* Barra de búsqueda y botones */}
-        <div className="flex flex-col md:flex-row md:items-center w-full gap-3">
-          {/* Buscador: Siempre ocupa el 100% en móvil, luego flex-1 en 'md' */}
+        <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
+          {/* Buscador: Flexible y ocupa el espacio disponible */}
           {showSearchBar && (
-            <div className="w-full md:flex-1 order-1 md:order-none">
-              {/* 'order-1' para que aparezca primero en móvil, 'md:order-none' para resetear en desktop */}
+            <div className="flex-grow w-full md:w-auto">
               <Search
                 allowClear
                 className="w-full"
@@ -525,22 +523,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
           )}
 
-          {/* Botones de acción: Se envuelven en móvil, luego se alinean a la derecha en 'md' */}
-          <div
-            className={clsx(
-              "w-full md:w-auto", // Ocupa todo el ancho en móvil, luego auto en 'md'
-              "flex flex-wrap gap-3 justify-start md:justify-end items-center", // Added items-center for vertical alignment
-              "order-2 md:order-none" // 'order-2' para que aparezca después de la searchbar en móvil
-            )}
-          >
+          {/* Contenedor de Botones: Se mantiene en una fila si es posible, envuelve si es necesario */}
+          <div className="flex flex-wrap justify-end items-center gap-3 flex-shrink-0">
             {/* Exportar a Excel */}
             {exportToExcel && (
               <Button
                 icon={<FaFileExcel />}
-                className={clsx(
-                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8",
-                  exportToExcel.buttonProps?.className
-                )}
+                className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 ${exportToExcel.buttonProps?.className || ""
+                  }`}
                 style={exportToExcel.buttonProps?.style}
                 onClick={onExportExcel}
               >
@@ -550,15 +540,13 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
             {/* Filtros personalizados */}
             {customFilters && (
-              <div className="flex flex-wrap gap-3 w-full md:w-auto">
+              <div className="flex flex-wrap gap-3">
                 {customFilters.map((filter) => (
                   <Button
                     key={filter.key}
                     type="default"
-                    className={clsx(
-                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8",
-                      filter.className
-                    )}
+                    className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""
+                      }`}
                     icon={filter.icon}
                     onClick={() => filter.onClick({} as T)}
                   >
