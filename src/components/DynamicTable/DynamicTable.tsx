@@ -510,11 +510,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         )}
 
         {/* Barra de búsqueda y botones */}
-        {/* Flex container que cambia de columna a fila en 'md' */}
-        <div className="flex flex-col md:flex-row w-full gap-3">
+        <div className="flex flex-col md:flex-row md:items-center w-full gap-3">
           {/* Buscador: Siempre ocupa el 100% en móvil, luego flex-1 en 'md' */}
           {showSearchBar && (
-            <div className="w-full md:flex-1 order-1 md:order-none"> {/* 'order-1' para que aparezca primero en móvil */}
+            <div className="w-full md:flex-1 order-1 md:order-none">
+              {/* 'order-1' para que aparezca primero en móvil, 'md:order-none' para resetear en desktop */}
               <Search
                 allowClear
                 className="w-full"
@@ -529,7 +529,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           <div
             className={clsx(
               "w-full md:w-auto", // Ocupa todo el ancho en móvil, luego auto en 'md'
-              "flex flex-wrap gap-3 items-start md:items-center md:justify-end",
+              "flex flex-wrap gap-3 justify-start md:justify-end items-center", // Added items-center for vertical alignment
               "order-2 md:order-none" // 'order-2' para que aparezca después de la searchbar en móvil
             )}
           >
