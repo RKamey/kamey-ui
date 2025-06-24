@@ -88,7 +88,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   formDescription?: string | ReactElement;
   columns: ColumnsProps<T>[];
   data?: T[];
-  fields: FormField[];
+  fields?: FormField[];
   showCreateButton?: boolean;
   createButtonText?: string;
   createButtonIcon?: ReactElement;
@@ -96,6 +96,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   icon?: ReactElement;
   layout?: "horizontal" | "vertical";
   actionConfig?: ActionConfig;
+  hiddenActions?: boolean;
   searchConfig?: SearchConfig<T>;
   showRefreshButton?: boolean;
   onRefresh?: () => void;
@@ -156,7 +157,8 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   backButton,
   showSearchBar,
   customFilters,
-  disableWrapper = false
+  disableWrapper = false,
+  hiddenActions = false,
 }: DynamicCrudProps<T>): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<T | null>(null);
@@ -168,7 +170,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   const formatRecordDates = (record: T): T => {
     const formattedRecord = { ...record };
 
-    fields.forEach((field) => {
+    fields?.forEach((field) => {
       if (field.type === 'datepicker' && formattedRecord[field.name as string]) {
         (formattedRecord as Record<string, unknown>)[field.name as string] = dayjs(formattedRecord[field.name] as string | number | Date | null | undefined);
       }
@@ -242,6 +244,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
         createButtonIcon={createButtonIcon}
         searchConfig={searchConfig}
         actionConfig={actionConfig}
+        hiddenActions={hiddenActions}
         headerDirection={headerDirection}
         showSearchBar={showSearchBar}
         showRefreshButton={showRefreshButton}
@@ -270,7 +273,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
           <DynamicForm
             title={formTitleToShow}
             description={formDescription || description}
-            fields={fields}
+            fields={fields ? fields : []}
             icon={formIconToShow}
             layout={layout}
             initialData={currentRecord || undefined}

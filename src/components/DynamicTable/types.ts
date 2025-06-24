@@ -124,4 +124,5 @@ export interface DynamicTableProps<T = Record<string, unknown>> {
   themeConfig?: ThemeConfig;
   customCols?: boolean;
   backButton?: boolean | ReactElement;
+  hiddenActions?: boolean;
 }

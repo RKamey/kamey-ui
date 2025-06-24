@@ -151,6 +151,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       view: "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300",
     },
   },
+  hiddenActions = false,
   searchConfig = {
     searchableFields: [],
     customSearch: undefined,
@@ -303,6 +304,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         ),
         className: "py-4 px-6",
         sorter: column.sorter ? (a: T, b: T) => sortOrder<T>(column.key as keyof T)(a, b) : undefined,
+        filters: column.filters,
+        onFilter: column.onFilter
       }));
 
     const renderActions = (record: T) => (
@@ -471,7 +474,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
     if (
       actionConfig.showDefaultActions ||
-      (moreActions && moreActions.length > 0)
+      (moreActions && moreActions.length > 0) ||
+      hiddenActions === false
     ) {
       return [...processedColumns, actionsColumn];
     }

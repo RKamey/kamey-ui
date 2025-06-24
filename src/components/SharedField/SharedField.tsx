@@ -25,6 +25,13 @@ const generateColumns = <T extends object>(
     render: field.render as
       | ((value: T[keyof T], record: T) => React.ReactNode)
       | undefined,
+    filters: field.filtrers,
+    onFilter: field.onFilter as
+      | ((value: boolean | React.Key, record: T & { key: number }) => boolean)
+      | undefined,
+    isPrimaryKey:
+      field.key?.toLowerCase() === "id" ||
+      field.key?.toLowerCase() === "uuid",
   }));
 };
 
