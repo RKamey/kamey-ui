@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwind(),
-    dts({ 
+    dts({
       include: ['src'],
       insertTypesEntry: true,
       rollupTypes: true

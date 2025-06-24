@@ -25,3 +25,6 @@ dist-ssr
 
 main.tsx
 App.tsx
+
+# Pages folder
+pages/

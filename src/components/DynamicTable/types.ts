@@ -6,11 +6,19 @@ export interface ColumnsProps<T = Record<string, unknown>> {
   isPrimaryKey?: boolean;
   isHidden?: boolean;
   key: string | number;
+  filters?: FilterItem[];
+  onFilter?: (value: boolean | React.Key, record: T & { key: number }) => boolean;
   width?: string | number;
   align?: "left" | "right" | "center";
   icon?: React.ReactElement;
   render?: (value: T[keyof T], record: T) => React.ReactNode;
   sorter?: boolean | ((a: T, b: T) => number);
+}
+
+export interface FilterItem {
+  text: string;
+  value: boolean;
+  children?: FilterItem[];
 }
 
 export interface ThemeConfig {

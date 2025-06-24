@@ -38,7 +38,7 @@
  * @param {ExcelConfigProps} [props.exportToExcel] - Configuration for exporting the table data to Excel.
  * @param {boolean | React.ReactElement} [props.backButton] - Whether to show a back button or a custom element.
  * @param {boolean} [props.showSearchBar] - Whether to show the search bar in the table.
- * 
+ *
  * @example
  * <DynamicCrud<T>
  *   title="User Management"
@@ -196,7 +196,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
 
   const handleEdit = (record: T) => {
     const formattedRecord = formatRecordDates(record);
-    
+
     setCurrentRecord(formattedRecord);
     setIsModalVisible(true);
     setMode("update");

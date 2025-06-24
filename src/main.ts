@@ -12,7 +12,7 @@ export type { FormField, Validations, CheckboxConfig, Options, SelectConfig, Rad
 export { DynamicCrud } from './components/DynamicCrud/DynamicCrud';
 
 export { DynamicTable } from './components/DynamicTable/DynamicTable';
-export type { DynamicTableProps, ActionIcons, CustomFilters, ActionConfig, SearchConfig, ExcelConfigProps, ColumnsProps, MoreActions, ThemeConfig } from './components/DynamicTable/types';
+export type { DynamicTableProps, ActionIcons, FilterItem, CustomFilters, ActionConfig, SearchConfig, ExcelConfigProps, ColumnsProps, MoreActions, ThemeConfig } from './components/DynamicTable/types';
 
 export type { DynamicCrudProps } from './components/DynamicCrud/DynamicCrud';
 
