@@ -17,7 +17,7 @@ export interface ColumnsProps<T = Record<string, unknown>> {
 
 export interface FilterItem {
   text: string;
-  value: boolean;
+  value: string | number | boolean;
   children?: FilterItem[];
 }
 
