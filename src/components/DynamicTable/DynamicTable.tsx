@@ -146,8 +146,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       view: <FaEye />,
     },
     customActionsColor: {
-      edit: "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-yellow-500 hover:!border hover:!border-yellow-500 transition-all duration-300",
-      delete: "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300",
+      edit: "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-yellow-700 hover:!text-white hover:!border hover:!border-yellow-500 transition-all duration-300",
+      delete: "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-red-700 hover:!text-white hover:!border hover:!border-red-500 transition-all duration-300",
       view: "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300",
     },
   },
@@ -354,7 +354,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       className={clsx(
                         "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
                         actionConfig.customActionsColor?.edit ||
-                        "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-yellow-500 hover:!border hover:!border-yellow-500 transition-all duration-300"
+                        "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-yellow-700 hover:!text-white hover:!border hover:!border-yellow-500 transition-all duration-300"
                       )}
                       icon={actionConfig.customIcons?.edit || <FaEdit className="text-white hover:text-yellow-500" />}
                       onClick={() => handleEdit(record)}
@@ -365,7 +365,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <Tooltip title="Editar">
                     <Button
                       type="warning"
-                      className={`!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-yellow-500 hover:!border hover:!border-yellow-500 transition-all duration-300 `}
+                      className={`!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-yellow-700 hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit || ""}`}
                       icon={actionConfig.customIcons?.edit || <FaEdit className="text-white hover:text-yellow-500" />}
                       onClick={() => handleEdit(record)}
                     />
@@ -386,7 +386,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                         className={clsx(
                           "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
                           actionConfig.customActionsColor?.delete ||
-                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300"
+                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-red-700 hover:!text-white hover:!border hover:!border-red-500 transition-all duration-300"
                         )}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -394,7 +394,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                               actionConfig.customIcons.delete.type
                             )
                           ) : (
-                            <FaTrash className="text-white hover:text-red-500" />
+                            <FaTrash className="text-white" />
                           )}
                       />
                     </Tooltip>
@@ -411,7 +411,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Button
                         type="danger"
                         className={clsx(
-                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-red-500 hover:!border hover:!border-red-500 transition-all duration-300",
+                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-red-700 hover:!text-white hover:!border hover:!border-red-500 transition-all duration-300",
+                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
                           actionConfig.customActionsColor?.delete || ""
                         )}
                         icon={
@@ -420,7 +421,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                               actionConfig.customIcons.delete.type
                             )
                           ) : (
-                            <FaTrash className="text-white hover:text-red-500" />
+                            <FaTrash className="text-white" />
                           )
                         }
                       />
