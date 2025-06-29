@@ -14,7 +14,7 @@
  * @param {(record: Record<string, unknown>) => void} [props.onView] - Callback function when the view button is clicked. This is optional and will only show the view button if provided.
  * @param {() => void} [props.onRefresh] - Callback function when the refresh button is clicked.
  * @param {string} [props.createButtonText="Crear"] - The text for the create button.
- * @param {React.ReactNode} [props.createButtonIcon=<FaPlus />] - The icon for the create button.
+ * @param {React.ReactNode} [props.createButtonIcon=<RiAddCircleLine />] - The icon for the create button.
  * @param {ColumnsProps[]} props.columns - The columns configuration for the table.
  * @param {Record<string, unknown>[]} props.data - The data to display in the table.
  * @param {boolean} [props.loading] - Whether the table is in a loading state.
@@ -26,11 +26,11 @@
  * @param {boolean} [props.actionConfig.showView=true] - Whether to show the view button. This is optional and will only show the view button if `onView` is provided.
  * @param {string} [props.actionConfig.refreshButtonText="Refrescar"] - The text for the refresh button.
  * @param {Object} [props.actionConfig.customIcons] - Custom icons for the actions.
- * @param {React.ReactNode} [props.actionConfig.customIcons.create=<FaPlus />] - Custom icon for the create button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.edit=<FaEdit />] - Custom icon for the edit button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.delete=<FaTrash />] - Custom icon for the delete button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.refresh=<FaSync />] - Custom icon for the refresh button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.view=<FaEye />] - Custom icon for the view button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.create=<RiAddCircleLine />] - Custom icon for the create button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.edit=<RiEditLine />] - Custom icon for the edit button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.delete=<RiDeleteBinLine />] - Custom icon for the delete button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.refresh=<RiRefreshLine />] - Custom icon for the refresh button.
+ * @param {React.ReactNode} [props.actionConfig.customIcons.view=<RiEyeLine />] - Custom icon for the view button.
  * @param {Object} [props.actionConfig.customActionsColor] - Custom colors for the actions.
  * @param {string} [props.actionConfig.customActionsColor.edit] - Custom color for the edit button.
  * @param {string} [props.actionConfig.customActionsColor.delete] - Custom color for the delete button.
@@ -49,34 +49,34 @@
  *
  * @example
  * <DynamicTable
- *   title="User List"
- *   icon={<FaUsers />}
- *   description="List of all users"
- *   showCreateButton={true}
- *   showRefreshButton={true}
- *   onCreate={() => console.log('Create button clicked')}
- *   onEdit={(record) => console.log('Edit button clicked', record)}
- *   onDelete={(record) => console.log('Delete button clicked', record)}
- *   onView={(record) => console.log('View button clicked', record)} // Optional
- *   onRefresh={() => console.log('Refresh button clicked')}
- *   moreActions={[
- *     {
- *       key: 'view',
- *       label: 'View',
- *       icon: <FaEye />,
- *       onClick: (record) => console.log('View button clicked', record),
- *     },
- *   ]}
- *   createButtonText="Add User"
- *   columns={[
- *     { title: 'Name', dataIndex: 'name', key: 'name' },
- *     { title: 'Email', dataIndex: 'email', key: 'email' },
- *   ]}
- *   data={[
- *     { name: 'John Doe', email: 'john@example.com' },
- *     { name: 'Jane Doe', email: 'jane@example.com' },
- *   ]}
- *   loading={false}
+ * title="User List"
+ * icon={<RiGroupLine />}
+ * description="List of all users"
+ * showCreateButton={true}
+ * showRefreshButton={true}
+ * onCreate={() => console.log('Create button clicked')}
+ * onEdit={(record) => console.log('Edit button clicked', record)}
+ * onDelete={(record) => console.log('Delete button clicked', record)}
+ * onView={(record) => console.log('View button clicked', record)} // Optional
+ * onRefresh={() => console.log('Refresh button clicked')}
+ * moreActions={[
+ * {
+ * key: 'view',
+ * label: 'View',
+ * icon: <RiEyeLine />,
+ * onClick: (record) => console.log('View button clicked', record),
+ * },
+ * ]}
+ * createButtonText="Add User"
+ * columns={[
+ * { title: 'Name', dataIndex: 'name', key: 'name' },
+ * { title: 'Email', dataIndex: 'email', key: 'email' },
+ * ]}
+ * data={[
+ * { name: 'John Doe', email: 'john@example.com' },
+ * { name: 'Jane Doe', email: 'jane@example.com' },
+ * ]}
+ * loading={false}
  * />
  */
 
@@ -90,14 +90,14 @@ import {
   Tooltip,
 } from "antd";
 import {
-  FaPlus,
-  FaEdit,
-  FaTrash,
-  FaSync,
-  FaEye,
-  FaFileExcel,
-  FaArrowLeft,
-} from "react-icons/fa";
+  RiAddCircleLine,
+  RiEditLine,
+  RiDeleteBinLine,
+  RiRefreshLine,
+  RiEyeLine,
+  RiFileExcel2Line,
+  RiArrowGoBackLine,
+} from "react-icons/ri";
 import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
 import clsx from "clsx";
@@ -117,7 +117,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   description,
   showSearchBar = true,
   showCreateButton,
-  showRefreshButton,
   onCreate,
   onEdit,
   onDelete,
@@ -125,7 +124,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   onRefresh,
   exportToExcel,
   createButtonText = "Crear",
-  createButtonIcon = <FaPlus />,
+  createButtonIcon = <RiAddCircleLine />,
   columns,
   data,
   loading,
@@ -139,18 +138,19 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     showView: false,
     refreshButtonText: "Refrescar",
     customIcons: {
-      create: <FaPlus />,
-      edit: <FaEdit />,
-      delete: <FaTrash />,
-      refresh: <FaSync />,
-      view: <FaEye />,
+      create: <RiAddCircleLine />,
+      edit: <RiEditLine />,
+      delete: <RiDeleteBinLine />,
+      refresh: <RiRefreshLine />,
+      view: <RiEyeLine />,
     },
     customActionsColor: {
-      edit: "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-yellow-700 hover:!text-white hover:!border hover:!border-yellow-500 transition-all duration-300",
-      delete: "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-red-700 hover:!text-white hover:!border hover:!border-red-500 transition-all duration-300",
-      view: "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300",
+      edit: "bg-yellow-500 hover:bg-yellow-700",
+      delete: "bg-red-500 hover:bg-red-700",
+      view: "bg-sky-500 hover:bg-sky-700",
     },
   },
+  showRefreshButton,
   hiddenActions = false,
   searchConfig = {
     searchableFields: [],
@@ -164,7 +164,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     () =>
       data.map((item, index) => ({
         ...(item as T),
-        key: index
+        key: index,
       })),
     [data]
   );
@@ -204,7 +204,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     if (!searchTerm) return dataWithKey;
 
     return dataWithKey.filter((item) => {
-      const typedItem = item as unknown as T; // First cast to unknown, then to T
+      const typedItem = item as unknown as T;
 
       if (searchConfig.customSearch) {
         return searchConfig.customSearch(typedItem, searchTerm);
@@ -226,11 +226,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   };
 
   const paginationConfig = {
-    defaultPageSize: 10,       // ← aquí
+    defaultPageSize: 10,
     showSizeChanger: true,
     showTotal: (total: number) =>
       `Total ${total} registros${searchTerm ? " filtrados" : ""}`,
-    // opcional: explícita los tamaños disponibles
     pageSizeOptions: ["10", "20", "50", "100"],
   };
 
@@ -256,8 +255,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     if (typeof backButton === "boolean") {
       return (
         <Button
-          icon={<FaArrowLeft />}
-          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
+          icon={<RiArrowGoBackLine />}
+          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
           onClick={() => window.history.back()}
         >
           Volver
@@ -305,12 +304,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         className: "py-4 px-6",
         sorter: column.sorter ? (a: T, b: T) => sortOrder<T>(column.key as keyof T)(a, b) : undefined,
         filters: column.filters,
-        onFilter: column.onFilter
+        onFilter: column.onFilter,
       }));
 
     const renderActions = (record: T) => (
       <div className="flex items-center gap-3">
-
         {/* More Actions */}
         {moreActions?.map((action) => {
           const isHidden =
@@ -323,8 +321,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   key={action.key}
                   type="button"
                   className={clsx(
-                    "action-button transition-colors shadow-sm hover:shadow-sm duration-300",
-                    action.className ? action.className : "!bg-slate-500 hover:!bg-slate-700 !border-none"
+                    "action-button transition-colors shadow-sm hover:shadow-sm duration-300 !text-white !border-none",
+                    action.className
+                      ? action.className
+                      : "bg-slate-500 hover:bg-slate-700 dark:bg-slate-600 dark:hover:bg-slate-800"
                   )}
                   style={action.style}
                   icon={
@@ -347,121 +347,140 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {actionConfig.showEdit &&
               (typeof actionConfig.showEdit === "function"
                 ? actionConfig.showEdit(record as T) && (
-                  <Tooltip title="Editar">
-                    <Button
-                      type="warning"
-                      title="Editar"
-                      className={clsx(
-                        "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                        actionConfig.customActionsColor?.edit ||
-                        "!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-yellow-700 hover:!text-white hover:!border hover:!border-yellow-500 transition-all duration-300"
-                      )}
-                      icon={actionConfig.customIcons?.edit || <FaEdit className="text-white hover:text-yellow-500" />}
-                      onClick={() => handleEdit(record)}
-                    />
-                  </Tooltip>
-                )
+                    <Tooltip title="Editar">
+                      <Button
+                        type="warning"
+                        title="Editar"
+                        className={clsx(
+                          "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500",
+                          actionConfig.customActionsColor?.edit ||
+                            "bg-yellow-500 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-800"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.edit || (
+                            <RiEditLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleEdit(record)}
+                      />
+                    </Tooltip>
+                  )
                 : actionConfig.showEdit && (
-                  <Tooltip title="Editar">
-                    <Button
-                      type="warning"
-                      className={`!bg-yellow-500 !text-white !border-none shadow-xs hover:!bg-yellow-700 hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center ${actionConfig.customActionsColor?.edit || ""}`}
-                      icon={actionConfig.customIcons?.edit || <FaEdit className="text-white hover:text-yellow-500" />}
-                      onClick={() => handleEdit(record)}
-                    />
-                  </Tooltip>
-                ))}
+                    <Tooltip title="Editar">
+                      <Button
+                        type="warning"
+                        className={clsx(
+                          "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
+                          actionConfig.customActionsColor?.edit ||
+                            "bg-yellow-500 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-800"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.edit || (
+                            <RiEditLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleEdit(record)}
+                      />
+                    </Tooltip>
+                  ))}
             {actionConfig.showDelete &&
               (typeof actionConfig.showDelete === "function"
                 ? actionConfig.showDelete(record) && (
-                  <Popconfirm
-                    title="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={() => handleDelete(record)}
-                    okText="Eliminar"
-                    cancelText="Cancelar"
-                  >
-                    <Tooltip title="Eliminar">
-                      <Button
-                        type="danger"
-                        className={clsx(
-                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                          actionConfig.customActionsColor?.delete ||
-                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-red-700 hover:!text-white hover:!border hover:!border-red-500 transition-all duration-300"
-                        )}
-                        icon={
-                          actionConfig.customIcons?.delete?.type ? (
-                            React.createElement(
-                              actionConfig.customIcons.delete.type
-                            )
-                          ) : (
-                            <FaTrash className="text-white" />
+                    <Popconfirm
+                      title="¿Estás seguro de que deseas eliminar este registro?"
+                      onConfirm={() => handleDelete(record)}
+                      okText="Eliminar"
+                      cancelText="Cancelar"
+                    >
+                      <Tooltip title="Eliminar">
+                        <Button
+                          className={clsx(
+                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
+                            actionConfig.customActionsColor?.delete ||
+                              "bg-red-500 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800"
                           )}
-                      />
-                    </Tooltip>
-                  </Popconfirm>
-                )
-                : actionConfig.showDelete && (
-                  <Popconfirm
-                    title="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={() => handleDelete(record)}
-                    okText="Eliminar"
-                    cancelText="Cancelar"
-                  >
-                    <Tooltip title="Eliminar">
-                      <Button
-                        type="danger"
-                        className={clsx(
-                          "!bg-red-500 !text-white !border-none shadow-xs hover:!bg-red-700 hover:!text-white hover:!border hover:!border-red-500 transition-all duration-300",
-                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                          actionConfig.customActionsColor?.delete || ""
-                        )}
-                        icon={
-                          actionConfig.customIcons?.delete?.type ? (
-                            React.createElement(
-                              actionConfig.customIcons.delete.type
+                          icon={
+                            actionConfig.customIcons?.delete?.type ? (
+                              React.createElement(
+                                actionConfig.customIcons.delete.type
+                              )
+                            ) : (
+                              <RiDeleteBinLine className="text-white" />
                             )
-                          ) : (
-                            <FaTrash className="text-white" />
-                          )
-                        }
-                      />
-                    </Tooltip>
-                  </Popconfirm>
-                ))}
+                          }
+                        />
+                      </Tooltip>
+                    </Popconfirm>
+                  )
+                : actionConfig.showDelete && (
+                    <Popconfirm
+                      title="¿Estás seguro de que deseas eliminar este registro?"
+                      onConfirm={() => handleDelete(record)}
+                      okText="Eliminar"
+                      cancelText="Cancelar"
+                    >
+                      <Tooltip title="Eliminar">
+                        <Button
+                          className={clsx(
+                            "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
+                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
+                            actionConfig.customActionsColor?.delete ||
+                              "bg-red-500 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800"
+                          )}
+                          icon={
+                            actionConfig.customIcons?.delete?.type ? (
+                              React.createElement(
+                                actionConfig.customIcons.delete.type
+                              )
+                            ) : (
+                              <RiDeleteBinLine className="text-white" />
+                            )
+                          }
+                        />
+                      </Tooltip>
+                    </Popconfirm>
+                  ))}
             {actionConfig.showView &&
               onView &&
               (typeof actionConfig.showView === "function"
                 ? actionConfig.showView(record) && (
-                  <Tooltip title="Ver">
-                    <Button
-                      type="view"
-                      className={clsx(
-                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                        actionConfig.customActionsColor?.view ||
-                        "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300"
-                      )}
-                      icon={actionConfig.customIcons?.view || <FaEye className="text-white hover:text-sky-500" />}
-                      onClick={() => handleView(record)}
-                    />
-                  </Tooltip>
-                )
+                    <Tooltip title="Ver">
+                      <Button
+                        type="view"
+                        className={clsx(
+                          "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500",
+                          actionConfig.customActionsColor?.view ||
+                            "bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.view || (
+                            <RiEyeLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleView(record)}
+                      />
+                    </Tooltip>
+                  )
                 : actionConfig.showView && (
-                  <Tooltip title="Ver">
-                    <Button
-                      type="view"
-                      className={clsx(
-                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                        actionConfig.customActionsColor?.view ||
-                        "!bg-sky-500 !text-white !border-none shadow-xs hover:!bg-white hover:!text-sky-500 hover:!border hover:!border-sky-500 transition-all duration-300"
-                      )}
-                      icon={actionConfig.customIcons?.view || <FaEye className="text-white hover:text-sky-500" />}
-                      onClick={() => handleView(record)}
-                    />
-                  </Tooltip>
-                ))}
+                    <Tooltip title="Ver">
+                      <Button
+                        type="view"
+                        className={clsx(
+                          "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500",
+                          actionConfig.customActionsColor?.view ||
+                            "bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.view || (
+                            <RiEyeLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleView(record)}
+                      />
+                    </Tooltip>
+                  ))}
           </>
         )}
-
       </div>
     );
 
@@ -487,7 +506,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   return (
     <div
       className={clsx("my-1", {
-        "bg-white rounded-xl shadow-lg p-1": !disableWrapper,
+        "bg-white rounded-xl shadow-lg p-1 dark:bg-gray-800": !disableWrapper,
       })}
     >
       {/* Header: Título, descripción, ícono y botón de volver */}
@@ -498,16 +517,16 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               {renderBackButton && <div>{renderBackButton()}</div>}
 
               {Icon && (
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors dark:bg-primary-dark dark:hover:bg-primary-dark/70">
                   {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
                 </div>
               )}
 
-              <h1 className="text-xl font-semibold">{title}</h1>
+              <h1 className="text-xl font-semibold dark:text-white">{title}</h1>
             </div>
 
             {description && (
-              <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem]">
+              <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem] dark:text-gray-300">
                 {description}
               </span>
             )}
@@ -520,7 +539,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             <div className="flex-grow sm:w-full w-auto">
               <Search
                 allowClear
-                className="w-full"
+                className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 placeholder="Buscar"
                 onChange={(e) => handleSearch(e.target.value)}
                 onSearch={handleSearch}
@@ -533,9 +552,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {/* Exportar a Excel */}
             {exportToExcel && (
               <Button
-                icon={<FaFileExcel />}
-                className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 ${exportToExcel.buttonProps?.className || ""
-                  }`}
+                icon={<RiFileExcel2Line />}
+                className={clsx(
+                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
+                  exportToExcel.buttonProps?.className
+                )}
                 style={exportToExcel.buttonProps?.style}
                 onClick={onExportExcel}
               >
@@ -550,8 +571,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                   <Button
                     key={filter.key}
                     type="default"
-                    className={`bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 ${filter.className || ""
-                      }`}
+                    className={clsx(
+                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
+                      filter.className
+                    )}
                     icon={filter.icon}
                     onClick={() => filter.onClick({} as T)}
                   >
@@ -565,8 +588,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {showRefreshButton && (
               <Button
                 type="default"
-                className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8"
-                icon={actionConfig.customIcons?.refresh || <FaSync />}
+                className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
+                icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
                 onClick={handleRefresh}
               >
                 <span className="font-medium">
@@ -579,8 +602,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {showCreateButton && (
               <Button
                 type="primary"
-                className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md"
-                icon={React.cloneElement(createButtonIcon) || <FaPlus />}
+                className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
+                icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
                 onClick={onCreate}
               >
                 {createButtonText}
@@ -597,11 +620,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           dataSource={filteredData}
           loading={loading}
           pagination={paginationConfig}
-          className="dynamic-table"
+          className="dynamic-table dark:bg-gray-800 dark:text-white"
           scroll={{ x: "max-content" }}
         />
       </div>
     </div>
   );
-
 };
