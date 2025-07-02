@@ -145,9 +145,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       view: <RiEyeLine />,
     },
     customActionsColor: {
-      edit: "bg-yellow-500 hover:bg-yellow-700",
-      delete: "bg-red-500 hover:bg-red-700",
-      view: "bg-sky-500 hover:bg-sky-700",
+      edit: "!bg-yellow-500 hover:!bg-yellow-700",
+      delete: "!bg-red-500 hover:!bg-red-700",
+      view: "!bg-sky-500 hover:!bg-sky-700",
     },
   },
   showRefreshButton,
@@ -256,7 +256,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       return (
         <Button
           icon={<RiArrowGoBackLine />}
-          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
+          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:!bg-gray-700 dark:!border-gray-600 dark:hover:!bg-gray-600 dark:text-white"
           onClick={() => window.history.back()}
         >
           Volver
@@ -324,7 +324,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     "action-button transition-colors shadow-sm hover:shadow-sm duration-300 !text-white !border-none",
                     action.className
                       ? action.className
-                      : "bg-slate-500 hover:bg-slate-700 dark:bg-slate-600 dark:hover:bg-slate-800"
+                      : "!bg-slate-500 hover:!bg-slate-700 dark:!bg-slate-600 dark:hover:!bg-slate-800"
                   )}
                   style={action.style}
                   icon={
@@ -352,9 +352,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                         type="warning"
                         title="Editar"
                         className={clsx(
-                          "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500",
-                          actionConfig.customActionsColor?.edit ||
-                            "bg-yellow-500 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-800"
+                          "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800",
                         )}
                         icon={
                           actionConfig.customIcons?.edit || (
@@ -370,9 +368,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Button
                         type="warning"
                         className={clsx(
-                          "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                          actionConfig.customActionsColor?.edit ||
-                            "bg-yellow-500 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-800"
+                          "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800"
                         )}
                         icon={
                           actionConfig.customIcons?.edit || (
@@ -395,9 +391,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Tooltip title="Eliminar">
                         <Button
                           className={clsx(
-                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
-                            actionConfig.customActionsColor?.delete ||
-                              "bg-red-500 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800"
+                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500 !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800"
                           )}
                           icon={
                             actionConfig.customIcons?.delete?.type ? (
@@ -423,9 +417,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                         <Button
                           className={clsx(
                             "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
-                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center",
-                            actionConfig.customActionsColor?.delete ||
-                              "bg-red-500 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800"
+                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800"
                           )}
                           icon={
                             actionConfig.customIcons?.delete?.type ? (
@@ -448,9 +440,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       <Button
                         type="view"
                         className={clsx(
-                          "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500",
-                          actionConfig.customActionsColor?.view ||
-                            "bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
+                          "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
                         )}
                         icon={
                           actionConfig.customIcons?.view || (
