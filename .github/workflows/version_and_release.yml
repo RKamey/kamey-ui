@@ -6,7 +6,7 @@ on:
     paths-ignore:
       # - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/**'
+      # - '.github/workflows/**'
     
 jobs:
   version-and-release:
@@ -25,9 +25,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: 📦 Install dependencies
-        run: |
-          npm run clean
-          npm ci
+        run: npm ci
 
       - name: 📦 Build
         run: npm run build:clean
