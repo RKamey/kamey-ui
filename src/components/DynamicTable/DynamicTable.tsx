@@ -529,7 +529,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             <div className="flex-grow sm:w-full w-auto">
               <Search
                 allowClear
-                className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 placeholder="Buscar"
                 onChange={(e) => handleSearch(e.target.value)}
                 onSearch={handleSearch}
@@ -610,7 +610,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           dataSource={filteredData}
           loading={loading}
           pagination={paginationConfig}
-          className="dynamic-table dark:bg-gray-800 dark:text-white"
+          className="dynamic-table"
           scroll={{ x: "max-content" }}
         />
       </div>
