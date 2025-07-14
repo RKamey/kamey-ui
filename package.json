@@ -29,8 +29,6 @@
 	"homepage": "https://kamey-components.netlify.app/",
 	"scripts": {
 		"dev": "vite",
-		"clean": "rimraf dist node_modules package-lock.json",
-		"build:clean": "npm run clean && npm ci && npm run build",
 		"build": "tsc -b && vite build",
 		"prepare": "npm run build",
 		"lint": "eslint .",
@@ -42,8 +40,8 @@
 		"antd": "^5.24.0",
 		"axios": "^1.7.9",
 		"dayjs": "^1.11.13",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0"
+		"react": "19.0.0",
+		"react-dom": "19.0.0"
 	},
 	"dependencies": {
 		"@ant-design/v5-patch-for-react-19": "^1.0.3",
@@ -82,8 +80,8 @@
 		"eslint-plugin-storybook": "^0.11.6",
 		"globals": "^15.14.0",
 		"postcss": "^8.4.49",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0",
+		"react": "19.0.0",
+		"react-dom": "19.0.0",
 		"storybook": "^8.6.7",
 		"storybook-addon-customize-antd-theme": "^1.1.0",
 		"tailwindcss": "^4.1.11",
