@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
-  title: 'Utilities/ApiVersioning',
+  title: 'Utils/ApiVersioning',
   component: () => null,
   parameters: {
     docsOnly: true,
@@ -24,6 +24,9 @@ const api = new ApiVersioning(import.meta.env.VITE_API_URL, {
 
 // Obtener instancia con versión específica
 const apiV1 = api.getInstance('v1');
+
+// O usar el alias
+const apiV1 = api.version('v1');
 
 // Hacer petición sin versión
 const response = await api.get('/users');
@@ -80,4 +83,31 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Documentacion: Story = {};
+export const Default: Story = {
+  args: {
+    baseUrl: 'https://api.example.com',
+    config: {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true
+    }
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `### Ejemplo de uso:
+\`\`\`typescript
+import { ApiVersioning } from './ApiVersioning';
+const api = new ApiVersioning('https://api.example.com', {
+  headers: { 'Authorization': 'Bearer token' },
+  withCredentials: true
+});
+const apiV1 = api.version('v1');
+const response = await apiV1.get('/users');
+console.log(response.data);
+\`\`\`
+`
+      }
+    }
+  }
+};
+
