@@ -11,7 +11,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
     formDescription?: string | ReactElement;
     columns: ColumnsProps<T>[];
     data?: T[];
-    fields: FormField[];
+    fields?: FormField[];
     showCreateButton?: boolean;
     createButtonText?: string;
     createButtonIcon?: ReactElement;
@@ -19,6 +19,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
     icon?: ReactElement;
     layout?: "horizontal" | "vertical";
     actionConfig?: ActionConfig;
+    hiddenActions?: boolean;
     searchConfig?: SearchConfig<T>;
     showRefreshButton?: boolean;
     onRefresh?: () => void;
@@ -42,5 +43,5 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
     showSearchBar?: boolean;
     disableWrapper?: boolean;
 }
-export declare const DynamicCrud: <T extends Record<string, unknown>>({ columns, data, title, formTitle, formTitles, description, formDescription, fields, showCreateButton, createButtonText, createButtonIcon, icon, layout, actionConfig, searchConfig, headerDirection, showRefreshButton, onRefresh, loading, onCreate, createRedirect, onEdit, onDelete, onView, submitButtonText, apiConfig, initialData, themeConfig, moreActions, formCols, formCustomCols, exportToExcel, backButton, showSearchBar, customFilters, disableWrapper }: DynamicCrudProps<T>) => ReactNode;
+export declare const DynamicCrud: <T extends Record<string, unknown>>({ columns, data, title, formTitle, formTitles, description, formDescription, fields, showCreateButton, createButtonText, createButtonIcon, icon, layout, actionConfig, searchConfig, headerDirection, showRefreshButton, onRefresh, loading, onCreate, createRedirect, onEdit, onDelete, onView, submitButtonText, apiConfig, initialData, themeConfig, moreActions, formCols, formCustomCols, exportToExcel, backButton, showSearchBar, customFilters, disableWrapper, hiddenActions, }: DynamicCrudProps<T>) => ReactNode;
 export {};

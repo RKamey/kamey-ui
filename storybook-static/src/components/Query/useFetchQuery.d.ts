@@ -17,7 +17,7 @@ export declare const useQueryFetch: <TData, TError = Error>({ queryKey, queryFn,
     queryKey: QueryKey;
     queryFn: () => Promise<TData>;
     config?: QueryConfig<TData, TError>;
-}) => import('@tanstack/react-query').UseQueryResult<TData, TError>;
+}) => import('@tanstack/react-query').UseQueryResult<import('@tanstack/query-core').NoInfer<TData>, TError>;
 /**
  * Use Mutation Fetch Hook
  * @param queryKey - The query key.

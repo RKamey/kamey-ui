@@ -157,6 +157,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     customSearch: undefined,
   },
   backButton,
+  widthActionsCol,
 }: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -477,7 +478,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     const actionsColumn = {
       title: <span className="font-medium">Acciones</span>,
       key: "actions",
-      width: 120,
+      width: widthActionsCol || 120,
       className: "py-4 px-6",
       render: (_: unknown, record: T) => renderActions(record),
     };

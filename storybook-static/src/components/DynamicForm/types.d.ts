@@ -3,7 +3,7 @@ export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | undefi
 export interface FormField {
     type: FieldType;
     name: string;
-    label: string;
+    label?: string;
     min?: number | undefined;
     max?: number | undefined;
     step?: number | undefined;

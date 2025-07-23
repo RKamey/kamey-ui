@@ -125,4 +125,5 @@ export interface DynamicTableProps<T = Record<string, unknown>> {
   customCols?: boolean;
   backButton?: boolean | ReactElement;
   hiddenActions?: boolean;
+  widthActionsCol?: string;
 }

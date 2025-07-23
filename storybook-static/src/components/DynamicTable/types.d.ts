@@ -5,11 +5,20 @@ export interface ColumnsProps<T = Record<string, unknown>> {
     isPrimaryKey?: boolean;
     isHidden?: boolean;
     key: string | number;
+    filters?: FilterItem[];
+    onFilter?: (value: boolean | React.Key, record: T & {
+        key: number;
+    }) => boolean;
     width?: string | number;
     align?: "left" | "right" | "center";
     icon?: React.ReactElement;
     render?: (value: T[keyof T], record: T) => React.ReactNode;
     sorter?: boolean | ((a: T, b: T) => number);
+}
+export interface FilterItem {
+    text: string;
+    value: string | number | boolean;
+    children?: FilterItem[];
 }
 export interface ThemeConfig {
     token?: {
@@ -62,7 +71,7 @@ export interface MoreActions<T = Record<string, unknown>> {
 }
 export interface CustomFilters<T = Record<string, unknown>> {
     key: string;
-    label?: string;
+    label?: string | ReactElement;
     className?: string;
     style?: React.CSSProperties;
     icon?: React.ReactElement;
@@ -107,4 +116,5 @@ export interface DynamicTableProps<T = Record<string, unknown>> {
     themeConfig?: ThemeConfig;
     customCols?: boolean;
     backButton?: boolean | ReactElement;
+    hiddenActions?: boolean;
 }

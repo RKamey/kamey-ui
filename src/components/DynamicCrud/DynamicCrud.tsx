@@ -119,6 +119,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   backButton?: boolean | ReactElement;
   showSearchBar?: boolean;
   disableWrapper?: boolean;
+  widthActionsCol?: string;
 }
 
 export const DynamicCrud = <T extends Record<string, unknown>>({
@@ -159,6 +160,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   customFilters,
   disableWrapper = false,
   hiddenActions = false,
+  widthActionsCol,
 }: DynamicCrudProps<T>): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<T | null>(null);
@@ -262,6 +264,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
         exportToExcel={exportToExcel}
         backButton={backButton}
         disableWrapper={disableWrapper}
+        widthActionsCol={widthActionsCol}
       />
 
       {isModalVisible && (

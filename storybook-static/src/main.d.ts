@@ -5,7 +5,7 @@ export { DynamicForm } from './components/DynamicForm/DynamicForm';
 export type { FormField, Validations, CheckboxConfig, Options, SelectConfig, RadioConfig, SelectDependencyConfig, FieldType, DatepickerConfig, PickerType } from './components/DynamicForm/types';
 export { DynamicCrud } from './components/DynamicCrud/DynamicCrud';
 export { DynamicTable } from './components/DynamicTable/DynamicTable';
-export type { DynamicTableProps, ActionIcons, CustomFilters, ActionConfig, SearchConfig, ExcelConfigProps, ColumnsProps, MoreActions, ThemeConfig } from './components/DynamicTable/types';
+export type { DynamicTableProps, ActionIcons, FilterItem, CustomFilters, ActionConfig, SearchConfig, ExcelConfigProps, ColumnsProps, MoreActions, ThemeConfig } from './components/DynamicTable/types';
 export type { DynamicCrudProps } from './components/DynamicCrud/DynamicCrud';
 export { ApiVersioning } from './components/ApiVersioning/ApiVersioning';
 export { useAsync } from './components/UseAsync/UseAsync';
