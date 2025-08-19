@@ -310,7 +310,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
 
     const renderActions = (record: T) => (
       <div
-        className="flex items-center gap-3 flex-wrap"
+        className={clsx(
+          "flex items-center gap-3",
+          widthActionsCol ? "flex-wrap" : "flex-nowrap" // Solo wrap cuando hay ancho limitado
+        )}
         style={widthActionsCol ? {
           maxWidth: `${widthActionsCol}px`,
           width: '100%'
@@ -327,7 +330,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 <Button
                   type="button"
                   className={clsx(
-                    "action-button transition-colors shadow-sm hover:shadow-sm duration-300 !text-white !border-none flex-shrink-0",
+                    "action-button transition-colors shadow-sm hover:shadow-sm duration-300 !text-white !border-none",
+                    widthActionsCol ? "flex-shrink-0" : "flex-shrink-0", // Siempre flex-shrink-0 para mantener tamaño
                     action.className
                       ? action.className
                       : "!bg-slate-500 hover:!bg-slate-700 dark:!bg-slate-600 dark:hover:!bg-slate-800"
@@ -483,7 +487,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     const actionsColumn = {
       title: <span className="font-medium">Acciones</span>,
       key: "actions",
-      width: widthActionsCol, // Si es undefined, Ant Design usará ancho automático
+      width: widthActionsCol || "auto", // "auto" para ajuste automático al contenido
       className: "py-4 px-6",
       render: (_: unknown, record: T) => renderActions(record),
     };
