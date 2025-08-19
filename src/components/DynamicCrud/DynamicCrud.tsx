@@ -119,7 +119,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   backButton?: boolean | ReactElement;
   showSearchBar?: boolean;
   disableWrapper?: boolean;
-  widthActionsCol?: string;
+  widthActionsCol?: string | number;
 }
 
 export const DynamicCrud = <T extends Record<string, unknown>>({

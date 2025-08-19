@@ -311,10 +311,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     const renderActions = (record: T) => (
       <div
         className="flex items-center gap-3 flex-wrap"
-        style={{
-          maxWidth: widthActionsCol ? `${widthActionsCol}px` : undefined,
+        style={widthActionsCol ? {
+          maxWidth: `${widthActionsCol}px`,
           width: '100%'
-        }}
+        } : undefined}
       >
         {/* More Actions */}
         {moreActions?.map((action) => {
@@ -483,8 +483,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     const actionsColumn = {
       title: <span className="font-medium">Acciones</span>,
       key: "actions",
-      width: widthActionsCol || 120,
-      className: "py-4 px-6 align-top", // Agregué align-top para mejor alineación
+      width: widthActionsCol, // Si es undefined, Ant Design usará ancho automático
+      className: "py-4 px-6",
       render: (_: unknown, record: T) => renderActions(record),
     };
 
