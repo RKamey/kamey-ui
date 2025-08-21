@@ -3,10 +3,10 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'package.json'
-      - 'package-lock.json'
-      # - '.github/workflows/**'
+    # paths-ignore:
+    #   - 'package.json'
+    #   - 'package-lock.json'
+    #   # - '.github/workflows/**'
     
 jobs:
   version-and-release:
