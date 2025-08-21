@@ -509,7 +509,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         "bg-white rounded-xl shadow-lg p-1 dark:bg-gray-800": !disableWrapper,
       })}
     >
-      {/* Header: Título, descripción, ícono y botón de volver */}
+      {/* Header: Title, description, icon, and back button */}
       <div className="mb-2 space-y-3 sm:space-y-3">
         {title && (
           <div className="mb-3 sm:mb-4 space-y-2">
@@ -533,10 +533,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
-          {/* Buscador: Flexible y ocupa el espacio disponible */}
+        {/* Search and Actions: Responsive layout */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* Search Bar: Takes available space */}
           {showSearchBar && (
-            <div className="flex-grow sm:w-full w-auto">
+            <div className="flex-grow min-w-0">
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -547,9 +548,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
           )}
 
-          {/* Contenedor de Botones: Se mantiene en una fila si es posible, envuelve si es necesario */}
-          <div className="flex flex-wrap justify-end items-center gap-3 flex-shrink-0">
-            {/* Exportar a Excel */}
+          {/* Action Buttons: Shrink to content, wrap if needed */}
+          <div className="flex flex-wrap items-center gap-3 justify-end sm:flex-nowrap flex-shrink-0">
+            {/* Export to Excel */}
             {exportToExcel && (
               <Button
                 icon={<RiFileExcel2Line />}
@@ -564,7 +565,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               </Button>
             )}
 
-            {/* Filtros personalizados */}
+            {/* Custom Filters */}
             {customFilters && (
               <div className="flex flex-wrap gap-3">
                 {customFilters.map((filter) => (
@@ -584,7 +585,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               </div>
             )}
 
-            {/* Botón de refrescar */}
+            {/* Refresh Button */}
             {showRefreshButton && (
               <Button
                 type="default"
@@ -598,7 +599,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               </Button>
             )}
 
-            {/* Botón de crear */}
+            {/* Create Button */}
             {showCreateButton && (
               <Button
                 type="primary"
@@ -613,14 +614,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         </div>
       </div>
 
-      {/* Tabla */}
+      {/* Table: Separated from header */}
       <div className="overflow-x-auto">
         <Table
           columns={processColumns(columns)}
           dataSource={filteredData}
           loading={loading}
           pagination={paginationConfig}
-          className="dynamic-table"
+          className="dynamic-table !mt-4"
           scroll={{ x: "max-content" }}
         />
       </div>
