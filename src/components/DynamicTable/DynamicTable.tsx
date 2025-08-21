@@ -504,127 +504,127 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   };
 
   return (
-    <div
-      className={clsx("my-1", {
-        "bg-white rounded-xl shadow-lg p-1 dark:bg-gray-800": !disableWrapper,
-      })}
-    >
-      {/* Header: Title, description, icon, and back button */}
-      <div className="mb-2 space-y-3 sm:space-y-3">
-        {title && (
-          <div className="mb-3 sm:mb-4 space-y-2">
-            <div className="flex items-center gap-3">
-              {renderBackButton && <div>{renderBackButton()}</div>}
+  <div
+    className={clsx("my-1", {
+      "bg-white rounded-xl shadow-lg p-1 dark:bg-gray-800": !disableWrapper,
+    })}
+  >
+    {/* Header: Title, description, icon, and back button */}
+    <div className="mb-2 space-y-3 sm:space-y-3">
+      {title && (
+        <div className="mb-3 sm:mb-4 space-y-2">
+          <div className="flex items-center gap-3">
+            {renderBackButton && <div>{renderBackButton()}</div>}
 
-              {Icon && (
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors dark:bg-primary-dark dark:hover:bg-primary-dark/70">
-                  {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-                </div>
-              )}
-
-              <h1 className="text-xl font-semibold dark:text-white">{title}</h1>
-            </div>
-
-            {description && (
-              <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem] dark:text-gray-300">
-                {description}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Search and Actions: Responsive layout */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          {/* Search Bar: Takes available space */}
-          {showSearchBar && (
-            <div className="flex-grow min-w-0">
-              <Search
-                allowClear
-                className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                placeholder="Buscar"
-                onChange={(e) => handleSearch(e.target.value)}
-                onSearch={handleSearch}
-              />
-            </div>
-          )}
-
-          {/* Action Buttons: Shrink to content, wrap if needed */}
-          <div className="flex flex-wrap items-center gap-3 justify-end sm:flex-nowrap flex-shrink-0">
-            {/* Export to Excel */}
-            {exportToExcel && (
-              <Button
-                icon={<RiFileExcel2Line />}
-                className={clsx(
-                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
-                  exportToExcel.buttonProps?.className
-                )}
-                style={exportToExcel.buttonProps?.style}
-                onClick={onExportExcel}
-              >
-                {exportToExcel.buttonProps?.text || "Exportar a Excel"}
-              </Button>
-            )}
-
-            {/* Custom Filters */}
-            {customFilters && (
-              <div className="flex flex-wrap gap-3">
-                {customFilters.map((filter) => (
-                  <Button
-                    key={filter.key}
-                    type="default"
-                    className={clsx(
-                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
-                      filter.className
-                    )}
-                    icon={filter.icon}
-                    onClick={() => filter.onClick({} as T)}
-                  >
-                    <span className="font-medium">{filter.label}</span>
-                  </Button>
-                ))}
+            {Icon && (
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors dark:bg-primary-dark dark:hover:bg-primary-dark/70">
+                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
               </div>
             )}
 
-            {/* Refresh Button */}
-            {showRefreshButton && (
-              <Button
-                type="default"
-                className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
-                icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
-                onClick={handleRefresh}
-              >
-                <span className="font-medium">
-                  {actionConfig.refreshButtonText || "Refrescar"}
-                </span>
-              </Button>
-            )}
-
-            {/* Create Button */}
-            {showCreateButton && (
-              <Button
-                type="primary"
-                className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
-                icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
-                onClick={onCreate}
-              >
-                {createButtonText}
-              </Button>
-            )}
+            <h1 className="text-xl font-semibold dark:text-white">{title}</h1>
           </div>
+
+          {description && (
+            <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem] dark:text-gray-300">
+              {description}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Search and Actions: Responsive layout */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        {/* Search Bar: Takes available space */}
+        {showSearchBar && (
+          <div className="flex-grow min-w-0">
+            <Search
+              allowClear
+              className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+              placeholder="Buscar"
+              onChange={(e) => handleSearch(e.target.value)}
+              onSearch={handleSearch}
+            />
+          </div>
+        )}
+
+        {/* Action Buttons: Shrink to content, wrap if needed */}
+        <div className="flex flex-wrap items-center gap-3 justify-end sm:flex-nowrap flex-shrink-0">
+          {/* Export to Excel */}
+          {exportToExcel && (
+            <Button
+              icon={<RiFileExcel2Line />}
+              className={clsx(
+                "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
+                exportToExcel.buttonProps?.className
+              )}
+              style={exportToExcel.buttonProps?.style}
+              onClick={onExportExcel}
+            >
+              {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+            </Button>
+          )}
+
+          {/* Custom Filters */}
+          {customFilters && (
+            <div className="flex flex-wrap gap-3">
+              {customFilters.map((filter) => (
+                <Button
+                  key={filter.key}
+                  type="default"
+                  className={clsx(
+                    "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
+                    filter.className
+                  )}
+                  icon={filter.icon}
+                  onClick={() => filter.onClick({} as T)}
+                >
+                  <span className="font-medium">{filter.label}</span>
+                </Button>
+              ))}
+            </div>
+          )}
+
+          {/* Refresh Button */}
+          {showRefreshButton && (
+            <Button
+              type="default"
+              className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
+              icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
+              onClick={handleRefresh}
+            >
+              <span className="font-medium">
+                {actionConfig.refreshButtonText || "Refrescar"}
+              </span>
+            </Button>
+          )}
+
+          {/* Create Button */}
+          {showCreateButton && (
+            <Button
+              type="primary"
+              className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
+              icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
+              onClick={onCreate}
+            >
+              {createButtonText}
+            </Button>
+          )}
         </div>
       </div>
-
-      {/* Table: Separated from header */}
-      <div className="overflow-x-auto">
-        <Table
-          columns={processColumns(columns)}
-          dataSource={filteredData}
-          loading={loading}
-          pagination={paginationConfig}
-          className="dynamic-table !mt-4"
-          scroll={{ x: "max-content" }}
-        />
-      </div>
     </div>
-  );
+
+    {/* Table: Separated from header */}
+    <div className="overflow-x-auto">
+      <Table
+        columns={processColumns(columns)}
+        dataSource={filteredData}
+        loading={loading}
+        pagination={paginationConfig}
+        className="dynamic-table !mt-4"
+        scroll={{ x: "max-content" }}
+      />
+    </div>
+  </div>
+);
 };
