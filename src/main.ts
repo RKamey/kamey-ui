@@ -31,3 +31,7 @@ export { useQueryFetch } from './components/Query/useFetchQuery';
 export { useMutationFetch } from './components/Query/useFetchQuery';
 
 export { createActionFactory } from './components/DynamicCrud/MoreActions';
+
+export { PermissionsProvider } from './components/Permissions/PermissionsProvider';
+export { usePermissions } from './components/Permissions/use-permissions';
+export { createPermissionsConfig, PERMISSIONS, createPermissions } from './components/Permissions/utils/permissions';

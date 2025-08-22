@@ -44,7 +44,11 @@ export interface ActionIcons {
   view?: React.ReactElement;
 }
 
-export interface ActionConfig<T = Record<string, unknown>> {
+export type RowPredicate<T extends Record<string, unknown>> =
+  | boolean
+  | ((record: T) => boolean);
+
+export interface ActionConfig<T extends Record<string, unknown> = Record<string, unknown>> {
   showDefaultActions?: boolean;
   showEdit?: boolean | ((record: T) => boolean);
   showDelete?: boolean | ((record: T) => boolean);

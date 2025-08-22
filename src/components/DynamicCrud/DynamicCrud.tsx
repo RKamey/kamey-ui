@@ -71,16 +71,17 @@ import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
 import { ActionConfig, ColumnsProps, CustomFilters, ExcelConfigProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useCallback, useMemo, useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
 import { PlusOutlined, EditOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { usePermissions } from "../Permissions/use-permissions";
 
 type OnCreateHandler<T = Record<string, unknown>> =
   | ((values: T) => void)
   | (() => void);
 
-export interface DynamicCrudProps<T = Record<string, unknown>> {
+export interface DynamicCrudProps<T extends Record<string, unknown>> {
   title?: string | ReactElement;
   formTitle?: string | ReactElement;
   formTitles?: string[];
@@ -95,7 +96,7 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   submitButtonText?: string;
   icon?: ReactElement;
   layout?: "horizontal" | "vertical";
-  actionConfig?: ActionConfig;
+  actionConfig?: ActionConfig<T>;
   hiddenActions?: boolean;
   searchConfig?: SearchConfig<T>;
   showRefreshButton?: boolean;
@@ -120,6 +121,16 @@ export interface DynamicCrudProps<T = Record<string, unknown>> {
   showSearchBar?: boolean;
   disableWrapper?: boolean;
   widthActionsCol?: string | number;
+  crudName?: string;
+  permissions?: {
+    create?: boolean;
+    read?: boolean;
+    update?: boolean;
+    delete?: boolean;
+    export?: boolean;
+    view?: boolean;
+    refresh?: boolean;
+  }
 }
 
 export const DynamicCrud = <T extends Record<string, unknown>>({
@@ -161,10 +172,74 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   disableWrapper = false,
   hiddenActions = false,
   widthActionsCol,
+  crudName,
+  permissions,
 }: DynamicCrudProps<T>): ReactNode => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<T | null>(null);
   const [mode, setMode] = useState(initialData ? "update" : "create");
+
+  // ==== [ Permissions ] ====
+  const {
+    canCreate,
+    canUpdate,
+    canDelete,
+    canView,
+    canRefresh,
+    canExport,
+  } = usePermissions(crudName, permissions);
+
+  const hasPermissionSystem = Boolean(crudName || permissions);
+
+  /**
+   * Applies permission restrictions to the action configuration.
+   * @param originalValue Original value of ActionConfig prop
+   * @param permissionCheck If the user has permission
+   * @param hasPermissionSystem If the user has system permission
+   * @returns Updated value based on permission check
+   */
+  const applyPermissionRestriction = useCallback((
+    originalValue: boolean | ((record: T) => boolean) | undefined,
+    permissionCheck: boolean,
+    hasPermissionSystem: boolean
+  ): boolean | ((record: T) => boolean) | undefined => {
+    
+    if (!hasPermissionSystem) return originalValue;
+
+    if (!permissionCheck) return false;
+
+    if (typeof originalValue === 'function') return originalValue;
+
+    if (originalValue === undefined) return true;
+
+    return originalValue;
+  }, []);
+
+  const finalActionConfig: ActionConfig<T> | undefined = useMemo(() => {
+    console.log(hasPermissionSystem);
+  if (!hasPermissionSystem) {
+    return actionConfig;
+  }
+
+  return {
+    ...actionConfig,
+    showEdit: applyPermissionRestriction(actionConfig?.showEdit, canUpdate, hasPermissionSystem),
+    showDelete: applyPermissionRestriction(actionConfig?.showDelete, canDelete, hasPermissionSystem),
+    showView: applyPermissionRestriction(actionConfig?.showView, canView, hasPermissionSystem),
+  } as ActionConfig<T>;
+}, [actionConfig, canUpdate, canDelete, canView, hasPermissionSystem, applyPermissionRestriction]);
+
+  const finalShowCreateButton = hasPermissionSystem 
+    ? (showCreateButton && canCreate)
+    : showCreateButton;
+
+  const finalShowRefreshButton = hasPermissionSystem
+    ? (showRefreshButton && canRefresh) 
+    : showRefreshButton;
+
+  const finalExportToExcel = hasPermissionSystem
+    ? (canExport ? exportToExcel : undefined)
+    : exportToExcel;
 
   // ==== [ Handlers ] ====
   const primaryKeyField = columns.find((col => col.isPrimaryKey))?.dataIndex || 'id';
@@ -241,27 +316,25 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
         icon={icon}
         columns={columns}
         data={data || []}
-        showCreateButton={showCreateButton}
+        showCreateButton={finalShowCreateButton}
         createButtonText={createButtonText}
         createButtonIcon={createButtonIcon}
         searchConfig={searchConfig}
-        actionConfig={actionConfig}
+        actionConfig={finalActionConfig as ActionConfig<Record<string, unknown>> | undefined}
         hiddenActions={hiddenActions}
         headerDirection={headerDirection}
         showSearchBar={showSearchBar}
-        showRefreshButton={showRefreshButton}
+        showRefreshButton={finalShowRefreshButton}
         loading={loading}
         onCreate={handleCreate}
-        onEdit={(record) => {
-          handleEdit(record);
-        }}
+        onEdit={handleEdit}
         onRefresh={onRefresh}
         onDelete={handleDelete}
         onView={handleView}
         themeConfig={themeConfig}
         moreActions={moreActions}
         customFilters={customFilters}
-        exportToExcel={exportToExcel}
+        exportToExcel={finalExportToExcel}
         backButton={backButton}
         disableWrapper={disableWrapper}
         widthActionsCol={widthActionsCol}
