@@ -1,85 +1,4 @@
-/**
- * @alias DynamicTableProps
- * @description The properties object for the DynamicTable component.
- * @author @RKamey @Guada8a
- * @param {Object} props - The properties object.
- * @param {string} props.title - The title of the table.
- * @param {React.ReactNode} [props.icon] - The icon to display next to the title.
- * @param {string} [props.description] - The description of the table.
- * @param {boolean} [props.showCreateButton] - Whether to show the create button.
- * @param {boolean} [props.showRefreshButton] - Whether to show the refresh button.
- * @param {() => void} [props.onCreate] - Callback function when the create button is clicked.
- * @param {(record: Record<string, unknown>) => void} [props.onEdit] - Callback function when the edit button is clicked.
- * @param {(record: Record<string, unknown>) => void} [props.onDelete] - Callback function when the delete button is clicked.
- * @param {(record: Record<string, unknown>) => void} [props.onView] - Callback function when the view button is clicked. This is optional and will only show the view button if provided.
- * @param {() => void} [props.onRefresh] - Callback function when the refresh button is clicked.
- * @param {string} [props.createButtonText="Crear"] - The text for the create button.
- * @param {React.ReactNode} [props.createButtonIcon=<RiAddCircleLine />] - The icon for the create button.
- * @param {ColumnsProps[]} props.columns - The columns configuration for the table.
- * @param {Record<string, unknown>[]} props.data - The data to display in the table.
- * @param {boolean} [props.loading] - Whether the table is in a loading state.
- * @param {Array<{ key: string, label: string, icon: React.ReactNode, onClick: (record: Record<string, unknown>) => void }>} [props.moreActions] - Additional actions to display in the actions column.
- * @param {Object} [props.actionConfig] - Configuration for the actions column.
- * @param {boolean} [props.actionConfig.showDefaultActions=true] - Whether to show the default actions (edit, delete, view).
- * @param {boolean} [props.actionConfig.showEdit=true] - Whether to show the edit button.
- * @param {boolean} [props.actionConfig.showDelete=true] - Whether to show the delete button.
- * @param {boolean} [props.actionConfig.showView=true] - Whether to show the view button. This is optional and will only show the view button if `onView` is provided.
- * @param {string} [props.actionConfig.refreshButtonText="Refrescar"] - The text for the refresh button.
- * @param {Object} [props.actionConfig.customIcons] - Custom icons for the actions.
- * @param {React.ReactNode} [props.actionConfig.customIcons.create=<RiAddCircleLine />] - Custom icon for the create button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.edit=<RiEditLine />] - Custom icon for the edit button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.delete=<RiDeleteBinLine />] - Custom icon for the delete button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.refresh=<RiRefreshLine />] - Custom icon for the refresh button.
- * @param {React.ReactNode} [props.actionConfig.customIcons.view=<RiEyeLine />] - Custom icon for the view button.
- * @param {Object} [props.actionConfig.customActionsColor] - Custom colors for the actions.
- * @param {string} [props.actionConfig.customActionsColor.edit] - Custom color for the edit button.
- * @param {string} [props.actionConfig.customActionsColor.delete] - Custom color for the delete button.
- * @param {string} [props.actionConfig.customActionsColor.view] - Custom color for the view button.
- * @param {Object} [props.searchConfig] - Configuration for the search functionality.
- * @param {string[]} [props.searchConfig.searchableFields=[]] - Fields to search within.
- * @param {(item: Record<string, unknown>, term: string) => boolean} [props.searchConfig.customSearch] - Custom search function.
- * @param {Object} [props.exportToExcel] - Configuration for exporting data to Excel.
- * @param {string} props.exportToExcel.fileName - The name of the Excel file.
- * @param {string} props.exportToExcel.sheetName - The name of the Excel sheet.
- * @param {Record<string, unknown>[]} props.exportToExcel.data - The data to export.
- * @param {ColumnsProps[]} props.exportToExcel.columns - The columns configuration for the Excel sheet.
- * @param {boolean} [props.disableWrapper=false] - Whether to disable the default wrapper styles.
- * @param {React.ReactNode | boolean} [props.backButton] - Custom back button. If `true`, a default back button will be rendered.
- * @param {Object} [props.themeConfig] - Theme configuration for the table.
- *
- * @example
- * <DynamicTable
- * title="User List"
- * icon={<RiGroupLine />}
- * description="List of all users"
- * showCreateButton={true}
- * showRefreshButton={true}
- * onCreate={() => console.log('Create button clicked')}
- * onEdit={(record) => console.log('Edit button clicked', record)}
- * onDelete={(record) => console.log('Delete button clicked', record)}
- * onView={(record) => console.log('View button clicked', record)} // Optional
- * onRefresh={() => console.log('Refresh button clicked')}
- * moreActions={[
- * {
- * key: 'view',
- * label: 'View',
- * icon: <RiEyeLine />,
- * onClick: (record) => console.log('View button clicked', record),
- * },
- * ]}
- * createButtonText="Add User"
- * columns={[
- * { title: 'Name', dataIndex: 'name', key: 'name' },
- * { title: 'Email', dataIndex: 'email', key: 'email' },
- * ]}
- * data={[
- * { name: 'John Doe', email: 'john@example.com' },
- * { name: 'Jane Doe', email: 'jane@example.com' },
- * ]}
- * loading={false}
- * />
- */
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState } from "react";
 import {
@@ -107,7 +26,6 @@ const { Search } = Input;
 
 interface ExportData {
   key: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -257,7 +175,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       return (
         <Button
           icon={<RiArrowGoBackLine />}
-          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:!bg-gray-700 dark:!border-gray-600 dark:hover:!bg-gray-600 dark:text-white"
+          className="bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 px-4 h-8 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white"
           onClick={() => window.history.back()}
         >
           Volver
@@ -312,7 +230,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
       <div
         className={clsx(
           "flex items-center gap-3",
-          widthActionsCol ? "flex-wrap" : "flex-nowrap" // Solo wrap cuando hay ancho limitado
+          widthActionsCol ? "flex-wrap" : "flex-nowrap"
         )}
         style={widthActionsCol ? {
           maxWidth: `${widthActionsCol}px`,
@@ -330,11 +248,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 <Button
                   type="button"
                   className={clsx(
-                    "action-button transition-colors shadow-sm hover:shadow-sm duration-300 !text-white !border-none",
-                    widthActionsCol ? "flex-shrink-0" : "flex-shrink-0", // Siempre flex-shrink-0 para mantener tamaño
+                    "transition-colors shadow-sm hover:shadow-md duration-300 text-white border-none",
+                    widthActionsCol ? "flex-shrink-0" : "flex-shrink-0",
                     action.className
                       ? action.className
-                      : "!bg-slate-500 hover:!bg-slate-700 dark:!bg-slate-600 dark:hover:!bg-slate-800"
+                      : "bg-gray-500 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-800"
                   )}
                   style={action.style}
                   icon={
@@ -362,7 +280,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                       type="warning"
                       title="Editar"
                       className={clsx(
-                        "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800 flex-shrink-0",
+                        "transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center text-white border-none shadow-sm hover:shadow-md hover:text-white hover:border hover:border-yellow-500 bg-yellow-500 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-800 flex-shrink-0",
                       )}
                       icon={
                         actionConfig.customIcons?.edit || (
@@ -378,7 +296,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="warning"
                       className={clsx(
-                        "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800 flex-shrink-0"
+                        "text-white border-none shadow-sm hover:shadow-md hover:text-white hover:border hover:border-yellow-500 transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center bg-yellow-500 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-800 flex-shrink-0"
                       )}
                       icon={
                         actionConfig.customIcons?.edit || (
@@ -401,7 +319,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Tooltip title="Eliminar">
                       <Button
                         className={clsx(
-                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500 !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800 flex-shrink-0"
+                          "transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center text-white border-none shadow-sm hover:shadow-md hover:text-white hover:border hover:border-red-500 bg-red-500 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800 flex-shrink-0"
                         )}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -426,8 +344,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Tooltip title="Eliminar">
                       <Button
                         className={clsx(
-                          "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
-                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800 flex-shrink-0"
+                          "text-white border-none shadow-sm hover:shadow-md hover:text-white hover:border hover:border-red-500 transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center bg-red-500 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800 flex-shrink-0"
                         )}
                         icon={
                           actionConfig.customIcons?.delete?.type ? (
@@ -450,7 +367,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="view"
                       className={clsx(
-                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800 flex-shrink-0"
+                        "transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center text-white border-none shadow-sm hover:shadow-md hover:text-sky-500 hover:border hover:border-sky-500 bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800 flex-shrink-0"
                       )}
                       icon={
                         actionConfig.customIcons?.view || (
@@ -466,7 +383,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     <Button
                       type="view"
                       className={clsx(
-                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 flex-shrink-0",
+                        "transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center text-white border-none shadow-sm hover:shadow-md hover:text-sky-500 hover:border hover:border-sky-500 flex-shrink-0",
                         actionConfig.customActionsColor?.view ||
                         "bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
                       )}
@@ -487,7 +404,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     const actionsColumn = {
       title: <span className="font-medium">Acciones</span>,
       key: "actions",
-      width: widthActionsCol || "auto", // "auto" para ajuste automático al contenido
+      width: widthActionsCol || "auto",
       className: "py-4 px-6",
       render: (_: unknown, record: T) => renderActions(record),
     };
@@ -504,127 +421,120 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   };
 
   return (
-  <div
-    className={clsx("my-1", {
-      "bg-white rounded-xl shadow-lg p-1 dark:bg-gray-800": !disableWrapper,
-    })}
-  >
-    {/* Header: Title, description, icon, and back button */}
-    <div className="mb-2 space-y-3 sm:space-y-3">
-      {title && (
-        <div className="mb-3 sm:mb-4 space-y-2">
-          <div className="flex items-center gap-3">
-            {renderBackButton && <div>{renderBackButton()}</div>}
-
-            {Icon && (
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-lightest hover:bg-primary-lightest/70 transition-colors dark:bg-primary-dark dark:hover:bg-primary-dark/70">
-                {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
-              </div>
+    <div
+      className={clsx("my-1 w-full", {
+        "bg-white rounded-xl shadow-lg p-4 dark:bg-gray-800": !disableWrapper,
+      })}
+    >
+      {/* Header: Title, description, icon, and back button */}
+      <div className="mb-4 space-y-4">
+        {title && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              {renderBackButton()}
+              {Icon && (
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors dark:bg-blue-900 dark:hover:bg-blue-800">
+                  {React.isValidElement(Icon) ? React.cloneElement(Icon) : Icon}
+                </div>
+              )}
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h1>
+            </div>
+            {description && (
+              <span className="block text-gray-600 pl-14 dark:text-gray-300">
+                {description}
+              </span>
             )}
-
-            <h1 className="text-xl font-semibold dark:text-white">{title}</h1>
-          </div>
-
-          {description && (
-            <span className="text-gray-700 block pl-[3.25rem] sm:pl-[3.25rem] dark:text-gray-300">
-              {description}
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Search and Actions: Responsive layout */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        {/* Search Bar: Takes available space */}
-        {showSearchBar && (
-          <div className="flex-grow min-w-0">
-            <Search
-              allowClear
-              className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-              placeholder="Buscar"
-              onChange={(e) => handleSearch(e.target.value)}
-              onSearch={handleSearch}
-            />
           </div>
         )}
 
-        {/* Action Buttons: Shrink to content, wrap if needed */}
-        <div className="flex flex-wrap items-center gap-3 justify-end sm:flex-nowrap flex-shrink-0">
-          {/* Export to Excel */}
-          {exportToExcel && (
-            <Button
-              icon={<RiFileExcel2Line />}
-              className={clsx(
-                "bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
-                exportToExcel.buttonProps?.className
-              )}
-              style={exportToExcel.buttonProps?.style}
-              onClick={onExportExcel}
-            >
-              {exportToExcel.buttonProps?.text || "Exportar a Excel"}
-            </Button>
-          )}
-
-          {/* Custom Filters */}
-          {customFilters && (
-            <div className="flex flex-wrap gap-3">
-              {customFilters.map((filter) => (
-                <Button
-                  key={filter.key}
-                  type="default"
-                  className={clsx(
-                    "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
-                    filter.className
-                  )}
-                  icon={filter.icon}
-                  onClick={() => filter.onClick({} as T)}
-                >
-                  <span className="font-medium">{filter.label}</span>
-                </Button>
-              ))}
+        {/* Search and Actions: Full-width layout */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
+          {/* Search Bar: Takes remaining space */}
+          {showSearchBar && (
+            <div className="flex-grow min-w-0">
+              <Search
+                allowClear
+                className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                placeholder="Buscar"
+                onChange={(e) => handleSearch(e.target.value)}
+                onSearch={handleSearch}
+              />
             </div>
           )}
-
-          {/* Refresh Button */}
-          {showRefreshButton && (
-            <Button
-              type="default"
-              className="bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-4 h-8 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
-              icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
-              onClick={handleRefresh}
-            >
-              <span className="font-medium">
-                {actionConfig.refreshButtonText || "Refrescar"}
-              </span>
-            </Button>
-          )}
-
-          {/* Create Button */}
-          {showCreateButton && (
-            <Button
-              type="primary"
-              className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
-              icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
-              onClick={onCreate}
-            >
-              {createButtonText}
-            </Button>
-          )}
+          {/* Action Buttons: Shrink to content */}
+          <div className="flex items-center gap-3 flex-shrink-0 flex-wrap sm:flex-nowrap">
+            {/* Export to Excel */}
+            {exportToExcel && (
+              <Button
+                icon={<RiFileExcel2Line />}
+                className={clsx(
+                  "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 px-4 h-8 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white",
+                  exportToExcel.buttonProps?.className
+                )}
+                style={exportToExcel.buttonProps?.style}
+                onClick={onExportExcel}
+              >
+                {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+              </Button>
+            )}
+            {/* Custom Filters */}
+            {customFilters && (
+              <div className="flex flex-wrap gap-3">
+                {customFilters.map((filter) => (
+                  <Button
+                    key={filter.key}
+                    type="default"
+                    className={clsx(
+                      "bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 px-4 h-8 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white",
+                      filter.className
+                    )}
+                    icon={filter.icon}
+                    onClick={() => filter.onClick({} as T)}
+                  >
+                    <span className="font-medium">{filter.label}</span>
+                  </Button>
+                ))}
+              </div>
+            )}
+            {/* Refresh Button */}
+            {showRefreshButton && (
+              <Button
+                type="default"
+                className="bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 px-4 h-8 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white"
+                icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
+                onClick={handleRefresh}
+              >
+                <span className="font-medium">
+                  {actionConfig.refreshButtonText || "Refrescar"}
+                </span>
+              </Button>
+            )}
+            {/* Create Button */}
+            {showCreateButton && (
+              <Button
+                type="primary"
+                className="flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-300 shadow-sm hover:shadow-md bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
+                icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
+                onClick={onCreate}
+              >
+                {createButtonText}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* Table: Separated from header */}
-    <div className="overflow-x-auto">
-      <Table
-        columns={processColumns(columns)}
-        dataSource={filteredData}
-        loading={loading}
-        pagination={paginationConfig}
-        className="dynamic-table !mt-4"
-        scroll={{ x: "max-content" }}
-      />
+      {/* Table: Full-width */}
+      <div className="w-full overflow-x-auto">
+        <Table
+          columns={processColumns(columns)}
+          dataSource={filteredData}
+          loading={loading}
+          pagination={paginationConfig}
+          className="dynamic-table !mt-4 w-full"
+          scroll={{ x: "max-content" }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
 };
