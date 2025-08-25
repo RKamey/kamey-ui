@@ -52,9 +52,11 @@ export interface DynamicFormProps {
   description?: string | ReactElement;
   icon?: ReactElement;
   layout?: "vertical" | "horizontal";
-  cols?: 1 | 2 | 3 | 4;
+  // cols?: 1 | 2 | 3 | 4;
+  cols?: number;
   fields: FormField[] | FormField[][];
   submitButtonText?: string;
+  submitEditText?: string;
   onSubmit?: (data: unknown) => void;
   apiConfig?: ApiConfig;
   initialData?: Record<string, unknown>;
@@ -69,7 +71,8 @@ export const DynamicForm = ({
   layout = "vertical",
   cols = 1,
   fields,
-  submitButtonText = "Enviar",
+  submitButtonText = "Guardar",
+  submitEditText = "Actualizar",
   onSubmit,
   initialData = {},
   customCols = false,
@@ -722,7 +725,7 @@ export const DynamicForm = ({
         break;
       }
       case "switch":
-        formItem = <Switch />;
+        formItem = <Switch defaultChecked />;
         break;
       case "slider":
         formItem = <Slider />;
@@ -848,10 +851,7 @@ export const DynamicForm = ({
                 className="bg-primary"
                 style={{ color: "white" }}
               >
-                {submitButtonText ||
-                  (mode
-                    ? { create: "Crear", update: "Actualizar" }[mode]
-                    : "Crear")}
+                {mode === 'update' ? submitEditText : submitButtonText}
               </Button>
             </Form.Item>
           </Row>

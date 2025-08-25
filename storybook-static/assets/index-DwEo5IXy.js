@@ -1,0 +1,1 @@
+import{c as n}from"./client-C_1asHPD.js";import{u}from"./UnstableContext-BvhCNf13.js";u(function(r,t){t._reactRoot||(t._reactRoot=n.createRoot(t));var o=t._reactRoot;return o.render(r),function(){return new Promise(function(e){setTimeout(function(){o.unmount(),e()},0)})}});

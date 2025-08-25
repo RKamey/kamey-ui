@@ -1,0 +1,1 @@
+import"./index-DwEo5IXy.js";import{_ as o}from"./index-CFjQpOdq.js";import"./client-C_1asHPD.js";import"./index-CZMpeKRu.js";import"./index-D-TIQtLp.js";import"./UnstableContext-BvhCNf13.js";import"./index-DDGe2ivH.js";const s={parameters:{docs:{theme:o.light},controls:{matchers:{color:/(background|color)$/i,date:/Date$/i}}},tags:["autodocs"]};export{s as default};

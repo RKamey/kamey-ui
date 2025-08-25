@@ -135,4 +135,8 @@ export interface Validations {
     target: string;
     message: string;
   },
+  custom?: {
+    isValid: (value: any) => boolean;
+    message: string;
+  };
 }

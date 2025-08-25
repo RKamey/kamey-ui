@@ -80,6 +80,13 @@ const meta = {
         defaultValue: { summary: 'Enviar' },
       },
     },
+    submitEditText: {
+      description: 'Texto del botón de edición.',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'Actualizar' },
+      },
+    },
     onSubmit: {
       description: 'Función que se ejecuta al enviar el formulario.',
       table: {
@@ -127,6 +134,7 @@ export const Default: Story = {
     layout: 'horizontal',
     cols: 2,
     submitButtonText: 'Submit',
+    submitEditText: 'Update',
     onSubmit: (data) => console.log(data),
     customCols: false,
 
