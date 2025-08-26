@@ -97,6 +97,7 @@ import {
   RiEyeLine,
   RiFileExcel2Line,
   RiArrowGoBackLine,
+  RiUploadLine,
 } from "react-icons/ri";
 import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
@@ -158,6 +159,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   },
   backButton,
   widthActionsCol,
+  bulkUpload,
+  onBulkUpload
 }: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -599,6 +602,19 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 <span className="font-medium hidden sm:inline">
                   {actionConfig.refreshButtonText || "Refrescar"}
                 </span>
+              </Button>
+            )}
+
+            {/* Bulk Upload */}
+            {bulkUpload && (
+              <Button
+                type="default"
+                className="flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
+                icon={<RiUploadLine />}
+                onClick={onBulkUpload}
+              >
+                <span className="hidden sm:inline">{"Carga masiva"}</span>
+                <span className="sm:hidden">Carga masiva</span>
               </Button>
             )}
 

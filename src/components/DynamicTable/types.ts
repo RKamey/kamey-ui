@@ -15,6 +15,24 @@ export interface ColumnsProps<T = Record<string, unknown>> {
   sorter?: boolean | ((a: T, b: T) => number);
 }
 
+export interface BulkUploadProps {
+  config?: BulkConfig;
+  enabled: boolean;
+  title?: string;
+  onUpload: (file: File) => Promise<void>;
+  maxFileSize?: number;
+  allowedFormats?: string[];
+  templateUrl?: string;
+}
+
+export interface BulkConfig {
+  entityName: string;
+  entityNameSingular: string;
+  maxFileSize?: number;
+  allowedFormats?: string[];
+  templateUrl?: string;
+}
+
 export interface FilterItem {
   text: string;
   value: string | number | boolean;
@@ -130,4 +148,6 @@ export interface DynamicTableProps<T = Record<string, unknown>> {
   backButton?: boolean | ReactElement;
   hiddenActions?: boolean;
   widthActionsCol?: string | number;
+  bulkUpload?: BulkUploadProps;
+  onBulkUpload?: () => void;
 }

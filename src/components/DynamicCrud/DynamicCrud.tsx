@@ -69,13 +69,14 @@
 
 import { DynamicTable } from "../DynamicTable/DynamicTable";
 import { DynamicForm, ApiConfig } from "../DynamicForm/DynamicForm";
-import { ActionConfig, ColumnsProps, CustomFilters, ExcelConfigProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
+import { ActionConfig, BulkUploadProps, ColumnsProps, CustomFilters, ExcelConfigProps, MoreActions, SearchConfig, ThemeConfig } from "../DynamicTable/types";
 import { FormField } from "../DynamicForm/types";
 import { ReactElement, ReactNode, useCallback, useMemo, useState } from "react";
 import { Modal } from "antd";
 import dayjs from "dayjs";
 import { PlusOutlined, EditOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { usePermissions } from "../Permissions/use-permissions";
+import BulkUploadModal from "../BulkUploadModal/BulkUploadModal";
 
 type OnCreateHandler<T = Record<string, unknown>> =
   | ((values: T) => void)
@@ -105,6 +106,7 @@ export interface DynamicCrudProps<T extends Record<string, unknown>> {
   loading?: boolean;
   onCreate?: OnCreateHandler;
   createRedirect?: boolean;
+  bulkUpload?: BulkUploadProps;
   onEdit?: (record: T) => void;
   onDelete?: (record: T) => void;
   onView?: (record: T) => void;
@@ -174,10 +176,16 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   widthActionsCol,
   crudName,
   permissions,
+  bulkUpload = {
+    enabled: false,
+    onUpload: async (file: File) => { console.log(file); }
+  }
 }: DynamicCrudProps<T>): ReactNode => {
+  // ==== [ States ] ====
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<T | null>(null);
   const [mode, setMode] = useState(initialData ? "update" : "create");
+  const [isBulkUploadVisible, setIsBulkUploadVisible] = useState(false);
 
   // ==== [ Permissions ] ====
   const {
@@ -254,6 +262,10 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
     });
 
     return formattedRecord;
+  }
+
+  const handleBulkUpload = () => {
+    setIsBulkUploadVisible(true);
   }
 
   const handleCreate = () => {
@@ -335,9 +347,11 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
         moreActions={moreActions}
         customFilters={customFilters}
         exportToExcel={finalExportToExcel}
+        bulkUpload={bulkUpload}
         backButton={backButton}
         disableWrapper={disableWrapper}
         widthActionsCol={widthActionsCol}
+        onBulkUpload={handleBulkUpload}
       />
 
       {isModalVisible && (
@@ -378,6 +392,19 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
             customCols={formCustomCols}
           />
         </Modal>
+      )}
+
+      {isBulkUploadVisible && bulkUpload?.enabled && (
+        <BulkUploadModal
+          title={bulkUpload?.title || "Carga masiva"}
+          visible={isBulkUploadVisible}
+          onCancel={() => setIsBulkUploadVisible(false)}
+          onUpload={(file) => {
+            // Handle file upload
+            console.log(file);
+          }}
+          config={bulkUpload.config!}
+        />
       )}
     </div>
   )
