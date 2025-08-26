@@ -533,11 +533,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </div>
         )}
 
-        {/* Search and Actions: Improved responsive layout */}
-        <div className="flex flex-col lg:flex-row lg:items-center gap-3">
-          {/* Search Bar: Takes available space on desktop, full width on mobile */}
+        {/* Search and Actions: Same row on desktop, 2 rows on mobile */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* First Row/Left Side: Search Bar */}
           {showSearchBar && (
-            <div className="flex-1 lg:max-w-md xl:max-w-lg">
+            <div className="flex-1 sm:max-w-md lg:max-w-lg">
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -548,78 +548,72 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
           )}
 
-          {/* Action Buttons Container: Right aligned, responsive wrapping */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 lg:ml-auto">
-            {/* First Row: Export and Custom Filters */}
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Export to Excel */}
-              {exportToExcel && (
-                <Button
-                  icon={<RiFileExcel2Line />}
-                  className={clsx(
-                    "flex-1 sm:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 py-1 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
-                    exportToExcel.buttonProps?.className
-                  )}
-                  style={exportToExcel.buttonProps?.style}
-                  onClick={onExportExcel}
-                >
-                  <span className="hidden sm:inline">
-                    {exportToExcel.buttonProps?.text || "Exportar a Excel"}
-                  </span>
-                  <span className="sm:hidden">Excel</span>
-                </Button>
-              )}
+          {/* Second Row/Right Side: All Action Buttons */}
+          <div className="flex items-center gap-2 sm:flex-shrink-0">
+            {/* Export to Excel */}
+            {exportToExcel && (
+              <Button
+                icon={<RiFileExcel2Line />}
+                className={clsx(
+                  "flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
+                  exportToExcel.buttonProps?.className
+                )}
+                style={exportToExcel.buttonProps?.style}
+                onClick={onExportExcel}
+              >
+                <span className="hidden sm:inline">
+                  {exportToExcel.buttonProps?.text || "Exportar a Excel"}
+                </span>
+                <span className="sm:hidden">Excel</span>
+              </Button>
+            )}
 
-              {/* Custom Filters */}
-              {customFilters && (
-                <div className="flex flex-wrap gap-2">
-                  {customFilters.map((filter) => (
-                    <Button
-                      key={filter.key}
-                      type="default"
-                      className={clsx(
-                        "flex-1 sm:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-3 py-1 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
-                        filter.className
-                      )}
-                      icon={filter.icon}
-                      onClick={() => filter.onClick({} as T)}
-                    >
-                      <span className="font-medium">{filter.label}</span>
-                    </Button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Custom Filters */}
+            {customFilters && (
+              <>
+                {customFilters.map((filter) => (
+                  <Button
+                    key={filter.key}
+                    type="default"
+                    className={clsx(
+                      "flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
+                      filter.className
+                    )}
+                    icon={filter.icon}
+                    onClick={() => filter.onClick({} as T)}
+                  >
+                    <span className="font-medium">{filter.label}</span>
+                  </Button>
+                ))}
+              </>
+            )}
 
-            {/* Second Row: Action Buttons */}
-            <div className="flex gap-2">
-              {/* Refresh Button */}
-              {showRefreshButton && (
-                <Button
-                  type="default"
-                  className="flex-1 sm:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 py-1 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
-                  icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
-                  onClick={handleRefresh}
-                >
-                  <span className="font-medium hidden sm:inline">
-                    {actionConfig.refreshButtonText || "Refrescar"}
-                  </span>
-                </Button>
-              )}
+            {/* Refresh Button */}
+            {showRefreshButton && (
+              <Button
+                type="default"
+                className="flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
+                icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
+                onClick={handleRefresh}
+              >
+                <span className="font-medium hidden sm:inline">
+                  {actionConfig.refreshButtonText || "Refrescar"}
+                </span>
+              </Button>
+            )}
 
-              {/* Create Button */}
-              {showCreateButton && (
-                <Button
-                  type="primary"
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md px-3 py-1 h-8 text-sm font-medium dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
-                  icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
-                  onClick={onCreate}
-                >
-                  <span className="hidden sm:inline">{createButtonText}</span>
-                  <span className="sm:hidden">Crear</span>
-                </Button>
-              )}
-            </div>
+            {/* Create Button */}
+            {showCreateButton && (
+              <Button
+                type="primary"
+                className="flex-1 xs:flex-initial flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md px-3 h-8 text-sm font-medium dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
+                icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
+                onClick={onCreate}
+              >
+                <span className="hidden sm:inline">{createButtonText}</span>
+                <span className="sm:hidden">Crear</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
