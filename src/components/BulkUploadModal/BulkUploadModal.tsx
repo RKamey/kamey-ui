@@ -1,9 +1,9 @@
-import { Alert, Button, Card, Col, Modal, Row, Steps, Typography } from "antd";
+import { Alert, Button, Card, Col, message, Modal, Row, Spin, Steps, Typography, UploadProps } from "antd";
 import { BulkConfig } from "../DynamicTable/types";
 import { useState } from "react";
 import { steps } from "./BulkUpload.config";
 import { IoDownloadOutline } from "react-icons/io5";
-import { TiUploadOutline } from "react-icons/ti";
+import { InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 
 const { Title, Text } = Typography;
@@ -46,16 +46,48 @@ const BulkUploadModal = <T,>({
   const formats = config.allowedFormats || ["xlsx", "csv"];
   // const templates = config.downloadTemplates || [];
 
+  const draggerProps: UploadProps = {
+    name: 'file',
+    multiple: false,
+    action: undefined,
+    beforeUpload: (file) => {
+      const validation = validateFile(file);
+      
+      if (!validation) {
+        message.error(validation);
+        return false
+      }
+
+      handleFileUpload(file);
+
+      return false;
+    },
+    showUploadList: false,
+  }
+
+  const validateFile = (file: File): boolean | string => {
+    console.log(file, 'validatefile');
+
+    if (file.size / 1024 / 1024 > maxSize) {
+      console.log(file.size / 1024 / 1024 > maxSize);
+      return `El archivo debe ser menor a ${maxSize}MB`;
+    }
+
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (!fileExtension || !formats.includes(fileExtension)) {
+      return `Formato de archivo no soportado. Formatos permitidos: ${formats.join(", ")}`;
+    }
+    
+    return true;
+  }
+
   const handleReset = () => {
     setCurrentStep(0);
   };
 
   const handleFileUpload = (file: File) => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    setIsLoading(true);
     setUploadedFile(file);
-    setCurrentStep(1);
 
     console.log("File uploaded:", file);
   };
@@ -104,16 +136,10 @@ const BulkUploadModal = <T,>({
         return (
           <Card>
             <Title level={4}>Subir archivo</Title>
-            <Dragger
-              name="file"
-              multiple={false}
-              accept={formats.join(",")}
-              beforeUpload={handleFileUpload}
-              showUploadList={false}
-              disabled={isLoading}
+            <Dragger {...draggerProps}
             >
               <p className="ant-upload-drag-icon">
-                <TiUploadOutline />
+                <InboxOutlined />
               </p>
               <p className="ant-upload-text">
                 Arrastra tu archivo aquí o haz clic para seleccionarlo
@@ -130,11 +156,11 @@ const BulkUploadModal = <T,>({
               />
             )}
             {isLoading && (
-              <Alert
-                message="Procesando archivo..."
-                type="info"
-                style={{ marginTop: 16 }}
-              />
+              <div className="mt-4 flex items-center">
+                <Spin size="small" style={{ marginRight: 8, }} />
+                Validando archivo...
+                Por favor espera
+              </div>
             )}
           </Card>
         );

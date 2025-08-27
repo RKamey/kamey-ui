@@ -606,7 +606,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             )}
 
             {/* Bulk Upload */}
-            {bulkUpload && (
+            {bulkUpload && bulkUpload.enabled !== false && (
               <Button
                 type="default"
                 className="flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
