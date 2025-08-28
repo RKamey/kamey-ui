@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react';
-import { Permission } from './types/permissions';
+import { normalizePermission, Permission, PermissionAlias } from './types/permissions';
 import PermissionsContext from './PermissionsProvider';
 
 interface DirectPermissions {
@@ -8,8 +8,12 @@ interface DirectPermissions {
   update?: boolean;
   delete?: boolean;
   view?: boolean;
-  refresh?: boolean;
-  export?: boolean;
+  // Aliases
+  c?: boolean;
+  r?: boolean;
+  u?: boolean;
+  d?: boolean;
+  v?: boolean;
 }
 
 interface PermissionChecker {
@@ -17,9 +21,7 @@ interface PermissionChecker {
   canUpdate: boolean;
   canDelete: boolean;
   canView: boolean;
-  canRefresh: boolean;
-  canExport: boolean;
-  hasPermission: (permission: string) => boolean;
+  hasPermission: (permission: Permission | PermissionAlias) => boolean;
 }
 
 export const usePermissions = (
@@ -30,16 +32,28 @@ export const usePermissions = (
 
   return useMemo(() => {
     if (directPermissions) {
+      const canCreate = directPermissions.create ?? directPermissions.c ?? false;
+      const canRead = directPermissions.read ?? directPermissions.r ?? false;
+      const canUpdate = directPermissions.update ?? directPermissions.u ?? false;
+      const canDelete = directPermissions.delete ?? directPermissions.d ?? false;
+      const canView = directPermissions.view ?? directPermissions.v ?? false;
+
       return {
-        canCreate: directPermissions.create ?? false,
-        canUpdate: directPermissions.update ?? false,
-        canDelete: directPermissions.delete ?? false,
-        canView: directPermissions.view ?? false,
-        canRefresh: directPermissions.refresh ?? false,
-        canExport: directPermissions.export ?? false,
-        hasPermission: (permission: string) => {
-          const action = permission as keyof DirectPermissions;
-          return directPermissions[action] ?? false;
+        canCreate,
+        canRead,
+        canUpdate,
+        canDelete,
+        canView,
+        hasPermission: (permission: Permission | PermissionAlias) => {
+          const normalizedPermission = normalizePermission(permission);
+          switch (normalizedPermission) {
+            case 'create': return canCreate;
+            case 'read': return canRead;
+            case 'update': return canUpdate;
+            case 'delete': return canDelete;
+            case 'view': return canView;
+            default: return false;
+          }
         },
       };
     }
@@ -50,9 +64,7 @@ export const usePermissions = (
         canUpdate: roleContext.canUpdate(crudName),
         canDelete: roleContext.canDelete(crudName),
         canView: roleContext.canView(crudName),
-        canRefresh: roleContext.canRefresh(crudName),
-        canExport: roleContext.canExport(crudName),
-        hasPermission: (permission: string) => 
+        hasPermission: (permission: Permission | PermissionAlias) =>
           roleContext.hasPermission(crudName, permission as Permission),
       };
     }

@@ -193,8 +193,6 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
     canUpdate,
     canDelete,
     canView,
-    canRefresh,
-    canExport,
   } = usePermissions(crudName, permissions);
 
   const hasPermissionSystem = Boolean(crudName || permissions);
@@ -240,14 +238,6 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   const finalShowCreateButton = hasPermissionSystem 
     ? (showCreateButton && canCreate)
     : showCreateButton;
-
-  const finalShowRefreshButton = hasPermissionSystem
-    ? (showRefreshButton && canRefresh) 
-    : showRefreshButton;
-
-  const finalExportToExcel = hasPermissionSystem
-    ? (canExport ? exportToExcel : undefined)
-    : exportToExcel;
 
   // ==== [ Handlers ] ====
   const primaryKeyField = columns.find((col => col.isPrimaryKey))?.dataIndex || 'id';
@@ -336,7 +326,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
         hiddenActions={hiddenActions}
         headerDirection={headerDirection}
         showSearchBar={showSearchBar}
-        showRefreshButton={finalShowRefreshButton}
+        showRefreshButton={showRefreshButton}
         loading={loading}
         onCreate={handleCreate}
         onEdit={handleEdit}
@@ -346,7 +336,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
         themeConfig={themeConfig}
         moreActions={moreActions}
         customFilters={customFilters}
-        exportToExcel={finalExportToExcel}
+        exportToExcel={exportToExcel}
         bulkUpload={bulkUpload}
         backButton={backButton}
         disableWrapper={disableWrapper}

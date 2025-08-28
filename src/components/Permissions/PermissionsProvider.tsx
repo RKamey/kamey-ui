@@ -1,22 +1,20 @@
 import { createContext, ReactNode, useMemo } from 'react';
-import { Permission } from './types/permissions';
+import { normalizePermission, Permission, PermissionAlias } from './types/permissions';
 
 type CrudName = string;
 
-type PermissionsConfig = Record<CrudName, Record<string, Permission[]>>;
+type PermissionsConfig = Record<CrudName, Record<string, (Permission[] | PermissionAlias[])>>;
 
 export interface PermissionsContextProps {
   role: string;
   config: PermissionsConfig;
-  hasPermission: (crud: CrudName, action: Permission) => boolean;
+  hasPermission: (crud: CrudName, action: Permission | PermissionAlias) => boolean;
   // common methods
   canCreate: (crud: CrudName) => boolean;
   canRead: (crud: CrudName) => boolean;
   canUpdate: (crud: CrudName) => boolean;
   canDelete: (crud: CrudName) => boolean;
   canView: (crud: CrudName) => boolean;
-  canRefresh: (crud: CrudName) => boolean;
-  canExport: (crud: CrudName) => boolean;
 }
 
 interface PermissionsProviderProps {
@@ -30,16 +28,20 @@ const PermissionsContext = createContext<PermissionsContextProps | undefined>(un
 export const PermissionsProvider = ({ role, config, children }: PermissionsProviderProps) => {
   
   const contextValue = useMemo(() => {
-    const hasPermission = (crud: CrudName, action: Permission): boolean => 
-      config[crud]?.[role]?.includes(action) ?? false;
+    const hasPermission = (crud: CrudName, action: Permission | PermissionAlias): boolean => {
+      const normalizedAction = normalizePermission(action);
+      const userPermissions = config[crud]?.[role] || [];
+      
+      const normalizedPermissions = userPermissions.map(normalizePermission);
+      
+      return normalizedPermissions.includes(normalizedAction);
+    };
 
     const canCreate = (crud: CrudName): boolean => hasPermission(crud, 'create');
     const canRead = (crud: CrudName): boolean => hasPermission(crud, 'read');
     const canUpdate = (crud: CrudName): boolean => hasPermission(crud, 'update');
     const canDelete = (crud: CrudName): boolean => hasPermission(crud, 'delete');
     const canView = (crud: CrudName): boolean => hasPermission(crud, 'view');
-    const canRefresh = (crud: CrudName): boolean => hasPermission(crud, 'refresh');
-    const canExport = (crud: CrudName): boolean => hasPermission(crud, 'export');
 
     return {
       role,
@@ -50,8 +52,6 @@ export const PermissionsProvider = ({ role, config, children }: PermissionsProvi
       canUpdate,
       canDelete,
       canView,
-      canRefresh,
-      canExport
     };
   }, [role, config]);
 
