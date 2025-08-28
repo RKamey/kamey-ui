@@ -40,7 +40,8 @@ export class FileReaderUtil {
 
           const rawData = XLSX.utils.sheet_to_json<string[]>(worksheet, {
             header: 1,
-            defval: ''
+            defval: '',
+            blankrows: false
           }) as RawData;
 
           const result = this.processRawData<T>(rawData, expectedFields);

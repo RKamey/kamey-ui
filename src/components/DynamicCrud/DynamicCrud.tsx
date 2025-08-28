@@ -399,9 +399,8 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
           title={bulkUpload?.title || "Carga masiva"}
           visible={isBulkUploadVisible}
           onCancel={() => setIsBulkUploadVisible(false)}
-          onUpload={(file) => {
-            // Handle file upload
-            console.log(file);
+          onFinish={(data) => {
+            console.log(data, 'onfinish');
           }}
           config={bulkUpload.config!}
         />

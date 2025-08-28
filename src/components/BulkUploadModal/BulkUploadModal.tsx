@@ -31,8 +31,16 @@ interface BulkUploadModalProps<T> {
   onDownloadTemplate?: (format: string, filename: string) => void;
   onValidateData?: (data: T[]) => Promise<string[] | null>;
   onCancel: () => void;
-  onUpload: (file: File) => void;
+  onFinish?: (data: T[]) => void;
   mockData?: T[];
+}
+
+enum STEP {
+  DownloadTemplate = 0,
+  UploadFile = 1,
+  ReviewData = 2,
+  ValidateData = 3,
+  ConfirmImport = 4,
 }
 
 const BulkUploadModal = <T extends Record<string, unknown>>({
@@ -40,14 +48,14 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
   subtitle,
   visible,
   onCancel,
-  // onUpload,
+  onFinish,
   config,
   // onDownloadTemplate,
   onValidateData,
   // mockData = [],
 }: BulkUploadModalProps<T>) => {
   // ===== [ State ] =====
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(STEP.DownloadTemplate);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [fileData, setFileData] = useState<T[]>([]);
@@ -68,6 +76,8 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
       severity: "error" | "warning";
     }>;
   } | null>(null);
+  const [processedJsonData, setProcessedJsonData] = useState<T[]>([]);
+  const [isProcessingData, setIsProcessingData] = useState<boolean>(false);
 
   const [isValidating, setIsValidating] = useState<boolean>(false);
 
@@ -101,10 +111,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
   };
 
   const validateFile = (file: File): boolean | string => {
-    console.log(file, "validatefile");
-
     if (file.size / 1024 / 1024 > maxSize) {
-      console.log(file.size / 1024 / 1024 > maxSize);
       return `El archivo debe ser menor a ${maxSize}MB`;
     }
 
@@ -116,14 +123,126 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
       return `Formato de archivo no soportado. Formatos permitidos: ${formats.join(", ")}`;
     }
 
+    const allowedMimeTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+      "text/csv", // .csv
+      "application/vnd.ms-excel", // .xls (legacy Excel)
+    ];
+
+    if (!allowedMimeTypes.includes(file.type)) {
+      console.warn(
+        `MIME type no reconocido: ${file.type}, pero la extensión es válida`
+      );
+
+      return `Tipo de archivo no soportado. Por favor sube un archivo válido.`;
+    }
+
+    const problematicChars = /[<>:"/\\|?*]/;
+    if (problematicChars.test(file.name)) {
+      return "El nombre del archivo contiene caracteres no válidos";
+    }
+
     return true;
+  };
+
+  const processDataToJson = async (dataToProcess?: T[]): Promise<T[]> => {
+    const dataSource = dataToProcess || fileData;
+    const processedData: T[] = [];
+
+    dataSource.forEach((row) => {
+      const hasContent = config.templateFields.some((field) => {
+        const value = row[field.key as keyof T];
+        return (
+          value !== null && value !== undefined && String(value).trim() !== ""
+        );
+      });
+
+      if (!hasContent) {
+        return;
+      }
+
+      const cleanedRow: Partial<T> = {};
+      let hasValidData = false;
+
+      config.templateFields.forEach((field) => {
+        const value = row[field.key as keyof T];
+
+        if (
+          value !== null &&
+          value !== undefined &&
+          String(value).trim() !== ""
+        ) {
+          hasValidData = true;
+          const stringValue = String(value).trim();
+
+          switch (field.type) {
+            case "number":
+              cleanedRow[field.key as keyof T] = Number(
+                stringValue
+              ) as T[keyof T];
+              break;
+            case "date": {
+              const dateValue = new Date(stringValue);
+              cleanedRow[field.key as keyof T] = dateValue
+                .toISOString()
+                .split("T")[0] as T[keyof T];
+              break;
+            }
+            case "email":
+              cleanedRow[field.key as keyof T] =
+                stringValue.toLowerCase() as T[keyof T];
+              break;
+            case "boolean": {
+              const boolValue = stringValue.toLowerCase();
+              cleanedRow[field.key as keyof T] = (boolValue === "true" ||
+                boolValue === "1" ||
+                boolValue === "si" ||
+                boolValue === "yes") as T[keyof T];
+              break;
+            }
+            case "text":
+            default:
+              cleanedRow[field.key as keyof T] = stringValue as T[keyof T];
+              break;
+          }
+        } else if (field.required) {
+          cleanedRow[field.key as keyof T] = null as T[keyof T];
+        }
+      });
+
+      if (hasValidData && Object.keys(cleanedRow).length > 0) {
+        processedData.push(cleanedRow as T);
+      }
+    });
+
+    return processedData;
   };
 
   const performDataValidation = async () => {
     setIsValidating(true);
     setValidationResults(null);
+    setIsProcessingData(true);
+    setProcessedJsonData([]);
 
     try {
+      const nonEmptyRows = fileData.filter((row) => {
+        const hasContent = config.templateFields.some((field) => {
+          const value = row[field.key as keyof T];
+          return (
+            value !== null && value !== undefined && String(value).trim() !== ""
+          );
+        });
+
+        return hasContent;
+      });
+
+      if (nonEmptyRows.length === 0) {
+        setValidationErrors([
+          "No se encontraron filas con datos válidos para procesar",
+        ]);
+        return;
+      }
+
       const validationDetails: Array<{
         rowIndex: number;
         field: string;
@@ -135,17 +254,22 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
       let passedCount = 0;
       let failedCount = 0;
 
-      for (let i = 0; i < fileData.length; i++) {
-        const row = fileData[i];
+      for (let i = 0; i < nonEmptyRows.length; i++) {
+        const row = nonEmptyRows[i];
+        const originalIndex = fileData.indexOf(row);
         let rowHasErrors = false;
 
         for (const field of config.templateFields) {
           const value = row[field.key as keyof T];
-          const validation = await validateFieldData(value, field, i + 1);
+          const validation = await validateFieldData(
+            value,
+            field,
+            originalIndex + 1
+          );
 
           if (!validation.isValid) {
             validationDetails.push({
-              rowIndex: i,
+              rowIndex: originalIndex,
               field: field.label,
               value: value,
               error: validation.error!,
@@ -166,7 +290,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
       }
 
       if (onValidateData) {
-        const customErrors = await onValidateData(fileData);
+        const customErrors = await onValidateData(nonEmptyRows);
         if (customErrors && customErrors.length > 0) {
           customErrors.forEach((error) => {
             validationDetails.push({
@@ -190,16 +314,20 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
       const criticalErrors = validationDetails.filter(
         (d) => d.severity === "error"
       );
+
       if (criticalErrors.length === 0) {
-        setCurrentStep(4);
+        const jsonData = await processDataToJson(nonEmptyRows);
+        setProcessedJsonData(jsonData);
+        setCurrentStep(STEP.ConfirmImport);
       } else {
-        setCurrentStep(3);
+        setCurrentStep(STEP.ValidateData);
       }
     } catch (error) {
       message.error("Error durante la validación");
       console.error("Validation error:", error);
     } finally {
       setIsValidating(false);
+      setIsProcessingData(false);
     }
   };
 
@@ -258,7 +386,16 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
   };
 
   const handleReset = () => {
-    setCurrentStep(0);
+    setCurrentStep(STEP.DownloadTemplate);
+    setUploadedFile(null);
+    setFileData([]);
+    setValidationErrors([]);
+    setValidationWarnings([]);
+    setValidationResults(null);
+    setProcessedJsonData([]);
+    setIsProcessingData(false);
+    setIsValidating(false);
+    setIsLoading(false);
   };
 
   const handleFileUpload = async (file: File) => {
@@ -269,9 +406,27 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
 
     try {
       const fileExtension = file.name.split(".").pop()?.toLowerCase();
+      const isValidExtension =
+        fileExtension && ["xlsx", "xls", "csv"].includes(fileExtension);
+      const isValidMimeType = [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+        "application/vnd.ms-excel", // .xls (legacy Excel)
+        "text/csv", // .csv
+      ].includes(file.type);
+
+      if (!isValidExtension || !isValidMimeType) {
+        throw new Error("Formato de archivo no soportado");
+      }
+
       let result: FileReaderResult<T>;
 
-      if (fileExtension === "xlsx") {
+      if (
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+        file.type === "application/vnd.ms-excel" ||
+        fileExtension === "xlsx" ||
+        fileExtension === "xls"
+      ) {
         result = await FileReaderUtil.readExcelFile<T>(
           file,
           config.templateFields
@@ -296,10 +451,10 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
               ...customValidationErrors,
             ]);
           } else {
-            setCurrentStep(2);
+            setCurrentStep(STEP.ReviewData);
           }
         } else {
-          setCurrentStep(2);
+          setCurrentStep(STEP.ReviewData);
         }
 
         if (result.warnings) {
@@ -333,7 +488,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 0:
+      case STEP.DownloadTemplate:
         return (
           <Card>
             <Title level={4}>Descargar plantilla</Title>
@@ -348,9 +503,8 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                   icon={<IoDownloadOutline />}
                   block
                   onClick={() => {
-                    setCurrentStep(1);
+                    setCurrentStep(STEP.UploadFile);
                     handleDownloadTemplate("xlsx");
-                    console.log("Download Excel template");
                   }}
                 >
                   Descargar plantilla Excel (.xlsx)
@@ -361,9 +515,8 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                   icon={<IoDownloadOutline />}
                   block
                   onClick={() => {
-                    setCurrentStep(1);
+                    setCurrentStep(STEP.UploadFile);
                     handleDownloadTemplate("csv");
-                    console.log("Download CSV template");
                   }}
                 >
                   Descargar plantilla CSV (.csv)
@@ -389,8 +542,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
               block
               size="large"
               onClick={() => {
-                setCurrentStep(1);
-                console.log("Skip template download");
+                setCurrentStep(STEP.UploadFile);
               }}
               style={{
                 borderColor: "#1890ff",
@@ -403,7 +555,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
           </Card>
         );
 
-      case 1:
+      case STEP.UploadFile:
         return (
           <Card>
             <Title level={4}>Subir archivo</Title>
@@ -454,7 +606,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
           </Card>
         );
 
-      case 2:
+      case STEP.ReviewData:
         return (
           <Card>
             <Title level={4}>Revisar datos</Title>
@@ -556,7 +708,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                 <Button
                   type="primary"
                   block
-                  loading={isValidating}
+                  loading={isValidating || isProcessingData}
                   onClick={performDataValidation}
                 >
                   Validar datos ({fileData.length} registros)
@@ -565,7 +717,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
             </Row>
           </Card>
         );
-      case 3:
+      case STEP.ValidateData:
         return (
           <Card>
             <Title level={4}>Validar datos</Title>
@@ -618,6 +770,31 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                   </Col>
                 </Row>
 
+                {processedJsonData.length > 0 && (
+                  <Card size="small" style={{ marginBottom: 16 }}>
+                    <Title level={5}>
+                      Vista previa JSON (primeros 3 registros):
+                    </Title>
+                    <pre
+                      style={{
+                        backgroundColor: "#f5f5f5",
+                        padding: "12px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        maxHeight: "200px",
+                        overflowY: "auto",
+                      }}
+                    >
+                      {JSON.stringify(processedJsonData.slice(0, 3), null, 2)}
+                    </pre>
+                    {processedJsonData.length > 3 && (
+                      <Text type="secondary" style={{ fontSize: "12px" }}>
+                        ... y {processedJsonData.length - 3} registros más
+                      </Text>
+                    )}
+                  </Card>
+                )}
+
                 {validationResults.details.length > 0 && (
                   <div
                     style={{
@@ -646,7 +823,10 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                     </Button>
                   </Col>
                   <Col span={8}>
-                    <Button block onClick={() => setCurrentStep(2)}>
+                    <Button
+                      block
+                      onClick={() => setCurrentStep(STEP.ReviewData)}
+                    >
                       Volver a vista previa
                     </Button>
                   </Col>
@@ -659,7 +839,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                           (d) => d.severity === "error"
                         ).length > 0
                       }
-                      onClick={() => setCurrentStep(4)}
+                      onClick={() => setCurrentStep(STEP.ConfirmImport)}
                     >
                       Continuar importación
                     </Button>
@@ -669,7 +849,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
             )}
           </Card>
         );
-      case 4:
+      case STEP.ConfirmImport:
         return (
           <Card>
             <Title level={4}>Confirmar importación</Title>
@@ -700,7 +880,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
 
             <Row gutter={16}>
               <Col span={12}>
-                <Button block onClick={() => setCurrentStep(3)}>
+                <Button block onClick={() => setCurrentStep(STEP.ValidateData)}>
                   Volver a validación
                 </Button>
               </Col>
@@ -709,11 +889,13 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                   type="primary"
                   block
                   onClick={() => {
-                    if (uploadedFile) {
-                      message.success("Datos importados correctamente");
-                      console.log(uploadedFile, "imported file");
-                      onCancel();
-                    }
+                    message.success(
+                      `${processedJsonData.length} registros importados exitosamente`
+                    );
+                    if (onFinish && processedJsonData.length > 0)
+                      onFinish(processedJsonData);
+                    handleReset();
+                    onCancel();
                   }}
                 >
                   Importar datos

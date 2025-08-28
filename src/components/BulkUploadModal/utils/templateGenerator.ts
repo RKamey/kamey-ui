@@ -5,7 +5,7 @@ export interface TemplateField {
   label: string;
   example?: string;
   required?: boolean;
-  type?: "text" | "email" | "number" | "date";
+  type?: "text" | "email" | "number" | "date" | "boolean";
 }
 
 export interface TemplateConfig {
