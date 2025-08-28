@@ -178,7 +178,6 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   permissions,
   bulkUpload = {
     enabled: false,
-    onUpload: async (file: File) => { console.log(file); }
   }
 }: DynamicCrudProps<T>): ReactNode => {
   // ==== [ States ] ====
@@ -389,9 +388,7 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
           title={bulkUpload?.title || "Carga masiva"}
           visible={isBulkUploadVisible}
           onCancel={() => setIsBulkUploadVisible(false)}
-          onFinish={(data) => {
-            console.log(data, 'onfinish');
-          }}
+          onFinish={bulkUpload.onFinish}
           config={bulkUpload.config!}
         />
       )}

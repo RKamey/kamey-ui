@@ -16,11 +16,11 @@ export interface ColumnsProps<T = Record<string, unknown>> {
   sorter?: boolean | ((a: T, b: T) => number);
 }
 
-export interface BulkUploadProps {
+export interface BulkUploadProps<T = Record<string, unknown>> {
   config?: BulkConfig;
   enabled: boolean;
   title?: string;
-  onUpload: (file: File) => Promise<void>;
+  onFinish?: (data: T[]) => void;
   maxFileSize?: number;
   allowedFormats?: string[];
   templateUrl?: string;

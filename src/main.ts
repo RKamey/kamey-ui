@@ -35,3 +35,5 @@ export { createActionFactory } from './components/DynamicCrud/MoreActions';
 export { PermissionsProvider } from './components/Permissions/PermissionsProvider';
 export { usePermissions } from './components/Permissions/use-permissions';
 export { createPermissionsConfig, PERMISSIONS, createPermissions } from './components/Permissions/utils/permissions';
+
+export type { TemplateField, TemplateConfig } from './components/BulkUploadModal/utils/templateGenerator';

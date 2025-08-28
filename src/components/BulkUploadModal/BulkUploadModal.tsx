@@ -852,18 +852,18 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
       case STEP.ConfirmImport:
         return (
           <Card>
-            <Title level={4}>Confirmar importación</Title>
-            <Text>¿Estás seguro de que deseas importar estos datos?</Text>
+            <Title level={4}>Confirmar datos</Title>
+            <Text>¿Estás seguro de que deseas cargar estos datos?</Text>
 
             <Alert
-              message="Resumen de importación"
+              message="Resumen de carga"
               description={
                 <div>
                   <p>
                     <strong>Archivo:</strong> {uploadedFile?.name}
                   </p>
                   <p>
-                    <strong>Registros a importar:</strong>{" "}
+                    <strong>Registros a cargar:</strong>{" "}
                     {validationResults?.passed || fileData.length}
                   </p>
                   <p>
@@ -890,7 +890,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                   block
                   onClick={() => {
                     message.success(
-                      `${processedJsonData.length} registros importados exitosamente`
+                      `${processedJsonData.length} registros cargados exitosamente`
                     );
                     if (onFinish && processedJsonData.length > 0)
                       onFinish(processedJsonData);
@@ -898,7 +898,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
                     onCancel();
                   }}
                 >
-                  Importar datos
+                  Cargar datos
                 </Button>
               </Col>
             </Row>
