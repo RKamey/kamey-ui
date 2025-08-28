@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import { TemplateField } from "../BulkUploadModal/utils/templateGenerator";
 
 export interface ColumnsProps<T = Record<string, unknown>> {
   title: string;
@@ -25,11 +26,15 @@ export interface BulkUploadProps {
   templateUrl?: string;
 }
 
+export type AllowedBulkFormats = readonly ['xlsx', 'csv'];
+export type BulkFileFormat = AllowedBulkFormats[number];
 export interface BulkConfig {
   entityName: string;
-  entityNameSingular: string;
   maxFileSize?: number;
-  allowedFormats?: string[];
+  entityNameSingular: string;
+  allowedFormats?: AllowedBulkFormats;
+  templateFields: TemplateField[];
+  downloadTemplates?: boolean;
   templateUrl?: string;
 }
 
