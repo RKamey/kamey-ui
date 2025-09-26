@@ -627,7 +627,6 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 onClick={onCreate}
               >
                 <span>{createButtonText}</span>
-                <span>Crear</span>
               </Button>
             )}
           </div>
