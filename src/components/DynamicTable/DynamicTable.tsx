@@ -626,8 +626,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                 icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
                 onClick={onCreate}
               >
-                <span className="hidden sm:inline">{createButtonText}</span>
-                <span className="sm:hidden">Crear</span>
+                <span>{createButtonText}</span>
+                <span>Crear</span>
               </Button>
             )}
           </div>
