@@ -21,6 +21,18 @@ export interface FormField {
   uploadConfig?: UploadConfig;
   radioConfig?: RadioConfig;
   hidden?: boolean;
+  conditionalConfig?: ConditionalConfig;
+}
+
+export interface ConditionalConfig {
+  dependsOn: string;
+  conditions: ConditionalRule[];
+}
+
+export interface ConditionalRule {
+  value: string | number | boolean;
+  show: boolean;
+  validations?: Validations[];
 }
 
 interface ApiResponse<T> {

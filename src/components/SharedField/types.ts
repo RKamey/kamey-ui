@@ -1,4 +1,4 @@
-import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations, UploadConfig, RadioConfig } from "../DynamicForm/types";
+import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations, UploadConfig, RadioConfig, ConditionalConfig } from "../DynamicForm/types";
 import { FilterItem } from "../DynamicTable/types";
 
 export interface SharedFieldConfig<T = Record<string, unknown>> {
@@ -29,4 +29,5 @@ export interface SharedFieldConfig<T = Record<string, unknown>> {
   onChange?: (value: string | number) => void;
   uploadConfig?: UploadConfig;
   radioConfig?: RadioConfig;
+  conditionalConfig?: ConditionalConfig;
 }

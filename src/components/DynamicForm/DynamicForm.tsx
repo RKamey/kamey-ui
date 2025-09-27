@@ -82,6 +82,8 @@ export const DynamicForm = ({
   const [selectOptions, setSelectOptions] = useState<Record<string, Options[]>>(
     {}
   );
+  const [conditionalFields, setConditionalFields] = useState<Record<string, boolean>>({});
+  const [conditionalValidations, setConditionalValidations] = useState<Record<string, Validations[]>>({});
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
@@ -152,6 +154,56 @@ export const DynamicForm = ({
     }
   }, [form, validationMap]);
 
+  // Función para evaluar condiciones de campos
+  const evaluateConditionalField = useCallback((field: FormField, formValues: Record<string, unknown>) => {
+    if (!field.conditionalConfig) return { show: true, validations: field.validations };
+
+    const { dependsOn, conditions } = field.conditionalConfig;
+    const dependentValue = formValues[dependsOn];
+
+    const matchingRule = conditions.find(condition => condition.value === dependentValue);
+    
+    if (matchingRule) {
+      return {
+        show: matchingRule.show,
+        validations: matchingRule.validations || field.validations
+      };
+    }
+
+    return { show: false, validations: [] };
+  }, []);
+
+  // Función para actualizar campos condicionales
+  const updateConditionalFields = useCallback((formValues: Record<string, unknown>) => {
+    const newConditionalFields: Record<string, boolean> = {};
+    const newConditionalValidations: Record<string, Validations[]> = {};
+
+    fields
+      .filter((field): field is FormField => typeof field === "object" && !Array.isArray(field))
+      .forEach(field => {
+        if (field.conditionalConfig) {
+          const evaluation = evaluateConditionalField(field, formValues);
+          newConditionalFields[field.name] = evaluation.show;
+          newConditionalValidations[field.name] = evaluation.validations || [];
+
+          // Si el campo debe ocultarse, limpiar su valor
+          if (!evaluation.show) {
+            form.setFieldValue(field.name, undefined);
+          }
+        }
+      });
+
+    setConditionalFields(newConditionalFields);
+    setConditionalValidations(newConditionalValidations);
+  }, [fields, form, evaluateConditionalField]);
+
+  // useEffect para evaluar campos condicionales en la inicialización y cuando cambien los initialData
+  useEffect(() => {
+    const formValues = form.getFieldsValue();
+    const allValues = { ...formValues, ...initialData };
+    updateConditionalFields(allValues);
+  }, [form, initialData, updateConditionalFields]);
+
 
   interface ChangedValues {
     [key: string]: unknown;
@@ -167,8 +219,12 @@ export const DynamicForm = ({
       if (shouldValidate) {
         validateDates();
       }
+
+      // Actualizar campos condicionales cuando cambien valores
+      const currentFormValues = form.getFieldsValue();
+      updateConditionalFields(currentFormValues);
     },
-    [validationMap, validateDates]
+    [validationMap, validateDates, form, updateConditionalFields]
   );
 
   const handleSubmit = (values: Record<string, unknown>) => {
@@ -318,10 +374,15 @@ export const DynamicForm = ({
     );
   };
 
-  const getRules = (validations?: Validations[]) => {
-    if (!validations) return [];
+  const getRules = (validations?: Validations[], fieldName?: string) => {
+    // Usar validaciones condicionales si están disponibles
+    const effectiveValidations = fieldName && conditionalValidations[fieldName]?.length > 0
+      ? conditionalValidations[fieldName]
+      : validations;
 
-    return validations.map((validation) => {
+    if (!effectiveValidations) return [];
+
+    return effectiveValidations.map((validation) => {
       const rules: Record<string, unknown> = {};
 
       if (validation.required) {
@@ -466,7 +527,9 @@ export const DynamicForm = ({
       onChange,
     } = field;
 
-    if (hidden) return null;
+    // Evaluar si el campo debe estar oculto (original hidden o por condiciones)
+    const isConditionallyHidden = field.conditionalConfig && conditionalFields[name] === false;
+    if (hidden || isConditionallyHidden) return null;
 
     // Si estamos en modo view, mostramos el valor como texto
     if (mode === 'view') {
@@ -791,7 +854,7 @@ export const DynamicForm = ({
     if (!formItem) return null;
 
     return (
-      <Form.Item label={label} name={name} rules={getRules(validations)}>
+      <Form.Item label={label} name={name} rules={getRules(validations, name)}>
         {React.cloneElement(formItem)}
       </Form.Item>
     );

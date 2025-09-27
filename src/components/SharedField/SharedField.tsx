@@ -63,6 +63,7 @@ const generateFields = (
     onChange: field.onChange,
     uploadConfig: field.uploadConfig,
     radioConfig: field.radioConfig,
+    conditionalConfig: field.conditionalConfig,
   }));
 };
 
