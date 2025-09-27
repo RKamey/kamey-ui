@@ -3,7 +3,7 @@ import React from "react";
 import { SharedFieldConfig, DynamicCrudProps } from "../main";
 
 // Simulando las interfaces que tendrías en tu proyecto
-interface Page {
+interface Page extends Record<string, unknown> {
   id: string;
   titulo: string;
   tipo_pagina: "interno" | "externo";
@@ -16,8 +16,6 @@ interface Page {
 interface CreatePageBody extends Omit<Page, 'id'> {
   etiquetaDependencia: string;
 }
-
-interface PageForm extends Omit<Page, 'id'> {}
 
 // Ejemplo de cómo modificar tu useCrudPagesConfig para usar campos condicionales
 export const useCrudPagesConfigExample = (): DynamicCrudProps<Page> & {
@@ -183,7 +181,9 @@ export const useCrudPagesConfigExample = (): DynamicCrudProps<Page> & {
     showRefreshButton: true,
     data: [], // crudOperations.data,
     disableWrapper: true,
-    onCreate: () => {}, // crudOperations.handleCreate,
+    onCreate: () => {
+      console.log('Create called with sharedFields:', Object.keys(sharedFields));
+    }, // crudOperations.handleCreate,
     onDelete: () => {}, // crudOperations.handleDelete,
     loading: false, // crudOperations.isLoading,
     onRefresh: () => {}, // crudOperations.refetch,
