@@ -919,7 +919,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
         handleReset();
       }}
       width={1200}
-      destroyOnHidden
+      destroyOnClose
       footer={null}
     >
       <div style={{ marginBottom: 24 }}>
