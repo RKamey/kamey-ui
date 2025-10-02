@@ -75,6 +75,7 @@ export interface RadioConfig {
 export interface FilterConfig {
   field: string;
   condition: '==' | '!=' | 'in' | 'not_in' | '>' | '<' | 'contains' | 'not_contains';
+  operator: 'equals' | 'not_equals' | 'in' | 'not_in' | 'greater_than' | 'less_than' | 'contains' | 'not_contains';
   value: string | number | boolean | (string | number | boolean)[];
 }
 
