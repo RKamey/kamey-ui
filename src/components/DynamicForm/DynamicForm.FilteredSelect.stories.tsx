@@ -160,7 +160,7 @@ export const OnlyPages: Story = {
             responseDataPath: 'data', // Especificamos el path para acceder a los datos
             filterBy: {
               field: 'tipo_menu',
-              operator: 'equals',
+              condition: '==',
               value: 'pagina'
             }
           }
@@ -197,7 +197,7 @@ export const ExcludePages: Story = {
             responseDataPath: 'data',
             filterBy: {
               field: 'tipo_menu',
-              operator: 'not_equals',
+              condition: '!=',
               value: 'pagina'
             }
           }
@@ -235,12 +235,12 @@ export const MultipleFilters: Story = {
             filterBy: [
               {
                 field: 'estatus',
-                operator: 'equals',
+                condition: '==',
                 value: 1
               },
               {
                 field: 'tipo_menu',
-                operator: 'in',
+                condition: 'in',
                 value: ['pagina', 'interno']
               }
             ]
@@ -278,7 +278,7 @@ export const ByMenuType: Story = {
             responseDataPath: 'data',
             filterBy: {
               field: 'tipo_menu',
-              operator: 'in',
+              condition: 'in',
               value: ['externo', 'etiqueta']
             }
           }
