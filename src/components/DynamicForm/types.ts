@@ -72,6 +72,12 @@ export interface RadioConfig {
   cols?: number;
 }
 
+export interface FilterConfig {
+  field: string;
+  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'greater_than' | 'less_than' | 'in' | 'not_in';
+  value: string | number | boolean | (string | number | boolean)[];
+}
+
 export interface SelectConfig {
   options?: Options[];
   apiConfig?: {
@@ -83,6 +89,7 @@ export interface SelectConfig {
     valueKey: string;
     labelKey: string;
     responseDataPath?: string;
+    filterBy?: FilterConfig | FilterConfig[];
   };
   customOption?: CustomOption;
   dependsOn?: SelectDependencyConfig;

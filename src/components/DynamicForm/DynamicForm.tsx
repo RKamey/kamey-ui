@@ -258,6 +258,7 @@ export const DynamicForm = ({
       valueKey,
       labelKey,
       responseDataPath,
+      filterBy,
     } = field.selectConfig.apiConfig;
 
     let response: AxiosResponse | void;
@@ -281,7 +282,38 @@ export const DynamicForm = ({
         ? responseData[0]
         : responseData;
 
-    const options = data.map((item: Record<string, unknown>) => ({
+    // Apply filters if configured
+    let filteredData = data;
+    if (filterBy) {
+      const filters = Array.isArray(filterBy) ? filterBy : [filterBy];
+      filteredData = data.filter((item: Record<string, unknown>) => {
+        return filters.every(filter => {
+          const fieldValue = item[filter.field];
+          switch (filter.operator) {
+            case 'equals':
+              return fieldValue === filter.value;
+            case 'not_equals':
+              return fieldValue !== filter.value;
+            case 'contains':
+              return String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
+            case 'not_contains':
+              return !String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
+            case 'greater_than':
+              return Number(fieldValue) > Number(filter.value);
+            case 'less_than':
+              return Number(fieldValue) < Number(filter.value);
+            case 'in':
+              return Array.isArray(filter.value) && filter.value.includes(fieldValue as string | number | boolean);
+            case 'not_in':
+              return Array.isArray(filter.value) && !filter.value.includes(fieldValue as string | number | boolean);
+            default:
+              return true;
+          }
+        });
+      });
+    }
+
+    const options = filteredData.map((item: Record<string, unknown>) => ({
       value: item[valueKey],
       label: item[labelKey],
     }));
