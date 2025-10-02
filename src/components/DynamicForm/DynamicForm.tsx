@@ -289,18 +289,18 @@ export const DynamicForm = ({
       filteredData = data.filter((item: Record<string, unknown>) => {
         return filters.every(filter => {
           const fieldValue = item[filter.field];
-          switch (filter.operator) {
-            case 'equals':
+          switch (filter.condition) {
+            case '==':
               return fieldValue === filter.value;
-            case 'not_equals':
+            case '!=':
               return fieldValue !== filter.value;
             case 'contains':
               return String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
             case 'not_contains':
               return !String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
-            case 'greater_than':
+            case '>':
               return Number(fieldValue) > Number(filter.value);
-            case 'less_than':
+            case '<':
               return Number(fieldValue) < Number(filter.value);
             case 'in':
               return Array.isArray(filter.value) && filter.value.includes(fieldValue as string | number | boolean);

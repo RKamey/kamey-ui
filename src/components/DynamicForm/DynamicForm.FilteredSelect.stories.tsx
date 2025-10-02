@@ -57,88 +57,112 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Datos de ejemplo que simularían venir de una API
-const mockMenusData = [
-  { id: 1, titulo: 'Inicio', tipo_menu: 'pagina', activo: true },
-  { id: 2, titulo: 'Productos', tipo_menu: 'categoria', activo: true },
-  { id: 3, titulo: 'Servicios', tipo_menu: 'categoria', activo: true },
-  { id: 4, titulo: 'Acerca de', tipo_menu: 'pagina', activo: true },
-  { id: 5, titulo: 'Contacto', tipo_menu: 'pagina', activo: false },
-  { id: 6, titulo: 'Blog', tipo_menu: 'categoria', activo: true },
-  { id: 7, titulo: 'Categoría Premium', tipo_menu: 'categoria', activo: true },
-];
+// Datos de ejemplo que simularían venir de una API real
+const mockMenusApiResponse = {
+  error: false,
+  message: "Menús obtenidos correctamente",
+  data: [
+    {
+      idDependencia: 1,
+      titulo: "Menú con Páginas",
+      etiqueta: null,
+      external_link: null,
+      tipo_menu: "interno",
+      estatus: 1,
+      position_menu: 0,
+      fechaCreacion: "2025-10-02 04:20:38",
+      fechaActualizacion: "2025-10-02 04:50:22",
+      id: 1
+    },
+    {
+      idDependencia: 1,
+      titulo: "Contacto",
+      external_link: null,
+      tipo_menu: "pagina",
+      estatus: 1,
+      position_menu: 1,
+      fechaCreacion: "2025-10-02 04:23:59",
+      fechaActualizacion: "2025-10-02 04:25:13",
+      id: 4,
+      etiqueta_menu: "contacto"
+    },
+    {
+      idDependencia: 1,
+      titulo: "Link Externo",
+      etiqueta: null,
+      external_link: "https://www.google.com/?gws_rd=ssl",
+      tipo_menu: "externo",
+      estatus: 1,
+      position_menu: 2,
+      fechaCreacion: "2025-10-02 04:50:37",
+      fechaActualizacion: "2025-10-02 04:50:37",
+      id: 5
+    },
+    {
+      idDependencia: 1,
+      titulo: "Noticias",
+      external_link: null,
+      tipo_menu: "etiqueta",
+      estatus: 1,
+      position_menu: 3,
+      fechaCreacion: "2025-10-02 04:50:47",
+      fechaActualizacion: "2025-10-02 04:50:47",
+      id: 6,
+      etiqueta_menu: "noticias"
+    },
+    {
+      idDependencia: 1,
+      titulo: "Página Sobre Nosotros",
+      external_link: null,
+      tipo_menu: "pagina",
+      estatus: 1,
+      position_menu: 4,
+      fechaCreacion: "2025-10-02 05:00:00",
+      fechaActualizacion: "2025-10-02 05:00:00",
+      id: 7,
+      etiqueta_menu: "sobre-nosotros"
+    },
+    {
+      idDependencia: 1,
+      titulo: "Sistema Interno",
+      external_link: null,
+      tipo_menu: "interno",
+      estatus: 0,
+      position_menu: 5,
+      fechaCreacion: "2025-10-02 05:10:00",
+      fechaActualizacion: "2025-10-02 05:10:00",
+      id: 8
+    }
+  ]
+};
 
 // Mock function que simula una llamada a la API
 const mockApiCall = () => {
   return Promise.resolve({
-    data: {
-      data: mockMenusData
-    }
+    data: mockMenusApiResponse
   });
 };
 
-export const SingleFilter: Story = {
+export const OnlyPages: Story = {
   args: {
-    title: 'Formulario con Select Filtrado (Un filtro)',
-    description: 'Este ejemplo muestra cómo filtrar opciones para excluir menús de tipo "pagina"',
+    title: 'Formulario con Select Filtrado - Solo Páginas',
+    description: 'Este ejemplo muestra cómo filtrar para obtener solo menús de tipo "pagina"',
     fields: [
       {
         name: 'idMenu',
-        label: 'Menú (Solo categorías)',
+        label: 'Menú (Solo páginas)',
         type: 'select',
         selectConfig: {
           apiConfig: {
             getterMethod: mockApiCall,
             valueKey: 'id',
             labelKey: 'titulo',
+            responseDataPath: 'data', // Especificamos el path para acceder a los datos
             filterBy: {
               field: 'tipo_menu',
-              operator: 'not_equals',
+              operator: 'equals',
               value: 'pagina'
             }
-          }
-        }
-      },
-      {
-        name: 'nombre',
-        label: 'Nombre',
-        type: 'text',
-        placeholder: 'Ingrese su nombre'
-      }
-    ],
-    onSubmit: (values) => {
-      console.log('Valores del formulario:', values);
-      alert(`Valores: ${JSON.stringify(values, null, 2)}`);
-    }
-  },
-};
-
-export const MultipleFilters: Story = {
-  args: {
-    title: 'Formulario con Select Filtrado (Múltiples filtros)',
-    description: 'Este ejemplo muestra cómo aplicar múltiples filtros: solo categorías activas',
-    fields: [
-      {
-        name: 'idMenu',
-        label: 'Menú (Solo categorías activas)',
-        type: 'select',
-        selectConfig: {
-          apiConfig: {
-            getterMethod: mockApiCall,
-            valueKey: 'id',
-            labelKey: 'titulo',
-            filterBy: [
-              {
-                field: 'tipo_menu',
-                operator: 'equals',
-                value: 'categoria'
-              },
-              {
-                field: 'activo',
-                operator: 'equals',
-                value: true
-              }
-            ]
           }
         }
       },
@@ -156,32 +180,34 @@ export const MultipleFilters: Story = {
   },
 };
 
-export const ContainsFilter: Story = {
+export const ExcludePages: Story = {
   args: {
-    title: 'Formulario con Filtro de Contenido',
-    description: 'Este ejemplo filtra menús que contienen "Premium" en el título',
+    title: 'Formulario con Select Filtrado - Excluir Páginas',
+    description: 'Este ejemplo muestra cómo excluir menús de tipo "pagina"',
     fields: [
       {
         name: 'idMenu',
-        label: 'Menús Premium',
+        label: 'Menú (Sin páginas)',
         type: 'select',
         selectConfig: {
           apiConfig: {
             getterMethod: mockApiCall,
             valueKey: 'id',
             labelKey: 'titulo',
+            responseDataPath: 'data',
             filterBy: {
-              field: 'titulo',
-              operator: 'contains',
-              value: 'Premium'
+              field: 'tipo_menu',
+              operator: 'not_equals',
+              value: 'pagina'
             }
           }
         }
       },
       {
-        name: 'categoria',
-        label: 'Categoría',
-        type: 'text'
+        name: 'observaciones',
+        label: 'Observaciones',
+        type: 'text',
+        placeholder: 'Ingrese observaciones'
       }
     ],
     onSubmit: (values) => {
@@ -191,31 +217,76 @@ export const ContainsFilter: Story = {
   },
 };
 
-export const InOperatorFilter: Story = {
+export const MultipleFilters: Story = {
   args: {
-    title: 'Formulario con Filtro IN',
-    description: 'Este ejemplo filtra menús que tienen IDs específicos usando el operador "in"',
+    title: 'Formulario con Múltiples Filtros',
+    description: 'Este ejemplo muestra cómo aplicar múltiples filtros: solo menús activos que sean páginas o internos',
     fields: [
       {
         name: 'idMenu',
-        label: 'Menús Específicos (IDs: 2, 3, 6)',
+        label: 'Menú (Páginas/Internos activos)',
         type: 'select',
         selectConfig: {
           apiConfig: {
             getterMethod: mockApiCall,
             valueKey: 'id',
             labelKey: 'titulo',
+            responseDataPath: 'data',
+            filterBy: [
+              {
+                field: 'estatus',
+                operator: 'equals',
+                value: 1
+              },
+              {
+                field: 'tipo_menu',
+                operator: 'in',
+                value: ['pagina', 'interno']
+              }
+            ]
+          }
+        }
+      },
+      {
+        name: 'prioridad',
+        label: 'Prioridad',
+        type: 'number',
+        placeholder: 'Ingrese la prioridad'
+      }
+    ],
+    onSubmit: (values) => {
+      console.log('Valores del formulario:', values);
+      alert(`Valores: ${JSON.stringify(values, null, 2)}`);
+    }
+  },
+};
+
+export const ByMenuType: Story = {
+  args: {
+    title: 'Filtrar por Tipos de Menú Específicos',
+    description: 'Este ejemplo filtra menús que sean de tipos específicos usando el operador "in"',
+    fields: [
+      {
+        name: 'idMenu',
+        label: 'Menús (Solo externos y etiquetas)',
+        type: 'select',
+        selectConfig: {
+          apiConfig: {
+            getterMethod: mockApiCall,
+            valueKey: 'id',
+            labelKey: 'titulo',
+            responseDataPath: 'data',
             filterBy: {
-              field: 'id',
+              field: 'tipo_menu',
               operator: 'in',
-              value: [2, 3, 6]
+              value: ['externo', 'etiqueta']
             }
           }
         }
       },
       {
-        name: 'observaciones',
-        label: 'Observaciones',
+        name: 'configuracion',
+        label: 'Configuración',
         type: 'textarea'
       }
     ],

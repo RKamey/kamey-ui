@@ -17,13 +17,45 @@ Para usar los filtros, agrega la propiedad `filterBy` en la configuración de la
       method: 'GET',
       valueKey: 'id',
       labelKey: 'titulo',
+      responseDataPath: 'data', // Si los datos están anidados
       filterBy: {
         field: 'tipo_menu',
-        operator: 'not_equals',
+        operator: 'equals',
         value: 'pagina'
       }
     }
   }
+}
+```
+
+## Ejemplo con tu estructura de datos
+
+Supongamos que tu API devuelve esta estructura:
+
+```json
+{
+  "error": false,
+  "message": "Menús obtenidos correctamente",
+  "data": [
+    {
+      "id": 1,
+      "titulo": "Menú con Páginas",
+      "tipo_menu": "interno",
+      "estatus": 1
+    },
+    {
+      "id": 4,
+      "titulo": "Contacto",
+      "tipo_menu": "pagina",
+      "estatus": 1
+    },
+    {
+      "id": 5,
+      "titulo": "Link Externo",
+      "tipo_menu": "externo",
+      "estatus": 1
+    }
+  ]
 }
 ```
 
@@ -45,7 +77,70 @@ Para usar los filtros, agrega la propiedad `filterBy` en la configuración de la
 - `in`: Valor está en la lista
 - `not_in`: Valor no está en la lista
 
-## Ejemplos de Uso
+## Ejemplos de Uso con tu estructura
+
+### 1. Solo mostrar páginas
+```typescript
+filterBy: {
+  field: 'tipo_menu',
+  operator: 'equals',
+  value: 'pagina'
+}
+```
+
+### 2. Excluir páginas (mostrar interno, externo, etiqueta)
+```typescript
+filterBy: {
+  field: 'tipo_menu',
+  operator: 'not_equals',
+  value: 'pagina'
+}
+```
+
+### 3. Solo menús activos
+```typescript
+filterBy: {
+  field: 'estatus',
+  operator: 'equals',
+  value: 1
+}
+```
+
+### 4. Solo tipos específicos
+```typescript
+filterBy: {
+  field: 'tipo_menu',
+  operator: 'in',
+  value: ['pagina', 'interno']
+}
+```
+
+### 5. Múltiples filtros: páginas activas
+```typescript
+filterBy: [
+  {
+    field: 'tipo_menu',
+    operator: 'equals',
+    value: 'pagina'
+  },
+  {
+    field: 'estatus',
+    operator: 'equals',
+    value: 1
+  }
+]
+```
+
+### 6. Filtrar por posición del menú
+```typescript
+filterBy: {
+  field: 'position_menu',
+  operator: 'less_than',
+  value: 3
+}
+```
+
+## Ejemplos de Uso Anteriores
 
 ### Filtro Simple - Excluir páginas
 ```typescript
