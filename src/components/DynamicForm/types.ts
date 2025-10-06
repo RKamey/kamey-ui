@@ -81,6 +81,7 @@ export interface FilterConfig {
 
 export interface SelectConfig {
   options?: Options[];
+  mode?: 'multiple' | 'tags';
   apiConfig?: {
     url?: string;
     getterMethod?: () => Promise<ApiResponse<unknown>>;

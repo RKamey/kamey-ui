@@ -584,8 +584,22 @@ export const DynamicForm = ({
             : field.selectConfig?.apiConfig
               ? selectOptions[name]
               : options;
-          const option = optionsList?.find(opt => opt.value === value);
-          displayValue = option?.label || value;
+          
+          if (field.selectConfig?.mode === 'multiple' || field.selectConfig?.mode === 'tags') {
+            // Para selects múltiples, mostrar una lista
+            if (Array.isArray(value)) {
+              const selectedLabels = optionsList
+                ?.filter(opt => value.includes(opt.value))
+                .map(opt => opt.label) || [];
+              displayValue = selectedLabels.join(', ') || '-';
+            } else {
+              displayValue = '-';
+            }
+          } else {
+            // Para selects simples
+            const option = optionsList?.find(opt => opt.value === value);
+            displayValue = option?.label || value;
+          }
           break;
         }
 
@@ -676,6 +690,7 @@ export const DynamicForm = ({
         formItem = (
           <Select
             showSearch
+            mode={field.selectConfig?.mode}
             placeholder={
               placeholder
                 ? placeholder
