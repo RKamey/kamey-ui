@@ -332,6 +332,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               <Tooltip title={action.tooltip} key={action.key}>
                 <Button
                   type="button"
+                  loading={action.loading}
                   className={clsx(
                     "action-button transition-colors shadow-sm hover:shadow-sm duration-300 !text-white !border-none",
                     widthActionsCol ? "flex-shrink-0" : "flex-shrink-0", // Siempre flex-shrink-0 para mantener tamaño

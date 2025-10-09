@@ -98,6 +98,7 @@ export interface MoreActions<T = Record<string, unknown>> {
   className?: string;
   style?: React.CSSProperties;
   icon?: React.ReactElement;
+  loading?: boolean;
   hidden?: (record: T) => boolean;
   onClick: (record: T) => void;
 }

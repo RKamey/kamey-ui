@@ -25,6 +25,7 @@ const createActionFactory = <T,>() => {
     onClick: (record: T) => void,
     hidden?: (record: T) => boolean,
     label: string = '',
+    loading: boolean = false,
     style: React.CSSProperties = {}
   ): MoreActions<T> {
     return {
@@ -35,7 +36,8 @@ const createActionFactory = <T,>() => {
       tooltip,
       className,
       onClick,
-      hidden
+      hidden,
+      loading
     };
   };
 };
