@@ -541,7 +541,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* First Row/Left Side: Search Bar */}
           {showSearchBar && (
-            <div className="flex-1 sm:max-w-md lg:max-w-lg">
+            <div className="w-full sm:flex-1 sm:max-w-md lg:max-w-lg">
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -553,7 +553,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           )}
 
           {/* Second Row/Right Side: All Action Buttons */}
-          <div className="flex items-center gap-2 sm:flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 sm:flex-shrink-0">
             {/* Export to Excel */}
             {exportToExcel && (
               <Button

@@ -232,7 +232,16 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
       showView: applyPermissionRestriction(actionConfig?.showView, canView, hasPermissionSystem),
     } as ActionConfig<T>;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionConfig, canUpdate, canDelete, canView, hasPermissionSystem]);
+  }, [
+    actionConfig?.showEdit,
+    actionConfig?.showDelete,
+    actionConfig?.showView,
+    actionConfig?.showDefaultActions,
+    canUpdate,
+    canDelete,
+    canView,
+    hasPermissionSystem
+  ]);
 
   const finalShowCreateButton = hasPermissionSystem 
     ? (showCreateButton && canCreate)
