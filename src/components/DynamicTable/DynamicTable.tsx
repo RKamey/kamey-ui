@@ -537,22 +537,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </div>
         )}
 
-        {/* Search and Actions */}
-        <div
-          className={clsx(
-            "flex gap-3 px-4 py-3",
-            "flex-col",
-            "sm:flex-row sm:items-center"
-          )}
-        >
-          {/* Search Bar */}
+        {/* Search and Actions: Same row on desktop, 2 rows on mobile */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
+          {/* First Row/Left Side: Search Bar */}
           {showSearchBar && (
-            <div
-              className={clsx(
-                "w-full",
-                title ? "sm:flex-1 sm:max-w-md" : "sm:flex-1 sm:min-w-0"
-              )}
-            >
+            <div className="w-full sm:w-auto sm:flex-1 sm:max-w-md">
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -563,14 +552,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto sm:flex-shrink-0">
+          {/* Second Row/Right Side: All Action Buttons */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-end gap-2 w-full sm:w-auto">
             {/* Export to Excel */}
             {exportToExcel && (
               <Button
                 icon={<RiFileExcel2Line />}
                 className={clsx(
-                  "flex-1 sm:flex-none bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white whitespace-nowrap",
+                  "flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
                   exportToExcel.buttonProps?.className
                 )}
                 style={exportToExcel.buttonProps?.style}
@@ -591,7 +580,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
                     key={filter.key}
                     type="default"
                     className={clsx(
-                      "flex-1 sm:flex-none bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white whitespace-nowrap",
+                      "flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white",
                       filter.className
                     )}
                     icon={filter.icon}
@@ -607,7 +596,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {showRefreshButton && (
               <Button
                 type="default"
-                className="flex-1 sm:flex-none bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white whitespace-nowrap"
+                className="flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
                 icon={actionConfig.customIcons?.refresh || <RiRefreshLine />}
                 onClick={handleRefresh}
               >
@@ -621,12 +610,12 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {bulkUpload && bulkUpload.enabled !== false && (
               <Button
                 type="default"
-                className="flex-1 sm:flex-none bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white whitespace-nowrap"
+                className="flex-1 xs:flex-initial bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-300 px-3 h-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white"
                 icon={<RiUploadLine />}
                 onClick={onBulkUpload}
               >
-                <span className="hidden sm:inline">Carga masiva</span>
-                <span className="sm:hidden">Carga</span>
+                <span className="hidden sm:inline">{"Carga masiva"}</span>
+                <span className="sm:hidden">Carga masiva</span>
               </Button>
             )}
 
@@ -634,7 +623,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {showCreateButton && (
               <Button
                 type="primary"
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md px-3 h-8 text-sm font-medium dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white whitespace-nowrap"
+                className="flex-1 xs:flex-initial flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md px-3 h-8 text-sm font-medium dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
                 icon={
                   React.cloneElement(createButtonIcon) || <RiAddCircleLine />
                 }
