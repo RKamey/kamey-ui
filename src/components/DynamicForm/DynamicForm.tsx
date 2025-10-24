@@ -97,8 +97,33 @@ export const DynamicForm = ({
         }
       });
       form.setFieldsValue(formattedData);
+
+      const newConditionalFields: Record<string, boolean> = {};
+      const newConditionalValidations: Record<string, Validations[]> = {};
+
+      fields
+        .filter((field): field is FormField => typeof field === "object" && !Array.isArray(field))
+        .forEach(field => {
+          if (field.conditionalConfig) {
+            const { dependsOn, conditions } = field.conditionalConfig;
+            const dependentValue = formattedData[dependsOn];
+            const matchingRule = conditions.find(condition => condition.value === dependentValue);
+            
+            if (matchingRule) {
+              newConditionalFields[field.name] = matchingRule.show;
+              newConditionalValidations[field.name] = matchingRule.validations || field.validations || [];
+            } else {
+              newConditionalFields[field.name] = false;
+              newConditionalValidations[field.name] = [];
+            }
+          }
+        });
+
+      setConditionalFields(newConditionalFields);
+      setConditionalValidations(newConditionalValidations);
     }
-  }, [form, initialData, fields]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData]);
 
   useEffect(() => {
     fields
@@ -114,10 +139,10 @@ export const DynamicForm = ({
         ) {
           fetchSelectOptions(field);
         } else if (field.type === "select" && field.dependsOn) {
-          fetchDependentOptions(
-            field,
-            initialData[field.dependsOn.field] as string
-          );
+          const dependentValue = initialData[field.dependsOn.field] as string;
+          if (dependentValue) {
+            fetchDependentOptions(field, dependentValue);
+          }
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -154,6 +179,14 @@ export const DynamicForm = ({
     }
   }, [form, validationMap]);
 
+  // useEffect para evaluar campos condicionales en la inicialización y cuando cambien los initialData
+  useEffect(() => {
+    const formValues = form.getFieldsValue();
+    const allValues = { ...formValues, ...initialData };
+    updateConditionalFields(allValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData]);
+
   // Función para actualizar campos condicionales
   const updateConditionalFields = useCallback((formValues: Record<string, unknown>) => {
     const newConditionalFields: Record<string, boolean> = {};
@@ -166,16 +199,17 @@ export const DynamicForm = ({
           const { dependsOn, conditions } = field.conditionalConfig;
           const dependentValue = formValues[dependsOn];
           const matchingRule = conditions.find(condition => condition.value === dependentValue);
-
-          // Si el campo debe ocultarse, limpiar su valor
-          const evaluation = matchingRule 
-            ? { show: matchingRule.show, validations: matchingRule.validations || field.validations }
-            : { show: false, validations: [] };
-
-          newConditionalFields[field.name] = evaluation.show;
-          newConditionalValidations[field.name] = evaluation.validations || [];
-
-          if (!evaluation.show) {
+          
+          if (matchingRule) {
+            newConditionalFields[field.name] = matchingRule.show;
+            newConditionalValidations[field.name] = matchingRule.validations || field.validations || [];
+            
+            // Si el campo debe mostrarse pero estaba oculto, no limpiar su valor
+            // Solo limpiar cuando debe ocultarse
+          } else {
+            newConditionalFields[field.name] = false;
+            newConditionalValidations[field.name] = [];
+            // Limpiar valor solo si el campo se oculta
             form.setFieldValue(field.name, undefined);
           }
         }
@@ -185,36 +219,24 @@ export const DynamicForm = ({
     setConditionalValidations(newConditionalValidations);
   }, [fields, form]);
 
-  // useEffect para evaluar campos condicionales en la inicialización y cuando cambien los initialData
-  useEffect(() => {
-    const formValues = form.getFieldsValue();
-    const allValues = { ...formValues, ...initialData };
-    updateConditionalFields(allValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialData]);
-
 
   interface ChangedValues {
     [key: string]: unknown;
   }
 
-  const handleValuesChange = useCallback(
-    (changedValues: ChangedValues) => {
-      const changedFieldNames = Object.keys(changedValues);
-      const shouldValidate = changedFieldNames.some((fieldName) => {
-        return validationMap[fieldName] || Object.values(validationMap).includes(fieldName);
-      });
+  const handleValuesChange = (changedValues: ChangedValues) => {
+    const changedFieldNames = Object.keys(changedValues);
+    const shouldValidate = changedFieldNames.some((fieldName) => {
+      return validationMap[fieldName] || Object.values(validationMap).includes(fieldName);
+    });
 
-      if (shouldValidate) {
-        validateDates();
-      }
+    if (shouldValidate) {
+      validateDates();
+    }
 
-      // Actualizar campos condicionales cuando cambien valores
-      const currentFormValues = form.getFieldsValue();
-      updateConditionalFields(currentFormValues);
-    },
-    [validationMap, validateDates, form, updateConditionalFields]
-  );
+    const currentFormValues = form.getFieldsValue();
+    updateConditionalFields(currentFormValues);
+  };
 
   const handleSubmit = (values: Record<string, unknown>) => {
     const formattedValues = { ...values };

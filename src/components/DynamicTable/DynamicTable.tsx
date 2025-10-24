@@ -82,13 +82,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState } from "react";
-import {
-  Button,
-  Input,
-  Table,
-  Popconfirm,
-  Tooltip,
-} from "antd";
+import { Button, Input, Table, Popconfirm, Tooltip } from "antd";
 import {
   RiAddCircleLine,
   RiEditLine,
@@ -160,7 +154,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
   backButton,
   widthActionsCol,
   bulkUpload,
-  onBulkUpload
+  onBulkUpload,
 }: DynamicTableProps<T>): React.ReactNode => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -192,11 +186,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
     });
   };
 
-  const searchByFields = (
-    item: T,
-    term: string,
-    fields: string[]
-  ) => {
+  const searchByFields = (item: T, term: string, fields: string[]) => {
     return fields.some((field) => {
       const value = item[field as keyof T];
       if (value === null || value === undefined) return false;
@@ -218,7 +208,11 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         searchConfig.searchableFields &&
         searchConfig.searchableFields.length > 0
       ) {
-        return searchByFields(typedItem, searchTerm, searchConfig.searchableFields);
+        return searchByFields(
+          typedItem,
+          searchTerm,
+          searchConfig.searchableFields
+        );
       }
 
       return searchInObject(item as Record<string, unknown>, searchTerm);
@@ -306,7 +300,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           <span className="font-medium">{column.title}</span>
         ),
         className: "py-4 px-6",
-        sorter: column.sorter ? (a: T, b: T) => sortOrder<T>(column.key as keyof T)(a, b) : undefined,
+        sorter: column.sorter
+          ? (a: T, b: T) => sortOrder<T>(column.key as keyof T)(a, b)
+          : undefined,
         filters: column.filters,
         onFilter: column.onFilter,
       }));
@@ -317,10 +313,14 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           "flex items-center gap-3",
           widthActionsCol ? "flex-wrap" : "flex-nowrap" // Solo wrap cuando hay ancho limitado
         )}
-        style={widthActionsCol ? {
-          maxWidth: `${widthActionsCol}px`,
-          width: '100%'
-        } : undefined}
+        style={
+          widthActionsCol
+            ? {
+                maxWidth: `${widthActionsCol}px`,
+                width: "100%",
+              }
+            : undefined
+        }
       >
         {/* More Actions */}
         {moreActions?.map((action) => {
@@ -361,128 +361,128 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             {actionConfig.showEdit &&
               (typeof actionConfig.showEdit === "function"
                 ? actionConfig.showEdit(record as T) && (
-                  <Tooltip title="Editar">
-                    <Button
-                      type="warning"
-                      title="Editar"
-                      className={clsx(
-                        "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800 flex-shrink-0",
-                      )}
-                      icon={
-                        actionConfig.customIcons?.edit || (
-                          <RiEditLine className="text-white" />
-                        )
-                      }
-                      onClick={() => handleEdit(record)}
-                    />
-                  </Tooltip>
-                )
+                    <Tooltip title="Editar">
+                      <Button
+                        type="warning"
+                        title="Editar"
+                        className={clsx(
+                          "action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800 flex-shrink-0"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.edit || (
+                            <RiEditLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleEdit(record)}
+                      />
+                    </Tooltip>
+                  )
                 : actionConfig.showEdit && (
-                  <Tooltip title="Editar">
-                    <Button
-                      type="warning"
-                      className={clsx(
-                        "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800 flex-shrink-0"
-                      )}
-                      icon={
-                        actionConfig.customIcons?.edit || (
-                          <RiEditLine className="text-white" />
-                        )
-                      }
-                      onClick={() => handleEdit(record)}
-                    />
-                  </Tooltip>
-                ))}
+                    <Tooltip title="Editar">
+                      <Button
+                        type="warning"
+                        className={clsx(
+                          "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-yellow-500 action-button-edit transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-yellow-500 hover:!bg-yellow-700 dark:!bg-yellow-600 dark:hover:!bg-yellow-800 flex-shrink-0"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.edit || (
+                            <RiEditLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleEdit(record)}
+                      />
+                    </Tooltip>
+                  ))}
             {actionConfig.showDelete &&
               (typeof actionConfig.showDelete === "function"
                 ? actionConfig.showDelete(record) && (
-                  <Popconfirm
-                    title="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={() => handleDelete(record)}
-                    okText="Eliminar"
-                    cancelText="Cancelar"
-                  >
-                    <Tooltip title="Eliminar">
-                      <Button
-                        className={clsx(
-                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500 !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800 flex-shrink-0"
-                        )}
-                        icon={
-                          actionConfig.customIcons?.delete?.type ? (
-                            React.createElement(
-                              actionConfig.customIcons.delete.type
+                    <Popconfirm
+                      title="¿Estás seguro de que deseas eliminar este registro?"
+                      onConfirm={() => handleDelete(record)}
+                      okText="Eliminar"
+                      cancelText="Cancelar"
+                    >
+                      <Tooltip title="Eliminar">
+                        <Button
+                          className={clsx(
+                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500 !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800 flex-shrink-0"
+                          )}
+                          icon={
+                            actionConfig.customIcons?.delete?.type ? (
+                              React.createElement(
+                                actionConfig.customIcons.delete.type
+                              )
+                            ) : (
+                              <RiDeleteBinLine className="text-white" />
                             )
-                          ) : (
-                            <RiDeleteBinLine className="text-white" />
-                          )
-                        }
-                      />
-                    </Tooltip>
-                  </Popconfirm>
-                )
+                          }
+                        />
+                      </Tooltip>
+                    </Popconfirm>
+                  )
                 : actionConfig.showDelete && (
-                  <Popconfirm
-                    title="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={() => handleDelete(record)}
-                    okText="Eliminar"
-                    cancelText="Cancelar"
-                  >
-                    <Tooltip title="Eliminar">
-                      <Button
-                        className={clsx(
-                          "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
-                          "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800 flex-shrink-0"
-                        )}
-                        icon={
-                          actionConfig.customIcons?.delete?.type ? (
-                            React.createElement(
-                              actionConfig.customIcons.delete.type
+                    <Popconfirm
+                      title="¿Estás seguro de que deseas eliminar este registro?"
+                      onConfirm={() => handleDelete(record)}
+                      okText="Eliminar"
+                      cancelText="Cancelar"
+                    >
+                      <Tooltip title="Eliminar">
+                        <Button
+                          className={clsx(
+                            "!text-white !border-none shadow-xs hover:!text-white hover:!border hover:!border-red-500",
+                            "action-button-delete transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !bg-red-500 hover:!bg-red-700 dark:!bg-red-600 dark:hover:!bg-red-800 flex-shrink-0"
+                          )}
+                          icon={
+                            actionConfig.customIcons?.delete?.type ? (
+                              React.createElement(
+                                actionConfig.customIcons.delete.type
+                              )
+                            ) : (
+                              <RiDeleteBinLine className="text-white" />
                             )
-                          ) : (
-                            <RiDeleteBinLine className="text-white" />
-                          )
-                        }
-                      />
-                    </Tooltip>
-                  </Popconfirm>
-                ))}
+                          }
+                        />
+                      </Tooltip>
+                    </Popconfirm>
+                  ))}
             {actionConfig.showView &&
               onView &&
               (typeof actionConfig.showView === "function"
                 ? actionConfig.showView(record) && (
-                  <Tooltip title="Ver">
-                    <Button
-                      type="view"
-                      className={clsx(
-                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800 flex-shrink-0"
-                      )}
-                      icon={
-                        actionConfig.customIcons?.view || (
-                          <RiEyeLine className="text-white" />
-                        )
-                      }
-                      onClick={() => handleView(record)}
-                    />
-                  </Tooltip>
-                )
+                    <Tooltip title="Ver">
+                      <Button
+                        type="view"
+                        className={clsx(
+                          "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800 flex-shrink-0"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.view || (
+                            <RiEyeLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleView(record)}
+                      />
+                    </Tooltip>
+                  )
                 : actionConfig.showView && (
-                  <Tooltip title="Ver">
-                    <Button
-                      type="view"
-                      className={clsx(
-                        "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 flex-shrink-0",
-                        actionConfig.customActionsColor?.view ||
-                        "bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
-                      )}
-                      icon={
-                        actionConfig.customIcons?.view || (
-                          <RiEyeLine className="text-white" />
-                        )
-                      }
-                      onClick={() => handleView(record)}
-                    />
-                  </Tooltip>
-                ))}
+                    <Tooltip title="Ver">
+                      <Button
+                        type="view"
+                        className={clsx(
+                          "action-button-view transition-all duration-300 rounded-lg h-8 w-8 flex items-center justify-center !text-white !border-none shadow-xs hover:!text-sky-500 hover:!border hover:!border-sky-500 flex-shrink-0",
+                          actionConfig.customActionsColor?.view ||
+                            "bg-sky-500 hover:bg-sky-700 dark:bg-sky-600 dark:hover:bg-sky-800"
+                        )}
+                        icon={
+                          actionConfig.customIcons?.view || (
+                            <RiEyeLine className="text-white" />
+                          )
+                        }
+                        onClick={() => handleView(record)}
+                      />
+                    </Tooltip>
+                  ))}
           </>
         )}
       </div>
@@ -624,7 +624,9 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               <Button
                 type="primary"
                 className="flex-1 xs:flex-initial flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md px-3 h-8 text-sm font-medium dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
-                icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
+                icon={
+                  React.cloneElement(createButtonIcon) || <RiAddCircleLine />
+                }
                 onClick={onCreate}
               >
                 <span>{createButtonText}</span>
