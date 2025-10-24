@@ -16,7 +16,7 @@
  * @returns {React.ReactNode}
  */
 
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import {
   Form,
   Button,
@@ -84,6 +84,7 @@ export const DynamicForm = ({
   );
   const [conditionalFields, setConditionalFields] = useState<Record<string, boolean>>({});
   const [conditionalValidations, setConditionalValidations] = useState<Record<string, Validations[]>>({});
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
@@ -181,6 +182,10 @@ export const DynamicForm = ({
 
   // useEffect para evaluar campos condicionales en la inicialización y cuando cambien los initialData
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     const formValues = form.getFieldsValue();
     const allValues = { ...formValues, ...initialData };
     updateConditionalFields(allValues);
@@ -203,23 +208,29 @@ export const DynamicForm = ({
           if (matchingRule) {
             newConditionalFields[field.name] = matchingRule.show;
             newConditionalValidations[field.name] = matchingRule.validations || field.validations || [];
-            
-            // Si el campo debe mostrarse pero estaba oculto, no limpiar su valor
-            // Solo limpiar cuando debe ocultarse
           } else {
             newConditionalFields[field.name] = false;
             newConditionalValidations[field.name] = [];
-            // Limpiar valor solo si el campo se oculta
             form.setFieldValue(field.name, undefined);
           }
         }
       });
 
-    setConditionalFields(newConditionalFields);
-    setConditionalValidations(newConditionalValidations);
+    // Solo actualizar si hay cambios reales
+    setConditionalFields(prev => {
+      if (JSON.stringify(prev) === JSON.stringify(newConditionalFields)) {
+        return prev;
+      }
+      return newConditionalFields;
+    });
+    
+    setConditionalValidations(prev => {
+      if (JSON.stringify(prev) === JSON.stringify(newConditionalValidations)) {
+        return prev;
+      }
+      return newConditionalValidations;
+    });
   }, [fields, form]);
-
-
   interface ChangedValues {
     [key: string]: unknown;
   }
