@@ -538,10 +538,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         )}
 
         {/* Search and Actions: Same row on desktop, 2 rows on mobile */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
           {/* First Row/Left Side: Search Bar */}
           {showSearchBar && (
-            <div className="w-full sm:flex-1 sm:max-w-md lg:max-w-lg">
+            <div className="w-full sm:w-auto sm:flex-1 sm:max-w-md">
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -553,7 +553,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           )}
 
           {/* Second Row/Right Side: All Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2 sm:flex-shrink-0">
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-end gap-2 w-full sm:w-auto">
             {/* Export to Excel */}
             {exportToExcel && (
               <Button
