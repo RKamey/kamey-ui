@@ -538,10 +538,10 @@ export const DynamicTable = <T extends Record<string, unknown>>({
         )}
 
         {/* Search and Actions: Same row on desktop, 2 rows on mobile */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* First Row/Left Side: Search Bar */}
           {showSearchBar && (
-            <div className="w-full sm:w-auto sm:flex-1 sm:max-w-md">
+            <div className="flex-1 sm:max-w-md lg:max-w-lg">
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -553,7 +553,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           )}
 
           {/* Second Row/Right Side: All Action Buttons */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center justify-end gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2 sm:flex-shrink-0">
             {/* Export to Excel */}
             {exportToExcel && (
               <Button
@@ -624,9 +624,7 @@ export const DynamicTable = <T extends Record<string, unknown>>({
               <Button
                 type="primary"
                 className="flex-1 xs:flex-initial flex items-center justify-center gap-2 hover:opacity-90 transition-all duration-200 shadow-xs hover:shadow-md px-3 h-8 text-sm font-medium dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
-                icon={
-                  React.cloneElement(createButtonIcon) || <RiAddCircleLine />
-                }
+                icon={React.cloneElement(createButtonIcon) || <RiAddCircleLine />}
                 onClick={onCreate}
               >
                 <span>{createButtonText}</span>
