@@ -93,10 +93,10 @@ import {
   RiArrowGoBackLine,
   RiUploadLine,
 } from "react-icons/ri";
-import { ColumnsProps, DynamicTableProps } from "./types";
 import * as XLSX from "xlsx";
 import clsx from "clsx";
 import { sortOrder } from "../SortOrder/SortOrder";
+import { ColumnsProps, DynamicTableProps } from "./types";
 
 const { Search } = Input;
 
@@ -537,11 +537,15 @@ export const DynamicTable = <T extends Record<string, unknown>>({
           </div>
         )}
 
-        {/* Search and Actions: Same row on desktop, 2 rows on mobile */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
-          {/* First Row/Left Side: Search Bar */}
+        {/* Search and Actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3">
           {showSearchBar && (
-            <div className="w-full sm:w-auto sm:flex-1 sm:max-w-md">
+            <div
+              className={clsx(
+                "w-full",
+                title ? "sm:flex-1 sm:max-w-md" : "sm:flex-1"
+              )}
+            >
               <Search
                 allowClear
                 className="!w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -552,8 +556,8 @@ export const DynamicTable = <T extends Record<string, unknown>>({
             </div>
           )}
 
-          {/* Second Row/Right Side: All Action Buttons */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center justify-end gap-2 w-full sm:w-auto">
+          {/* Action Buttons - Se agrupan a la derecha */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
             {/* Export to Excel */}
             {exportToExcel && (
               <Button
