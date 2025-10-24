@@ -221,18 +221,18 @@ export const DynamicCrud = <T extends Record<string, unknown>>({
   }, []);
 
   const finalActionConfig: ActionConfig<T> | undefined = useMemo(() => {
-    console.log(hasPermissionSystem);
-  if (!hasPermissionSystem) {
-    return actionConfig;
-  }
+    if (!hasPermissionSystem) {
+      return actionConfig;
+    }
 
-  return {
-    ...actionConfig,
-    showEdit: applyPermissionRestriction(actionConfig?.showEdit, canUpdate, hasPermissionSystem),
-    showDelete: applyPermissionRestriction(actionConfig?.showDelete, canDelete, hasPermissionSystem),
-    showView: applyPermissionRestriction(actionConfig?.showView, canView, hasPermissionSystem),
-  } as ActionConfig<T>;
-}, [actionConfig, canUpdate, canDelete, canView, hasPermissionSystem, applyPermissionRestriction]);
+    return {
+      ...actionConfig,
+      showEdit: applyPermissionRestriction(actionConfig?.showEdit, canUpdate, hasPermissionSystem),
+      showDelete: applyPermissionRestriction(actionConfig?.showDelete, canDelete, hasPermissionSystem),
+      showView: applyPermissionRestriction(actionConfig?.showView, canView, hasPermissionSystem),
+    } as ActionConfig<T>;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionConfig, canUpdate, canDelete, canView, hasPermissionSystem]);
 
   const finalShowCreateButton = hasPermissionSystem 
     ? (showCreateButton && canCreate)
