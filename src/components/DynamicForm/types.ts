@@ -115,6 +115,7 @@ export interface SelectDependencyConfig {
 export interface CheckboxConfig {
   options?: Options[];
   onChange?: (value: string | number) => void;
+  defaultChecked?: boolean;
 }
 
 export interface Options {

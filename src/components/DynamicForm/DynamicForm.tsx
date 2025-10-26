@@ -37,6 +37,7 @@ import dayjs from "dayjs";
 import axios, { AxiosResponse } from "axios";
 import { BiUpload } from "react-icons/bi";
 import { message } from "antd";
+import { Rule } from "antd/es/form";
 
 export interface ApiConfig {
   url: string;
@@ -707,7 +708,13 @@ export const DynamicForm = ({
           />
         );
         break;
-      case "select":
+      case "select": {
+        const optionsList = field.dependsOn
+          ? selectOptions[name]
+          : field.selectConfig?.apiConfig
+            ? selectOptions[name]
+            : options || [];
+
         formItem = (
           <Select
             showSearch
@@ -745,19 +752,14 @@ export const DynamicForm = ({
               }
             }}
           >
-            {(field.dependsOn
-              ? selectOptions[name]
-              : field.selectConfig?.apiConfig
-                ? selectOptions[name]
-                : options || []
-            )?.map((option) => (
+            {optionsList?.map((option) => (
               <Select.Option key={String(option.value)} value={option.value}>
-                {option.emoji && <span className="mr-2">{option.emoji}</span>}
-                {option.icon && <span className="mr-2">{option.icon}</span>}
+                {option.emoji && <span style={{ marginRight: 8 }}>{option.emoji}</span>}
+                {option.icon && <span style={{ marginRight: 8 }}>{option.icon}</span>}
                 {option.label}
               </Select.Option>
             ))}
-            
+
             {field.selectConfig?.customOption && (
               <Select.Option 
                 key={String(field.selectConfig.customOption.value)} 
@@ -769,17 +771,18 @@ export const DynamicForm = ({
                 }}
               >
                 {field.selectConfig.customOption.emoji && (
-                  <span className="mr-2">{field.selectConfig.customOption.emoji}</span>
+                  <span style={{ marginRight: 8 }}>{field.selectConfig.customOption.emoji}</span>
                 )}
                 {field.selectConfig.customOption.icon && (
-                  <span className="mr-2">{field.selectConfig.customOption.icon}</span>
+                  <span style={{ marginRight: 8 }}>{field.selectConfig.customOption.icon}</span>
                 )}
                 {field.selectConfig.customOption.label}
               </Select.Option>
             )}
           </Select>
         );
-      break;
+        break;
+      }
       case "datepicker":
         formItem = (
           <DatePicker
@@ -828,23 +831,11 @@ export const DynamicForm = ({
             <Checkbox.Group
               options={options}
               disabled={readonly}
-              onChange={(checkedValues) => {
-                form.setFieldsValue({
-                  [name]: checkedValues,
-                });
-              }}
             />
           );
         } else {
           formItem = (
-            <Checkbox
-              disabled={readonly}
-              onChange={(e) => {
-                form.setFieldsValue({
-                  [name]: e.target.checked,
-                });
-              }}
-            >
+            <Checkbox disabled={readonly}>
               {placeholder}
             </Checkbox>
           );
@@ -951,8 +942,28 @@ export const DynamicForm = ({
 
     if (!formItem) return null;
 
+    const formItemProps: {
+      label?: string | ReactElement;
+      name?: string;
+      rules?: Rule[];
+      valuePropName?: string;
+      initialValue?: unknown;
+    } = {
+      label,
+      name,
+      rules: getRules(validations, name),
+    }
+
+    if (type === 'checkbox' && !options) {
+      formItemProps.valuePropName = 'checked';
+
+      if (field.checkboxConfig?.defaultChecked !== undefined && !initialData[name]) {
+        formItemProps.initialValue = field.checkboxConfig.defaultChecked;
+      }
+    }
+
     return (
-      <Form.Item label={label} name={name} rules={getRules(validations, name)}>
+      <Form.Item {...formItemProps}>
         {React.cloneElement(formItem)}
       </Form.Item>
     );
