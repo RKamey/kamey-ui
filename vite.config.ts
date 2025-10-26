@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import tailwind from '@tailwindcss/vite';
+// import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
   plugins: [
@@ -12,7 +13,8 @@ export default defineConfig({
       include: ['src'],
       insertTypesEntry: true,
       rollupTypes: true
-    })
+    }),
+    // visualizer({ open: true })
   ],
   build: {
     lib: {
@@ -26,21 +28,35 @@ export default defineConfig({
         'react',
         'react-dom',
         'antd',
+        '@tanstack/react-query',
         'axios',
-        'dayjs'
+        'dayjs',
+        'jspdf',
+        'jspdf-autotable',
+        'xlsx',
       ],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           antd: 'antd',
+          '@tanstack/react-query': 'ReactQuery',
           axios: 'axios',
-          dayjs: 'dayjs'
-        }
+          dayjs: 'dayjs',
+          jspdf: 'jsPDF',
+          'jspdf-autotable': 'jspdfAutoTable',
+          xlsx: 'XLSX',
+        },
       }
     },
-    sourcemap: true,
+    sourcemap: false,
     minify: 'terser',
-    cssCodeSplit: false
+    cssCodeSplit: false,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
   }
 });

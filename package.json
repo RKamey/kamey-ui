@@ -83,6 +83,7 @@
 		"postcss": "^8.4.49",
 		"react": "19.0.0",
 		"react-dom": "19.0.0",
+		"rollup-plugin-visualizer": "^6.0.5",
 		"storybook": "^8.6.7",
 		"storybook-addon-customize-antd-theme": "^1.1.0",
 		"tailwindcss": "^4.1.11",
