@@ -283,64 +283,73 @@ export const DynamicForm = ({
       filterBy,
     } = field.selectConfig.apiConfig;
 
-    let response: AxiosResponse | void;
+    try {
+      let response: AxiosResponse | void;
 
-    if (getterMethod) {
-      response = (await getterMethod()) as AxiosResponse;
-    } else {
-      response = await axios.get(url ? url : "", {
-        method: method || "GET",
-        headers,
-      });
-    }
-
-    const responseData =
-      response && responseDataPath
-        ? response.data[responseDataPath]
-        : response?.data?.data;
-
-    const data =
-      Array.isArray(responseData) && Array.isArray(responseData[0])
-        ? responseData[0]
-        : responseData;
-
-    // Apply filters if configured
-    let filteredData = data;
-    if (filterBy) {
-      const filters = Array.isArray(filterBy) ? filterBy : [filterBy];
-      filteredData = data.filter((item: Record<string, unknown>) => {
-        return filters.every(filter => {
-          const fieldValue = item[filter.field];
-          switch (filter.condition) {
-            case '==':
-              return fieldValue === filter.value;
-            case '!=':
-              return fieldValue !== filter.value;
-            case 'contains':
-              return String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
-            case 'not_contains':
-              return !String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
-            case '>':
-              return Number(fieldValue) > Number(filter.value);
-            case '<':
-              return Number(fieldValue) < Number(filter.value);
-            case 'in':
-              return Array.isArray(filter.value) && filter.value.includes(fieldValue as string | number | boolean);
-            case 'not_in':
-              return Array.isArray(filter.value) && !filter.value.includes(fieldValue as string | number | boolean);
-            default:
-              return true;
-          }
+      if (getterMethod) {
+        response = (await getterMethod()) as AxiosResponse;
+      } else {
+        response = await axios.get(url ? url : "", {
+          method: method || "GET",
+          headers,
         });
-      });
+      }
+
+      const responseData =
+        response && responseDataPath
+          ? response.data[responseDataPath]
+          : response?.data?.data;
+
+      const data =
+        Array.isArray(responseData) && Array.isArray(responseData[0])
+          ? responseData[0]
+          : responseData;
+
+      if (!Array.isArray(data)) {
+        setSelectOptions((prev) => ({ ...prev, [field.name]: [] as Options[] }));
+        return;
+      }
+
+      let filteredData = data;
+      if (filterBy) {
+        const filters = Array.isArray(filterBy) ? filterBy : [filterBy];
+        filteredData = data.filter((item: Record<string, unknown>) => {
+          return filters.every(filter => {
+            const fieldValue = item[filter.field];
+            switch (filter.condition) {
+              case '==':
+                return fieldValue === filter.value;
+              case '!=':
+                return fieldValue !== filter.value;
+              case 'contains':
+                return String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
+              case 'not_contains':
+                return !String(fieldValue).toLowerCase().includes(String(filter.value).toLowerCase());
+              case '>':
+                return Number(fieldValue) > Number(filter.value);
+              case '<':
+                return Number(fieldValue) < Number(filter.value);
+              case 'in':
+                return Array.isArray(filter.value) && filter.value.includes(fieldValue as string | number | boolean);
+              case 'not_in':
+                return Array.isArray(filter.value) && !filter.value.includes(fieldValue as string | number | boolean);
+              default:
+                return true;
+            }
+          });
+        });
+      }
+
+      const formattedOptions: Options[] = (filteredData || []).map((item: Record<string, unknown>) => ({
+        value: item[valueKey] as Options['value'],
+        label: item[labelKey] as Options['label'],
+      }));
+
+      setSelectOptions((prev) => ({ ...prev, [field.name]: formattedOptions }));
+    } catch (error) {
+      console.error(`Error fetching options for ${field.name}:`, error);
+      setSelectOptions((prev) => ({ ...prev, [field.name]: [] as Options[] }));
     }
-
-    const options = filteredData.map((item: Record<string, unknown>) => ({
-      value: item[valueKey],
-      label: item[labelKey],
-    }));
-
-    setSelectOptions((prev) => ({ ...prev, [field.name]: options }));
   };
 
   const fetchDependentOptions = async (
@@ -371,16 +380,16 @@ export const DynamicForm = ({
 
       const responseData = response.data.data || response.data;
 
-      const options = responseData.map((item: Record<string, unknown>) => ({
-        value: item[valueKey],
-        label: item[labelKey],
+      const formattedOptions: Options[] = (responseData || []).map((item: Record<string, unknown>) => ({
+        value: item[valueKey] as Options['value'],
+        label: item[labelKey] as Options['label'],
       }));
 
-      setSelectOptions((prev) => ({ ...prev, [field.name]: options }));
+      setSelectOptions((prev) => ({ ...prev, [field.name]: formattedOptions }));
       form.setFieldValue(field.name, undefined);
     } catch (error) {
       console.error(`Error fetching options for ${field.name}:`, error);
-      setSelectOptions((prev) => ({ ...prev, [field.name]: [] }));
+      setSelectOptions((prev) => ({ ...prev, [field.name]: [] as Options[] }));
     }
   };
 
