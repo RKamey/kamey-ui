@@ -384,16 +384,6 @@ export const DynamicForm = ({
     }
   };
 
-  const convertOptions = (options: Options[] | undefined, field: FormField): Options[] => {
-    if (!options) return [];
-
-    if (field.selectConfig?.customOption) {
-      return [field.selectConfig.customOption as Options, ...options];
-    }
-
-    return options;
-  }
-
   const getFormattedPlaceholder = (
     field: FormField,
     parentFieldName?: string
@@ -718,20 +708,17 @@ export const DynamicForm = ({
                 ? placeholder
                 : getFormattedPlaceholder(field, field.dependsOn?.field)
             }
-            options={
-              field.dependsOn
-                ? selectOptions[name]
-                : field.selectConfig?.apiConfig
-                  ? selectOptions[name]
-                  : convertOptions(options, field)
-            }
             optionFilterProp="label"
             onChange={(value) => {
               form.setFieldsValue({ [name]: value });
 
+              // Manejar click en opción personalizada
               if (field.selectConfig?.customOption) {
                 if (value === field.selectConfig.customOption.value) {
                   field.selectConfig.customOption.onClick?.();
+                  // Limpiar el valor después del click
+                  form.setFieldValue(name, undefined);
+                  return;
                 }
               }
 
@@ -748,9 +735,42 @@ export const DynamicForm = ({
                   });
               }
             }}
-          />
+          >
+            {(field.dependsOn
+              ? selectOptions[name]
+              : field.selectConfig?.apiConfig
+                ? selectOptions[name]
+                : options || []
+            )?.map((option) => (
+              <Select.Option key={String(option.value)} value={option.value}>
+                {option.emoji && <span className="mr-2">{option.emoji}</span>}
+                {option.icon && <span className="mr-2">{option.icon}</span>}
+                {option.label}
+              </Select.Option>
+            ))}
+            
+            {field.selectConfig?.customOption && (
+              <Select.Option 
+                key={String(field.selectConfig.customOption.value)} 
+                value={field.selectConfig.customOption.value}
+                style={{ 
+                  borderTop: '1px solid #f0f0f0',
+                  marginTop: '4px',
+                  paddingTop: '8px'
+                }}
+              >
+                {field.selectConfig.customOption.emoji && (
+                  <span className="mr-2">{field.selectConfig.customOption.emoji}</span>
+                )}
+                {field.selectConfig.customOption.icon && (
+                  <span className="mr-2">{field.selectConfig.customOption.icon}</span>
+                )}
+                {field.selectConfig.customOption.label}
+              </Select.Option>
+            )}
+          </Select>
         );
-        break;
+      break;
       case "datepicker":
         formItem = (
           <DatePicker

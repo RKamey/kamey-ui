@@ -93,7 +93,7 @@ export interface SelectConfig {
     responseDataPath?: string;
     filterBy?: FilterConfig | FilterConfig[];
   };
-  customOption?: CustomOption;
+  customOption?: CustomSelectOption;
   dependsOn?: SelectDependencyConfig;
   onChange?: (value: string | number) => void;
 }
@@ -120,11 +120,17 @@ export interface CheckboxConfig {
 export interface Options {
   label: string | React.ReactElement;
   value: string | number | boolean;
+  icon?: React.ReactElement;
+  emoji?: string;
   disabled?: boolean;
 }
 
-export interface CustomOption extends Partial<Options> {
-  onClick: () => void;
+export interface CustomSelectOption {
+  label: string;
+  value: string | number | boolean;
+  emoji?: string;
+  icon?: React.ReactElement;
+  onClick?: () => void;
 }
 
 export interface Validations {
