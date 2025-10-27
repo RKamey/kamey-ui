@@ -783,17 +783,44 @@ export const DynamicForm = ({
         );
         break;
       }
-      case "datepicker":
-        formItem = (
-          <DatePicker
-            className="w-full"
-            placeholder={placeholder}
-            size={size}
-            format={format}
-            showTime={showTime}
-            onChange={onChange}
-          />
-        );
+      case "datepicker": {
+          const {
+            format,
+            showTime,
+            size,
+            disablePastDates,
+            disableFutureDates,
+            disabledDate: customDisabledDate,
+          } = datepickerConfig || {};
+
+          const disabledDate = (current: dayjs.Dayjs) => {
+            if (typeof customDisabledDate === "function") {
+              return customDisabledDate(current);
+            }
+
+            if (disablePastDates && current < dayjs().startOf("day")) {
+              return true;
+            }
+
+            if (disableFutureDates && current > dayjs().endOf("day")) {
+              return true;
+            }
+
+            return false;
+          };
+
+          formItem = (
+            <DatePicker
+              className="w-full"
+              placeholder={placeholder}
+              size={size}
+              format={format}
+              showTime={showTime}
+              onChange={onChange}
+              disabledDate={disabledDate}
+            />
+          );
+        };
         break;
       case "rangepicker":
         formItem = (

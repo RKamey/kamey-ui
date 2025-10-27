@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type FieldType = 'text' | 'email' | 'password' | 'number' | 'select' | 'textarea' | 'datepicker' | 'rangepicker' | 'time' | 'checkbox' | 'radio' | 'switch' | 'slider' | 'rate' | 'upload' | 'custom' | 'hidden';
 export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
@@ -44,6 +46,9 @@ export interface DatepickerConfig {
   showTime?: boolean;
   picker?: PickerType;
   size?: 'large' | 'middle' | 'small';
+  disablePastDates?: boolean;
+  disableFutureDates?: boolean;
+  disabledDate?: (date: dayjs.Dayjs) => boolean;
 }
 
 export interface UploadConfig {
