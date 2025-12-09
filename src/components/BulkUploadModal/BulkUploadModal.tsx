@@ -926,7 +926,7 @@ const BulkUploadModal = <T extends Record<string, unknown>>({
         <Text type="secondary">{defaultSubtitle}</Text>
       </div>
 
-      <Steps current={currentStep} items={steps} className="!mb-4" />
+      <Steps current={currentStep} items={steps} className="mb-4!" />
 
       {renderStepContent()}
     </Modal>

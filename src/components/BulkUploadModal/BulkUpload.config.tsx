@@ -1,9 +1,9 @@
-import { StepProps } from "antd";
+import type { StepsProps } from "antd";
 import { IoCheckmarkOutline, IoDownloadOutline, IoEyeOutline } from "react-icons/io5";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { TiUploadOutline } from "react-icons/ti";
 
-export const steps: StepProps[] = [
+export const steps: NonNullable<StepsProps['items']> = [
   {
     title: 'Descargar plantilla',
     description: 'Obten el formato correcto',

@@ -1,5 +1,4 @@
 import './index.css';
-import '@ant-design/v5-patch-for-react-19';
 
 export { Btn } from './components/Button/Button';
 export type { BtnProps } from './components/Button/Button';
