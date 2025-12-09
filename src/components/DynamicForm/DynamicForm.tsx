@@ -577,8 +577,7 @@ export const DynamicForm = ({
       max,
       step,
       datepickerConfig,
-      hidden,
-      onChange,
+      hidden
     } = field;
 
     // Evaluar si el campo debe estar oculto (original hidden o por condiciones)
@@ -816,7 +815,6 @@ export const DynamicForm = ({
               size={size}
               format={format}
               showTime={showTime}
-              onChange={onChange}
               disabledDate={disabledDate}
             />
           );
