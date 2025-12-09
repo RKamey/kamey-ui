@@ -8,8 +8,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
  * @param baseUrl URL base de la API
  * @param config Configuración personalizada de Axios
  * 
- * @method version(version: string): AxiosInstance
- * @method getInstance(version: string): AxiosInstance
+ * @method version(version: string): AxiosInstance - Obtiene o crea una instancia de Axios para una versión específica de la API.
  *
  * @example
  * ```typescript
@@ -61,10 +60,32 @@ export class ApiVersioning {
     });
   }
 
+  /**
+   * Get or create an Axios instance for a specific API version.
+   * @param version The API version (e.g., 'v1', 'v2')
+   * @returns AxiosInstance configured for the specified version
+   * @example
+   * ```typescript
+   * const apiV1 = api.version('v1');
+   * ```
+   */
   public version(version: string): AxiosInstance {
-    return this.getInstance(version);
+    if (!this.instances[version]) {
+      this.instances[version] = this.createApiInstance(version);
+    }
+    return this.instances[version];
   }
 
+  /**
+   * Get or create an Axios instance for a specific API version.
+   * @param version The API version (e.g., 'v1', 'v2')
+   * @returns AxiosInstance configured for the specified version
+   * @deprecated Use the `version` method instead.
+   * @example
+   * ```typescript
+   * const apiV1 = api.getInstance('v1');
+   * ```
+   */
   public getInstance(version: string): AxiosInstance {
     if (!this.instances[version]) {
       this.instances[version] = this.createApiInstance(version);

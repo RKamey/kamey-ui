@@ -1,4 +1,4 @@
-import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations, UploadConfig, RadioConfig, ConditionalConfig } from "../DynamicForm/types";
+import { FieldType, CheckboxConfig, SelectConfig, SelectDependencyConfig, Validations, UploadConfig, RadioConfig, ConditionalConfig, DatepickerConfig } from "../DynamicForm/types";
 import { FilterItem } from "../DynamicTable/types";
 
 export interface SharedFieldConfig<T = Record<string, unknown>> {
@@ -10,7 +10,7 @@ export interface SharedFieldConfig<T = Record<string, unknown>> {
   filtrers?: FilterItem[];
   onFilter?: (value: boolean | React.Key, record: T & { key: number }) => boolean;
   width?: string | number;
-  datepickerConfig?: { format: string; showTime: boolean };
+  datepickerConfig?: DatepickerConfig;
   min?: number;
   render?: <T extends string = string>(value: T) => React.ReactNode;
   readonly?: boolean;

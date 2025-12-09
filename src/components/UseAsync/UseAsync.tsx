@@ -8,6 +8,11 @@ import { useState, useEffect } from 'react';
  * @param {() => Promise<T>} asyncFunction - The asynchronous function to execute.
  * @param {unknown[]} [dependencies] - Optional array of dependencies for the useEffect hook.
  * @returns {{ data: T | undefined, error: Error | null, loading: boolean }} - An object containing the data, error, and loading state.
+ * @example
+ * const { data, error, loading } = useAsync(async () => {
+ *   const response = await fetch('/api/data');
+ *  return response.json();
+ * });
  */
 export const useAsync = <T,>(asyncFunction: () => Promise<T>, dependencies?: unknown[]) => {
   const [data, setData] = useState<T>();
